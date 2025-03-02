@@ -1,0 +1,82 @@
+<section class="admin-section">
+    <div class="container-fluid">
+        <h2 class="text-center">Edit {{event.eventName}}</h2>
+        <form action="/admin/edit-event/{{event._id}}" method="post" enctype="multipart/form-data">
+            <label for="">Event Name</label>
+            <input type="text" name="eventName" id="" class="form-control" value="{{event.eventName}}">
+
+            <label for="">Event Sub Name</label>
+            <input type="text" name="eventSubName" id="" class="form-control" value="{{event.eventSubName}}"></input>
+
+            <label for="">Event Image url</label>
+            <input type="text" name="eventImageUrl" id="" class="form-control" value="{{event.eventImageUrl}}">
+
+            <label for="">Description</label>
+            <textarea name="description" id="" rows="4" class="form-control">{{event.description}}</textarea>
+
+            <label for="eventStrength">Participation Strength</label>
+            <select name="eventStrength" id="eventStrength" class="form-control" onchange="toggleGroupFields()">
+                <option value="individual" {{#if (eq event.eventStrength "individual" )}}selected{{/if}}>Individual
+                </option>
+                <option value="group" {{#if (eq event.eventStrength "group" )}}selected{{/if}}>Group</option>
+            </select>
+
+            <!-- Min & Max input fields (Initially Hidden) -->
+            <div id="groupFields" style="display: none; margin-top: 10px;">
+                <label for="minParticipants">Min Participants</label>
+                <input type="number" name="minParticipants" id="minParticipants" class="form-control"
+                    value="{{event.minParticipants}}" placeholder="Min Participants">
+
+                <label for="maxParticipants">Max Participants</label>
+                <input type="number" name="maxParticipants" id="maxParticipants" class="form-control"
+                    value="{{event.maxParticipants}}" placeholder="Max Participants">
+            </div>
+
+
+            <label for="">Registrations from a class</label>
+            <select name="classReg" id="" class="form-control" value="{{event.classReg}}">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="unlimited">Unlimited</option>
+            </select>
+
+            <label for="">Time Limit</label>
+            <input type="text" name="timeLimit" class="form-control" value="{{event.timeLimit}}" id="">
+
+            <label for="">Event Head</label>
+            <input type="text" name="eventHead" class="form-control" value="{{event.eventHead}}" id="">
+
+            <label for="">Event Head Contact</label>
+            <input type="number" name="eventHeadContact" class="form-control" value="{{event.eventHeadContact}}" id="">
+
+            <label for="">Date</label>
+            <input type="date" name="eventDate" id="" class="form-control" value="{{event.eventDate}}">
+
+            <button class="btn btn-success" type="submit">Submit</button>
+        </form>
+    </div>
+</section>
+
+
+<script>
+    function toggleGroupFields() {
+        let selection = document.getElementById("eventStrength").value;
+        let groupFields = document.getElementById("groupFields");
+
+        let minParticipants = document.getElementById('minParticipants')
+        let maxParticipants = document.getElementById('maxParticipants')
+
+
+        if (selection === "group") {
+            groupFields.style.display = "block"; // Show fields
+        } else {
+            groupFields.style.display = "none"; // Hide fields
+            minParticipants.value = "";  // Reset input value
+            maxParticipants.value = "";  // Reset input value
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        toggleGroupFields();
+    });
+</script>

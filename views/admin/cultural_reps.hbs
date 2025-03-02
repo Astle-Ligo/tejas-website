@@ -1,0 +1,22 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Register Number</th>
+            <th scope="col">Class</th>
+            <th scope="col">Phone Number</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each cultural_reps}}
+        <tr>
+            <th scope="row">{{inc @index}}</th>
+            <td>{{this.Name}}</td>
+            <td>{{this.regNum}}</td>
+            <td>{{this.class}}</td>
+            <td>{{this.phoneNumber}}</td>
+        </tr>
+        {{/each}} 
+    </tbody>
+</table>

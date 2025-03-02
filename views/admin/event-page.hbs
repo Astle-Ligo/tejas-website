@@ -1,0 +1,24 @@
+<section class="center">
+    <div class="card" style="width: 70rem;">
+        <img src="{{event.eventImageUrl}}" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">{{event.eventName}} {{#if event.eventSubName}} <span>
+                    ({{event.eventSubName}}) </span>{{/if}}</h5>
+            <p class="card-text">{{event.description}}</p>
+            <div class="card-details-box">
+                <p>Strength : {{event.eventStrength}} </p>
+                {{#if (eq event.eventStrength "group")}}
+                <p> {{#if event.minParticipants}} {{event.minParticipants}} - {{/if}} {{event.maxParticipants}} in a group</p>
+                {{/if}}
+                <p>Max Reg From a Class : {{event.classReg}} </p>
+                <p>Time Limit : {{event.timeLimit}} </p>
+                <p>Event Head : {{event.eventHead}} </p>
+                <p>Event Head Conctact : {{event.eventHeadContact}} </p>
+                <p>Date : {{event.eventDate}} </p>
+            </div>
+            <a href="/admin/edit-event/{{event._id}}" class="btn btn-primary buttons">Edit</a>
+            <a href="/admin/delete-event/{{event._id}}" class="btn btn-danger buttons"
+                onclick="return confirm('Do you want to delete {{event.eventName}}? ')">Delete</a>
+        </div>
+    </div>
+</section>

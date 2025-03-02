@@ -1,0 +1,26 @@
+<section class="admin-section">
+    <div class="row">
+        <div class="col">
+            <div class="container-fluid">
+                <h2 class="text-center">Login</h2>
+                <form action="/culRep/culRep-login" method="post">  <!-- Fixed form action -->
+                    {{#if loginError}}  <!-- Fixed error condition -->
+                    <p class="error">{{loginError}}</p>
+                    {{/if}}
+
+                    <div class="form-group">
+                        <label for="">Email Address</label>
+                        <input type="email" name="Email" class="form-control" placeholder="Enter Email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="">Password</label>
+                        <input type="password" name="Password" class="form-control" placeholder="Password" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary float-right">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

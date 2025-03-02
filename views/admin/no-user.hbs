@@ -1,0 +1,30 @@
+<section class="admin-section page">
+    <div class="no-user">
+        {{#if count}}
+        <h2>
+            Hello Admin,
+            <br>
+            <br>
+            Please Do Login to Acess the Admin Panel
+            <br>
+            Click the Button to LOGIN
+        </h2>
+        <br>
+        <a href="admin/admin-login" class="btn btn-success btn-lg">Login</a>
+        {{else}}
+        <h2>
+            Hello,
+            <br>
+            <br>
+            Currently there are no Admin to access the Admin Panel.
+            <br>
+            Please do signup and become the first Admin
+            <br>
+            <br>
+            Click the Button to SIGNUP
+        </h2>
+        <br>
+        <a href="admin/admin-signup" class="btn btn-primary btn-lg">Signup</a>
+        {{/if}}
+    </div>
+</section>

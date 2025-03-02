@@ -1,0 +1,48 @@
+<section class="admin-section">
+    <div class="row">
+        <div class="col">
+            <div class="conatiner-fluid">
+                <h2 class="text-center">Create Cultural Rep</h2>
+                <form action="/admin/cultural-rep-signup" method="post">
+
+                    <div class="form-group">
+                        <label for="">Name</label>
+                        <input type="text" name="Name" class="form-control" placeholder="Enter Name" id="">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="">Register Number</label>
+                        <input type="text" name="regNum" class="form-control" placeholder="Enter Name" id="">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="">Class</label>
+                        <select name="class" id="" class="form-control">
+                            <option value="3 BCA B">3 BCA B</option>
+                            <option value="3 BCA C">3 BCA C</option>
+                            <option value="3 BBA C">3 BBA C</option>
+                            <option value="3 BBA D">3 BBA D</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="">Email Address</label>
+                        <input type="email" name="Email" class="form-control" placeholder="Enter Email" id="">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="">Phone Number</label>
+                        <input type="number" name="phoneNumber" class="form-control" placeholder="Enter Phone" id="">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="">Password</label>
+                        <input type="password" name="Password" class="form-control" placeholder="Password" id="">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary float-right">SignUp</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

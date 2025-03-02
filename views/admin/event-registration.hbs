@@ -1,0 +1,12 @@
+<h2 class="mb-4">Event Registrations</h2>
+
+<!-- Event-wise Box for List of Events -->
+<div class="classwise-box">
+    {{#each events}}
+    <div class="alert alert-primary" role="alert">
+        <a href="/admin/eventRegistrations/{{this._id}}" class="event-link">{{this.eventName}}</a>
+    </div>
+    {{else}}
+    <p>No events found.</p>
+    {{/each}}
+</div>

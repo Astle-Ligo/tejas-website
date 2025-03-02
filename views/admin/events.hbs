@@ -1,0 +1,25 @@
+<section class="admin-section">
+    <h1 class="landingHeader">Event Details</h1>
+    <div class="view-product container">
+        <div class="admin-button">
+            <a href="add-event" class="btn btn-success btn-lg">Add Events</a>
+        </div>
+        <div class="card-box">
+            {{#each events}}
+            <a href="events/{{this._id}}" style="text-decoration: none;">
+                <div class="card" style="width: 15rem;">
+                    <img src="{{this.eventImageUrl}}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">{{this.eventName}} {{#if this.eventSubName}} <span>
+                                ({{this.eventSubName}}) </span>{{/if}}</h5>
+                        <p class="card-text">Date : {{this.eventDate}}</p>
+                        <a href="/admin/edit-event/{{this._id}}" class="btn btn-primary buttons">Edit</a>
+                        <a href="/admin/delete-event/{{this._id}}" class="btn btn-danger buttons"
+                            onclick="return confirm('Do you want to delete {{this.eventName}}? ')">Delete</a>
+                    </div>
+                </div>
+            </a>
+            {{/each}}
+        </div>
+    </div>
+</section>

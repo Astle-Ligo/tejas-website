@@ -1,0 +1,46 @@
+<h2 class="mb-4">Event Registrations for {{eventDetails.eventName}}</h2>
+<h3>{{eventDetails.eventDate}}</h3>
+
+{{#if registrations.length}}
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Participant Type</th>
+            <th scope="col">Participants</th>
+            <th scope="col">Class</th>
+            <th scope="col">Phone Number</th>
+            <th scope="col">Registration Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each registrations}}
+        <tr>
+            <th scope="row">{{inc @index}}</th>
+            <td class="text-capitalize">{{type}}</td> <!-- Participant type (individual/group) -->
+            <td>
+                {{#if (eq type "individual")}}
+                {{participant.name}} ({{participant.regNum}}) <!-- Individual participant -->
+                {{else}}
+                <strong>Team Name: {{teamName}}</strong><br>
+                {{#each teamMembers}} <!-- Display team members -->
+                {{this.name}} ({{this.regNum}}) <br>
+                {{/each}}
+                {{/if}}
+            </td>
+            <td>{{classId}}</td> <!-- Class -->
+            <td>
+                {{#if (eq type "individual")}}
+                {{participant.phone}} <!-- Individual participant's phone -->
+                {{else}}
+                {{contact.teamPhone}} / {{contact.altPhone}} <!-- Team phone numbers -->
+                {{/if}}
+            </td>
+            <td>{{this.timestamp}}</td> <!-- Formatted registration time -->
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{else}}
+<p class="text-muted">No registrations yet.</p>
+{{/if}}

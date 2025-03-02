@@ -1,0 +1,95 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+footer {
+  bottom: 0;
+  /* position: fixed; */
+  height: 5rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: red;
+  z-index: 10;
+}
+
+/* .page {
+  width: calc(100dvw-17px);
+  height: 100dvh;
+} */
+
+/* FORMS */
+
+.form-object {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+}
+
+.formLabel {
+  width: 20%;
+}
+
+/* FORMS */
+
+
+
+
+/* ADMIN */
+
+/* .admin-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+} */
+
+.card-box {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.card-img-top {
+  height: 8rem;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.center {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-details-box {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.classwise-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  width: 100%;
+}
+
+
+
+/* ADMIN */
