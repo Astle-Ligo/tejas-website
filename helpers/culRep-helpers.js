@@ -45,9 +45,36 @@ module.exports = {
     getEventDetails: (eventId) => {
         return new Promise(async (resolve, reject) => {
             try {
+
+                if (!ObjectId.isValid(eventId)) {
+                    console.log("Invalid ObjectId format");
+                    return resolve(null);
+                }
+
                 let event = await db.get().collection(collection.EVENT_COLLECTION).findOne({ _id: new ObjectId(eventId) });
+
                 resolve(event);
             } catch (error) {
+                console.error("Error in getEventDetails:", error);
+                reject(error);
+            }
+        });
+    },
+
+    getRegistrationDetails: (regId) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+
+                if (!ObjectId.isValid(regId)) {
+                    console.log("Invalid ObjectId format");
+                    return resolve(null);
+                }
+
+                let registeration = await db.get().collection(collection.REGISTRATION_COLLECTION).findOne({ _id: new ObjectId(regId) });
+
+                resolve(registeration);
+            } catch (error) {
+                console.error("Error in getEventDetails:", error);
                 reject(error);
             }
         });
@@ -195,7 +222,129 @@ module.exports = {
             console.error("Error fetching registrations for class:", error);
             return 0;
         }
-    }
+    },
 
+    deleteRegistration: async (regId, userId) => {
+        console.log(regId, userId);
+
+        const result = await db.get().collection(collection.REGISTRATION_COLLECTION).findOne({
+            _id: new ObjectId(regId),
+            userId: userId  // Keep userId as a string
+        });
+        console.log(result);
+
+
+
+        try {
+            const response = await db.get().collection(collection.REGISTRATION_COLLECTION).deleteOne({
+                _id: new ObjectId(regId),  // Corrected field name
+                userId: userId  // Keep userId as a string
+            });
+            console.log(response);
+
+            if (response.deletedCount === 0) {
+                return { status: false, message: "No registration found or already deleted." };
+            }
+
+            return { status: true, message: "Registration deleted successfully." };
+        } catch (error) {
+            console.error("Error deleting registration:", error);
+            return { status: false, message: "Error processing registration deletion." };
+        }
+    },
+
+    updateRegistration: async (eventId, userData, sessionData) => {
+        try {
+            console.log("User Data:", userData);
+            console.log(sessionData._id);
+
+            const userId = sessionData._id; // Ensure sessionData is passed correctly
+
+            // Convert eventId and userId to ObjectId for database queries
+            const event = await db.get().collection(collection.EVENT_COLLECTION).findOne({ _id: new ObjectId(eventId) });
+            console.log(event);
+
+
+            if (!event) {
+                return { status: false, message: "Event not found" };
+            }
+
+            const minParticipants = parseInt(event.minParticipants) || 1;
+            const maxParticipants = parseInt(event.maxParticipants) || 10;
+
+            let updateData = {};
+
+            if (event.eventStrength === "individual") {
+                updateData = {
+                    "participant.name": userData.participantName,
+                    "participant.regNum": userData.regNum,
+                    "participant.email": userData.email,
+                    "participant.phone": userData.phone
+                };
+            } else {
+                let teamMembers = userData["teamMembers[]"];
+                let teamRegNums = userData["teamRegNums[]"];
+
+                if (!Array.isArray(teamMembers)) {
+                    teamMembers = teamMembers ? [teamMembers] : [];
+                }
+                if (!Array.isArray(teamRegNums)) {
+                    teamRegNums = teamRegNums ? [teamRegNums] : [];
+                }
+
+                const filteredTeamMembers = teamMembers.filter(name => name.trim() !== "");
+                const filteredTeamRegNums = teamRegNums.filter(reg => reg.trim() !== "");
+
+                if (filteredTeamMembers.length < minParticipants) {
+                    return {
+                        status: false,
+                        message: `Minimum ${minParticipants} team members are required.`,
+                        showAlert: true
+                    };
+                }
+
+                updateData = {
+                    teamName: userData.teamName,
+                    "contact.teamPhone": userData.teamPhone,
+                    "contact.altPhone": userData.altPhone,
+                    teamMembers: filteredTeamMembers.map((name, index) => ({
+                        name,
+                        regNum: filteredTeamRegNums[index] || "N/A",
+                    }))
+                };
+            }
+
+            // 🔹 **Check if Registration Exists Before Updating**
+            const existingRegistration = await db.get().collection(collection.REGISTRATION_COLLECTION).findOne({
+                eventId: eventId, // Keep as a string
+                userId: userId // Keep as a string
+            });
+
+            console.log(existingRegistration);
+
+            if (!existingRegistration) {
+                return { status: false, message: "No existing registration found", showAlert: true };
+            }
+
+            // 🔹 **Use `updateOne()` to Modify Existing Registration**
+            console.log("Updating registration for:", { eventId, userId, updateData });
+
+            const result = await db.get().collection(collection.REGISTRATION_COLLECTION).updateOne(
+                { eventId: eventId, userId: userId },  // Use as strings
+                { $set: updateData }
+            );
+
+            console.log("Update result:", result);
+
+            if (result.modifiedCount === 0) {
+                return { status: false, message: "No changes made, or registration not found." };
+            }
+
+            return { status: true, message: "Registration updated successfully" };
+        } catch (error) {
+            console.error("Error updating registration:", error);
+            return { status: false, message: "Error processing registration update" };
+        }
+    },
 
 };

@@ -35,6 +35,9 @@ app.engine(
       },
       inc: function (value) {
         return parseInt(value) + 1; // Convert to number and increment
+      },
+      isArray: function (value) {
+        return Array.isArray(value); // ✅ Returns true if value is an array
       }
     }
   })

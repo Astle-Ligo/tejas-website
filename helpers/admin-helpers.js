@@ -290,4 +290,58 @@ module.exports = {
         }
     },
 
+    getAllEventHeads: async () => {
+        try {
+            const eventHeads = await db.get()
+                .collection(collection.EVENT_HEAD_COLLECTION)
+                .find({})
+                .toArray();
+
+            // Process each event head
+            await Promise.all(eventHeads.map(async (eventHead) => {
+                if (!eventHead.events) {
+                    eventHead.eventDetails = [{ name: "No Events Assigned", date: "N/A" }];
+                    return;
+                }
+
+                const eventIds = Array.isArray(eventHead.events)
+                    ? eventHead.events.map(id => new ObjectId(id))
+                    : [new ObjectId(eventHead.events)];
+
+                // Fetch event details
+                const events = await db.get()
+                    .collection(collection.EVENT_COLLECTION)
+                    .find({ _id: { $in: eventIds } })
+                    .toArray();
+
+                eventHead.eventDetails = events.length > 0
+                    ? events.map(event => ({
+                        name: event.eventName || "Unnamed Event",
+                        date: event.eventDate || "No Date"
+                    }))
+                    : [{ name: "Event Not Found", date: "N/A" }];
+            }));
+
+            return eventHeads;
+        } catch (error) {
+            console.error("Error fetching event heads:", error);
+            throw error;
+        }
+    },
+
+    deleteEventHead: async (eventHeadId) => {
+        try {
+            await db.get()
+                .collection(collection.EVENT_HEAD_COLLECTION)
+                .deleteOne({ _id: new ObjectId(eventHeadId) });
+
+            console.log(`Event head with ID ${eventHeadId} deleted successfully`);
+        } catch (error) {
+            console.error("Error deleting event head:", error);
+            throw error;
+        }
+    }
+
+
+
 };

@@ -4,6 +4,17 @@
   box-sizing: border-box;
 }
 
+body{
+  height: 100%;
+  padding-top: 10vh;
+}
+
+header{
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
 footer {
   bottom: 0;
   /* position: fixed; */
@@ -90,6 +101,31 @@ footer {
   width: 100%;
 }
 
+.admin-dashboard-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 100%;
+  padding: 2rem;
+}
 
+.admin-dashboard-element {
+  width: 20rem;
+  height: 10rem;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  background-color: #D1E7DD;
+  color: #0C4128;
+}
+
+.admin-dashboard-box>a {
+  text-decoration: none;
+}
 
 /* ADMIN */

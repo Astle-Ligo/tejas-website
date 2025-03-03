@@ -59,6 +59,16 @@ router.post('/culRep-login', async (req, res) => {
   }
 });
 
+router.get('/cultural_rep-log-out', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error("Error logging out:", err);
+      return res.status(500).send("Error logging out.");
+    }
+    res.redirect('/culRep');
+  });
+});
+
 router.get('/events', async (req, res) => {
   try {
 
@@ -78,12 +88,12 @@ router.get('/events/:id', async (req, res) => {
     let event = await culRepHelpers.getEventDetails(req.params.id);
     console.log(event);
     console.log(req.session.culRep.class);
-    
+
     // Get the current class registrations for the event
     const classRegistrationsCount = await culRepHelpers.getClassRegistrations(event._id, req.session.culRep.class);
 
     console.log(classRegistrationsCount);
-    
+
     // Check if registration is allowed based on classReg value
     let canRegister = true;  // Default: allow registration
     if (event.classReg === "1" && classRegistrationsCount >= 1) {
@@ -95,7 +105,7 @@ router.get('/events/:id', async (req, res) => {
     }
 
     console.log(canRegister);
-    
+
 
     res.render('culRep/event-page', {
       event,
@@ -142,14 +152,8 @@ router.get("/registrations", async (req, res) => {
       return res.redirect("/culRep"); // Redirect to login if not authenticated
     }
 
-    console.log(culRepUser._id);
-
     // Get registrations of the logged-in cultural representative
     const registrations = await culRepHelpers.getRegistrationsByCulturalRep(culRepUser._id);
-
-    console.log(registrations);
-
-
     res.render("culRep/registrations", {
       culRep: true,
       culRepUser,
@@ -160,6 +164,69 @@ router.get("/registrations", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+router.get('/edit-registration/:id', async (req, res) => {
+  try {
+    let registration = await culRepHelpers.getRegistrationDetails(req.params.id);
+
+    if (!registration) {
+      return res.status(404).send("Registration not found.");
+    }
+
+    let event = await culRepHelpers.getEventDetails(registration.eventId);
+    console.log("Event data:", event, "Registration:", registration);
+
+    res.render('culRep/edit-registration', { event, registration, culRep: true, culRepUser: req.session.culRep });
+  } catch (error) {
+    console.error("Error fetching event details:", error);
+    res.status(500).send("Error fetching event details.");
+  }
+});
+
+// 🔹 POST route to update registration details
+router.post('/edit-registration/:id', async (req, res) => {
+  console.log("hai");
+
+  try {
+    console.log("Updating registration...");
+
+    const updateResponse = await culRepHelpers.updateRegistration(req.params.id, req.body, req.session.culRep);
+
+    if (!updateResponse.status) {
+      return res.status(400).send(updateResponse.message);
+    }
+
+    res.redirect('/culRep/registrations');
+  } catch (error) {
+    console.error("Error updating registration:", error);
+    res.status(500).send("Error updating registration.");
+  }
+});
+
+
+router.get('/delete-registration/:regId', async (req, res) => {
+  try {
+    const userId = req.session.culRep?._id; // Ensure userId is extracted properly
+
+    if (!userId) {
+      return res.status(401).send("Unauthorized: User not logged in.");
+    }
+    console.log(req.params.regId, userId);
+
+    const response = await culRepHelpers.deleteRegistration(req.params.regId, userId);
+
+    if (response.status) {
+      res.redirect('/culRep/registrations');
+    } else {
+      res.status(404).send(response.message);
+    }
+  } catch (error) {
+    console.error("Error deleting registration:", error);
+    res.status(500).send("Error deleting registration.");
+  }
+});
+
+
 
 
 

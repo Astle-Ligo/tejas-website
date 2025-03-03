@@ -183,21 +183,24 @@ router.get('/event-head-signup', async (req, res) => {
   }
 });
 
+
 router.post('/event-head-signup', async (req, res) => {
   try {
+    // Handle signup logic and save event head to database
     await adminHelpers.doEventHeadSignup(req.body);
-    res.redirect('/admin');
+    res.redirect('/admin'); // Redirect to admin page after successful signup
   } catch (error) {
-    console.error("Error signing up admin:", error);
-    res.status(500).send("Error signing up admin.");
+    console.error("Error signing up event head:", error);
+    res.status(500).send("Error signing up event head.");
   }
 });
 
 
-router.get('/cultural_reps', async (req, res) => {
+
+router.get('/cultural-reps', async (req, res) => {
   let cultural_reps = await adminHelpers.getAllCulturalReps()
   console.log(cultural_reps);
-  res.render('admin/cultural_reps', { cultural_reps, admin: true, adminUser: req.session.admin })
+  res.render('admin/cultural-reps', { cultural_reps, admin: true, adminUser: req.session.admin })
 })
 
 router.get("/classRegistrations", async (req, res) => {
@@ -271,6 +274,32 @@ router.get('/eventRegistrations/:eventId', async (req, res) => {
   }
 });
 
+router.get('/event-heads', async (req, res) => {
+  try {
+    let eventHeads = await adminHelpers.getAllEventHeads();
+    console.log(eventHeads);
+
+    res.render('admin/event-heads', {
+      eventHeads,
+      admin: true,
+      adminUser: req.session.admin,
+    });
+  } catch (error) {
+    console.error('Error fetching event heads:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+router.get('/delete-eventHead/:id', async (req, res) => {
+  try {
+    const eventHeadId = req.params.id;
+    await adminHelpers.deleteEventHead(eventHeadId);
+    res.redirect('/admin/event-heads'); // Redirect back to the event heads list
+  } catch (error) {
+    console.error("Error deleting event head:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 
 

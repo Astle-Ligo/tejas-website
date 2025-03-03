@@ -1,0 +1,82 @@
+<h2 class="text-center mb-4">Results Entry</h2>
+<p class="text-center">Welcome, <strong>{{eventHeadUser.Name}}</strong></p>
+
+
+<!-- Form for Adding or Editing Results -->
+<div class="card">
+    <div class="card-header bg-success text-white" id="formTitle">Add Results</div>
+    <div class="card-body">
+        <form id="resultsForm" action="/eventHead/results" method="POST">
+            <input type="hidden" name="resultId" id="resultId"> <!-- Hidden input for editing -->
+
+            <div class="mb-3">
+                <label for="event" class="form-label">Select Event:</label>
+                <select name="eventId" id="event" class="form-select" required onchange="loadParticipants(this)">
+                    <option value="">-- Select an Event --</option>
+                    {{#each events}}
+                    <option value="{{this._id}}" data-event-name="{{this.eventName}}">{{this.eventName}}</option>
+                    {{/each}}
+                </select>
+                <input type="hidden" name="eventName" id="eventName">
+            </div>
+
+            <div class="mb-3">
+                <label for="firstPlace" class="form-label">First Place Winner:</label>
+                <select name="firstPlace" id="firstPlace" class="form-select" required>
+                    <option value="">-- Select First Place Winner --</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="secondPlace" class="form-label">Second Place Winner:</label>
+                <select name="secondPlace" id="secondPlace" class="form-select" required>
+                    <option value="">-- Select Second Place Winner --</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Submit Results</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    async function loadParticipants(eventSelect) {
+        const eventId = eventSelect.value;
+        const eventName = eventSelect.options[eventSelect.selectedIndex].getAttribute("data-event-name");
+
+        document.getElementById("eventName").value = eventName || "";
+
+        const firstPlaceSelect = document.getElementById("firstPlace");
+        const secondPlaceSelect = document.getElementById("secondPlace");
+
+        firstPlaceSelect.innerHTML = '<option value="">-- Select First Place Winner --</option>';
+        secondPlaceSelect.innerHTML = '<option value="">-- Select Second Place Winner --</option>';
+
+        if (!eventId) return;
+
+        try {
+            const response = await fetch(`/eventHead/getParticipants/${eventId}`);
+            const participants = await response.json();
+
+            participants.forEach(participant => {
+                const option = `<option value="${participant._id}">${participant.name} (${participant.class})</option>`;
+                firstPlaceSelect.innerHTML += option;
+                secondPlaceSelect.innerHTML += option;
+            });
+        } catch (error) {
+            console.error("Error fetching participants:", error);
+        }
+    }
+
+    function editResult(resultId, eventId, firstPlace, secondPlace) {
+        document.getElementById("formTitle").innerText = "Edit Result";
+        document.getElementById("resultId").value = resultId;
+        document.getElementById("event").value = eventId;
+        loadParticipants(document.getElementById("event"));
+
+        setTimeout(() => {
+            document.getElementById("firstPlace").value = firstPlace;
+            document.getElementById("secondPlace").value = secondPlace;
+        }, 500);
+    }
+</script>

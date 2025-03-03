@@ -1,0 +1,176 @@
+<section class="registration-section">
+    <div class="container">
+        <h2 class="text-center">Edit Registration for {{event.eventName}}</h2>
+
+        <form action="/culRep/edit-registration/{{event._id}}" method="post">
+            <input type="hidden" name="eventId" value="{{event._id}}">
+
+            <!-- Event Details (Read-only) -->
+            <label for="eventName">Event Name</label>
+            <input type="text" id="eventName" class="form-control" value="{{event.eventName}}" readonly>
+
+            <label for="eventSubName">Event Sub Name</label>
+            <input type="text" id="eventSubName" class="form-control" value="{{event.eventSubName}}" readonly>
+
+            <label for="eventStrength">Participation Type</label>
+            <input type="text" id="eventStrength" class="form-control" value="{{event.eventStrength}}" readonly>
+
+            <label for="Class">Class</label>
+            <input type="text" id="Class" class="form-control" value="{{culRepUser.class}}" readonly>
+
+            <!-- Individual Registration Fields -->
+            <div id="individualFields">
+                <label for="participantName">Participant Name</label>
+                <input type="text" name="participantName" id="participantName" class="form-control"
+                    value="{{registration.participant.name}} ">
+
+                <label for="regNum">Registration Number</label>
+                <input type="text" name="regNum" id="regNum" class="form-control"
+                    value="{{registration.participant.regNum}}">
+
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" class="form-control"
+                    value="{{registration.participant.email}}">
+
+                <label for="phone">Phone Number</label>
+                <input type="tel" name="phone" id="phone" class="form-control"
+                    value="{{registration.participant.phone}}">
+            </div>
+
+            <!-- Group Registration Fields -->
+            <div id="groupFields" style="display: none;">
+                <label for="teamName">Team Name</label>
+                <input type="text" name="teamName" id="teamName" class="form-control" value="{{registration.teamName}}">
+
+                <label for="phone">Team Contact Number</label>
+                <input type="tel" name="teamPhone" id="phone" class="form-control"
+                    value="{{registration.contact.teamPhone}}">
+
+                <label for="altPhone">Alternate Phone Number</label>
+                <input type="tel" name="altPhone" id="altPhone" class="form-control"
+                    value="{{registration.contact.altPhone}}">
+
+                <div id="teamMembers">
+                    <label>Team Members</label>
+
+                    {{#each registration.teamMembers}}
+                    <div class="team-member mt-2">
+                        <input type="text" name="teamMembers[]" class="form-control mt-2" placeholder="Member Name"
+                            value="{{this.name}}" required>
+                        <input type="text" name="teamRegNums[]" class="form-control mt-2" placeholder="Reg No."
+                            value="{{this.regNum}}" required>
+                        <button type="button" class="btn btn-danger btn-sm mt-2"
+                            onclick="removeTeamMember(this)">Delete</button>
+                    </div>
+                    {{/each}}
+                </div>
+
+                <input type="hidden" name="teamMembers" id="hiddenTeamMembers">
+                <input type="hidden" name="teamRegNums" id="hiddenTeamRegNums">
+
+                <button type="button" class="btn btn-primary mt-2" id="addMemberBtn" onclick="addTeamMember()">+ Add
+                    Member</button>
+            </div>
+
+            <button class="btn btn-success mt-3" type="submit">Register</button>
+        </form>
+    </div>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const eventStrength = "{{event.eventStrength}}"; // "individual" or "group"
+        const maxParticipants = parseInt("{{event.maxParticipants}}") || 10;
+        const minParticipants = parseInt("{{event.minParticipants}}") || 1;
+        const teamMembersDiv = document.getElementById("teamMembers");
+        const addMemberBtn = document.getElementById("addMemberBtn");
+
+        function setRequiredFields(fields, isRequired) {
+            fields.forEach(field => {
+                if (isRequired) {
+                    field.setAttribute("required", "required");
+                } else {
+                    field.removeAttribute("required");
+                }
+            });
+        }
+
+        if (eventStrength === "group") {
+            document.getElementById("individualFields").style.display = "none";
+            document.getElementById("groupFields").style.display = "block";
+
+            setRequiredFields(document.querySelectorAll("#individualFields input"), false);
+            setRequiredFields(document.querySelectorAll("#groupFields input"), true);
+
+            // ✅ Ensure at least minParticipants are present
+            while (teamMembersDiv.getElementsByClassName("team-member").length < minParticipants) {
+                addTeamMember("", "");
+            }
+
+            // ✅ Hide "Add Member" button if max participants are already listed
+            if (teamMembersDiv.getElementsByClassName("team-member").length >= maxParticipants) {
+                addMemberBtn.style.display = "none";
+            }
+        } else {
+            document.getElementById("individualFields").style.display = "block";
+            document.getElementById("groupFields").style.display = "none";
+
+            setRequiredFields(document.querySelectorAll("#individualFields input"), true);
+            setRequiredFields(document.querySelectorAll("#groupFields input"), false);
+        }
+    });
+
+    function addTeamMember(name = "", regNum = "") {
+        const maxParticipants = parseInt("{{event.maxParticipants}}") || 10;
+        const teamMembersDiv = document.getElementById("teamMembers");
+        const addMemberBtn = document.getElementById("addMemberBtn");
+        const currentMembers = teamMembersDiv.getElementsByClassName("team-member").length;
+
+        if (currentMembers < maxParticipants) {
+            let newMemberDiv = document.createElement("div");
+            newMemberDiv.classList.add("team-member", "mt-2");
+            newMemberDiv.innerHTML = `
+            <input type="text" name="teamMembers[]" class="form-control mt-2" placeholder="Member Name" value="${name}" required>
+            <input type="text" name="teamRegNums[]" class="form-control mt-2" placeholder="Reg No." value="${regNum}" required>
+            <button type="button" class="btn btn-danger btn-sm mt-2 remove-member" onclick="removeTeamMember(this)">Delete</button>
+        `;
+            teamMembersDiv.appendChild(newMemberDiv);
+        }
+
+        updateDeleteButtons();
+
+        if (teamMembersDiv.getElementsByClassName("team-member").length >= maxParticipants) {
+            addMemberBtn.style.display = "none";
+        }
+    }
+
+    function removeTeamMember(button) {
+        const minParticipants = parseInt("{{event.minParticipants}}") || 1;
+        const teamMembersDiv = document.getElementById("teamMembers");
+        const addMemberBtn = document.getElementById("addMemberBtn");
+
+        if (teamMembersDiv.getElementsByClassName("team-member").length > minParticipants) {
+            button.parentElement.remove();
+        } else {
+            alert(`You must have at least ${minParticipants} team members.`);
+        }
+
+        updateDeleteButtons();
+
+        if (teamMembersDiv.getElementsByClassName("team-member").length < parseInt("{{event.maxParticipants}}")) {
+            addMemberBtn.style.display = "block";
+        }
+    }
+
+    // ✅ Shows an alert instead of disabling delete buttons
+    function updateDeleteButtons() {
+        const minParticipants = parseInt("{{event.minParticipants}}") || 1;
+        const teamMembers = document.getElementsByClassName("team-member");
+
+        if (teamMembers.length <= minParticipants) {
+            document.querySelectorAll(".remove-member").forEach(button => {
+                button.disabled = false;
+            });
+        }
+    }
+</script>
