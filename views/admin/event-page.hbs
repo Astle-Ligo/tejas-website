@@ -1,32 +1,30 @@
-<section class="center">
-    <div class="card event-card">
-        <img src="{{event.eventImageUrl}}" class="card-img-top" alt="{{event.eventName}}">
-        <div class="card-body">
-            <h5 class="card-title">
-                {{event.eventName}}
-                {{#if event.eventSubName}}
-                <span>({{event.eventSubName}})</span>
-                {{/if}}
-            </h5>
-            <p class="card-text">{{event.description}}</p>
-            <div class="card-details-box">
-                <p><strong>Strength:</strong> {{event.eventStrength}}</p>
-                {{#if (eq event.eventStrength "group")}}
-                <p><strong>Group Size:</strong> {{#if event.minParticipants}}{{event.minParticipants}} - {{/if}}
-                    {{event.maxParticipants}}</p>
-                {{/if}}
-                <p><strong>Max Registrations from a Class:</strong> {{event.classReg}}</p>
-                <p><strong>Time Limit:</strong> {{event.timeLimit}}</p>
-                <p><strong>Event Head:</strong> {{event.eventHead}}</p>
-                <p><strong>Event Head Contact:</strong> {{event.eventHeadContact}}</p>
-                <p><strong>Event Venue:</strong> {{event.venue}}</p>
-                <p><strong>Date:</strong> {{event.eventDate}}</p>
-            </div>
-            <div class="button-group">
-                <a href="/admin/edit-event/{{event._id}}" class="btn btn-primary">Edit</a>
-                <a href="/admin/delete-event/{{event._id}}" class="btn btn-danger"
-                    onclick="return confirm('Do you want to delete {{event.eventName}}?')">Delete</a>
-            </div>
+{{!-- eventDetails.hbs --}}
+<section class="py-20 px-6 bg-beige text-bistre flex justify-center items-center min-h-screen">
+    <div class="bg-white p-8 shadow-lg rounded-lg max-w-2xl w-full">
+        <img src="{{event.eventImageUrl}}" alt="{{event.eventName}}" class="w-full h-64 object-cover rounded-lg mb-4">
+        <h2 class="text-3xl font-bold text-coffee text-center font-handwritten">{{event.eventName}}
+            {{#if event.eventSubName}}
+            <span class="text-lg">({{event.eventSubName}})</span>
+            {{/if}}
+        </h2>
+        <p class="text-center text-bistre mt-2 font-handwritten">{{event.description}}</p>
+        <div class="mt-6 space-y-2">
+            <p><strong>Strength:</strong> {{event.eventStrength}}</p>
+            {{#if (eq event.eventStrength "group")}}
+            <p><strong>Group Size:</strong> {{#if event.minParticipants}}{{event.minParticipants}} -
+                {{/if}}{{event.maxParticipants}}</p>
+            {{/if}}
+            <p><strong>Max Registrations from a Class:</strong> {{event.classReg}}</p>
+            <p><strong>Time Limit:</strong> {{event.timeLimit}}</p>
+            <p><strong>Event Head:</strong> {{event.eventHead}}</p>
+            <p><strong>Event Head Contact:</strong> {{event.eventHeadContact}}</p>
+            <p><strong>Event Venue:</strong> {{event.venue}}</p>
+            <p><strong>Date:</strong> {{event.eventDate}}</p>
+        </div>
+        <div class="mt-6 flex justify-center gap-4">
+            <a href="/admin/edit-event/{{event._id}}" class="btn btn-primary">Edit</a>
+            <a href="/admin/delete-event/{{event._id}}" class="btn btn-danger"
+                onclick="return confirm('Do you want to delete {{event.eventName}}?')">Delete</a>
         </div>
     </div>
 </section>

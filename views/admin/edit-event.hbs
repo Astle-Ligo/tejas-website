@@ -1,82 +1,134 @@
-<section class="admin-section">
-    <div class="container-fluid">
-        <h2 class="text-center">Edit {{event.eventName}}</h2>
-        <form action="/admin/edit-event/{{event._id}}" method="post" enctype="multipart/form-data">
-            <label for="">Event Name</label>
-            <input type="text" name="eventName" id="" class="form-control" value="{{event.eventName}}">
-
-            <label for="">Event Sub Name</label>
-            <input type="text" name="eventSubName" id="" class="form-control" value="{{event.eventSubName}}"></input>
-
-            <label for="">Event Image url</label>
-            <input type="text" name="eventImageUrl" id="" class="form-control" value="{{event.eventImageUrl}}">
-
-            <label for="">Description</label>
-            <textarea name="description" id="" rows="4" class="form-control">{{event.description}}</textarea>
-
-            <label for="eventStrength">Participation Strength</label>
-            <select name="eventStrength" id="eventStrength" class="form-control" onchange="toggleGroupFields()">
-                <option value="individual" {{#if (eq event.eventStrength "individual" )}}selected{{/if}}>Individual
-                </option>
-                <option value="group" {{#if (eq event.eventStrength "group" )}}selected{{/if}}>Group</option>
-            </select>
-
-            <!-- Min & Max input fields (Initially Hidden) -->
-            <div id="groupFields" style="display: none; margin-top: 10px;">
-                <label for="minParticipants">Min Participants</label>
-                <input type="number" name="minParticipants" id="minParticipants" class="form-control"
-                    value="{{event.minParticipants}}" placeholder="Min Participants">
-
-                <label for="maxParticipants">Max Participants</label>
-                <input type="number" name="maxParticipants" id="maxParticipants" class="form-control"
-                    value="{{event.maxParticipants}}" placeholder="Max Participants">
+<section class="py-20 px-6 bg-beige text-bistre flex justify-center items-center min-h-screen">
+    <div class="bg-white p-8 shadow-lg rounded-lg max-w-2xl w-full">
+        <h2 class="text-3xl font-bold text-coffee text-center mb-6 font-handwritten">Edit {{event.eventName}}</h2>
+        <form action="/admin/edit-event/{{event._id}}" method="post" class="space-y-4" id="eventForm">
+            <div>
+                <label class="block font-semibold">Event Name</label>
+                <input type="text" name="eventName" class="w-full p-2 border border-khaki rounded"
+                    value="{{event.eventName}}">
             </div>
-
-
-            <label for="">Registrations from a class</label>
-            <select name="classReg" id="" class="form-control" value="{{event.classReg}}">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="unlimited">Unlimited</option>
-            </select>
-
-            <label for="">Time Limit</label>
-            <input type="text" name="timeLimit" class="form-control" value="{{event.timeLimit}}" id="">
-
-            <label for="">Event Head</label>
-            <input type="text" name="eventHead" class="form-control" value="{{event.eventHead}}" id="">
-
-            <label for="">Event Head Contact</label>
-            <input type="number" name="eventHeadContact" class="form-control" value="{{event.eventHeadContact}}" id="">
-
-            <label for="">Date</label>
-            <input type="date" name="eventDate" id="" class="form-control" value="{{event.eventDate}}">
-
-            <button class="btn btn-success" type="submit">Submit</button>
+            <div>
+                <label class="block font-semibold">Event Sub Name</label>
+                <input type="text" name="eventSubName" class="w-full p-2 border border-khaki rounded"
+                    value="{{event.eventSubName}}">
+            </div>
+            <div>
+                <label class="block font-semibold">Event Image URL</label>
+                <input type="text" name="eventImageUrl" class="w-full p-2 border border-khaki rounded"
+                    value="{{event.eventImageUrl}}">
+            </div>
+            <div>
+                <label class="block font-semibold">Description</label>
+                <textarea name="description" rows="4"
+                    class="w-full p-2 border border-khaki rounded">{{event.description}}</textarea>
+            </div>
+            <div>
+                <label class="block font-semibold">Participation Strength</label>
+                <select name="eventStrength" id="eventStrength" class="w-full p-2 border border-khaki rounded"
+                    onchange="toggleGroupFields()">
+                    <option value="individual" {{#if (eq event.eventStrength "individual" )}}selected{{/if}}>Individual
+                    </option>
+                    <option value="group" {{#if (eq event.eventStrength "group" )}}selected{{/if}}>Group</option>
+                </select>
+            </div>
+            <div id="groupFields" class="hidden">
+                <div>
+                    <label class="block font-semibold">Min Participants</label>
+                    <input type="number" name="minParticipants" id="minParticipants"
+                        class="w-full p-2 border border-khaki rounded" value="{{event.minParticipants}}">
+                </div>
+                <div>
+                    <label class="block font-semibold">Max Participants</label>
+                    <input type="number" name="maxParticipants" id="maxParticipants"
+                        class="w-full p-2 border border-khaki rounded" value="{{event.maxParticipants}}">
+                </div>
+            </div>
+            <div>
+                <label class="block font-semibold">Registrations from a Class</label>
+                <select name="classReg" class="w-full p-2 border border-khaki rounded">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="unlimited">Unlimited</option>
+                </select>
+            </div>
+            <div>
+                <label class="block font-semibold">Time Limit</label>
+                <input type="text" name="timeLimit" class="w-full p-2 border border-khaki rounded"
+                    value="{{event.timeLimit}}">
+            </div>
+            <div>
+                <label class="block font-semibold">Venue</label>
+                <input type="text" name="venue" class="w-full p-2 border border-khaki rounded" value="{{event.venue}}">
+            </div>
+            <div>
+                <label class="block font-semibold text-bistre font-handwritten">Time:</label>
+                <input type="time" id="eventTime" name="eventTimeRaw" class="w-full p-2 border border-khaki rounded"
+                    value="{{event.eventTimeRaw}}">
+                <!-- Hidden field to store 12-hour formatted time -->
+                <input type="hidden" id="formattedEventTime" name="eventTime">
+            </div>
+            <div>
+                <label class="block font-semibold">Event Head</label>
+                <input type="text" name="eventHead" class="w-full p-2 border border-khaki rounded"
+                    value="{{event.eventHead}}">
+            </div>
+            <div>
+                <label class="block font-semibold">Event Head Contact</label>
+                <input type="tel" name="eventHeadContact" class="w-full p-2 border border-khaki rounded"
+                    value="{{event.eventHeadContact}}">
+            </div>
+            <div>
+                <label class="block font-semibold">Date</label>
+                <input type="date" name="eventDate" class="w-full p-2 border border-khaki rounded"
+                    value="{{event.eventDate}}">
+            </div>
+            <button type="submit"
+                class="w-full py-2 bg-coffee text-beige font-bold rounded-lg hover:bg-bistre transition">Submit</button>
         </form>
     </div>
 </section>
-
 
 <script>
     function toggleGroupFields() {
         let selection = document.getElementById("eventStrength").value;
         let groupFields = document.getElementById("groupFields");
-
-        let minParticipants = document.getElementById('minParticipants')
-        let maxParticipants = document.getElementById('maxParticipants')
-
-
         if (selection === "group") {
-            groupFields.style.display = "block"; // Show fields
+            groupFields.classList.remove("hidden");
         } else {
-            groupFields.style.display = "none"; // Hide fields
-            minParticipants.value = "";  // Reset input value
-            maxParticipants.value = "";  // Reset input value
+            groupFields.classList.add("hidden");
+            document.getElementById("minParticipants").value = "";
+            document.getElementById("maxParticipants").value = "";
         }
     }
 
     document.addEventListener("DOMContentLoaded", function () {
         toggleGroupFields();
+
+        let eventTimeInput = document.getElementById("eventTime");
+        let formattedTimeInput = document.getElementById("formattedEventTime");
+
+        function formatTime(timeValue) {
+            if (!timeValue) return "";
+            let [hours, minutes] = timeValue.split(":").map(Number);
+            let period = hours >= 12 ? "PM" : "AM";
+            hours = hours % 12 || 12; // Convert to 12-hour format
+            return `${hours}:${minutes.toString().padStart(2, "0")} ${period}`;
+        }
+
+        // Set the initial formatted time if an existing value is present
+        if (eventTimeInput.value) {
+            formattedTimeInput.value = formatTime(eventTimeInput.value);
+        }
+
+        eventTimeInput.addEventListener("change", function () {
+            formattedTimeInput.value = formatTime(this.value);
+        });
+
+        document.getElementById("eventForm").addEventListener("submit", function (event) {
+            if (!formattedTimeInput.value) {
+                event.preventDefault(); // Prevent form submission if time is empty
+                alert("Please select a time.");
+            }
+        });
     });
 </script>

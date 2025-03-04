@@ -1,30 +1,37 @@
-<h2 class="text-center mb-4">My Event Results</h2>
-
-{{#if results.length}}
-<table class="table table-bordered table-striped">
-    <thead class="table-dark">
-        <tr>
-            <th>Event Name</th>
-            <th>First Place</th>
-            <th>Second Place</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        {{#each results}}
-        <tr>
-            <td>{{this.eventName}}</td>
-            <td>{{this.firstPlaceName}} ({{this.classFirst}})</td>
-            <td>{{this.secondPlaceName}} ({{this.classSecond}})</td>
-            <td>
-                <a href="/eventHead/edit-result/{{this._id}}" class="btn btn-primary btn-sm">Edit</a>
-            </td>
-        </tr>
-        {{/each}}
-    </tbody>
-</table>
-{{else}}
-<div class="alert alert-info text-center">
-    <p>No results found for your events.</p>
-</div>
-{{/if}}
+{{!-- resultsEntry.hbs --}}
+<section class="py-20 px-6 bg-beige text-bistre min-h-screen">
+    <div class="container mx-auto max-w-5xl bg-white p-8 shadow-lg rounded-lg">
+        <h2 class="text-3xl font-bold text-coffee text-center mb-6">My Event Results</h2>
+        {{#if results.length}}
+        <div class="overflow-x-auto">
+            <table class="w-full border border-khaki text-left">
+                <thead class="bg-coffee text-beige">
+                    <tr>
+                        <th class="p-3 border-b">Event Name</th>
+                        <th class="p-3 border-b">First Place</th>
+                        <th class="p-3 border-b">Second Place</th>
+                        <th class="p-3 border-b">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each results}}
+                    <tr class="border-b">
+                        <td class="p-3">{{this.eventName}}</td>
+                        <td class="p-3">{{this.firstPlaceName}} ({{this.classFirst}})</td>
+                        <td class="p-3">{{this.secondPlaceName}} ({{this.classSecond}})</td>
+                        <td class="p-3">
+                            <a href="/eventHead/edit-result/{{this._id}}"
+                                class="px-3 py-2 bg-blue-600 text-beige rounded-lg hover:bg-blue-700 transition">Edit</a>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        {{else}}
+        <div class="bg-blue-100 text-blue-800 p-4 rounded-lg text-center">
+            <p>No results found for your events.</p>
+        </div>
+        {{/if}}
+    </div>
+</section>

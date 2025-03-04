@@ -111,6 +111,8 @@ router.get('/add-event', isAdminLoggedIn, (req, res) => {
 
 router.post('/add-event', isAdminLoggedIn, async (req, res) => {
   try {
+    console.log(req.body);
+    
     await adminHelpers.addEvent(req.body);
     res.redirect('/admin/events');
   } catch (error) {

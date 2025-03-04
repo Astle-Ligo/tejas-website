@@ -1,30 +1,23 @@
-<section class="admin-section page">
-    <div class="no-user">
+{{!-- adminAccessPage.hbs --}}
+<section class="py-20 px-6 bg-beige text-bistre flex justify-center items-center min-h-screen">
+    <div class="bg-white p-8 shadow-lg rounded-lg max-w-lg w-full text-center">
         {{#if count}}
-        <h2>
-            Hello Admin,
-            <br>
-            <br>
-            Please Do Login to Acess the Admin Panel
-            <br>
-            Click the Button to LOGIN
+        <h2 class="text-2xl font-bold text-coffee mb-6">
+            Hello Admin,<br><br>
+            Please log in to access the Admin Panel.<br>
+            Click the button below to LOGIN.
         </h2>
-        <br>
-        <a href="admin/admin-login" class="btn btn-success btn-lg">Login</a>
+        <a href="admin/admin-login"
+            class="px-4 py-2 bg-green-600 text-beige font-bold rounded-lg hover:bg-green-700 transition">Login</a>
         {{else}}
-        <h2>
-            Hello,
-            <br>
-            <br>
-            Currently there are no Admin to access the Admin Panel.
-            <br>
-            Please do signup and become the first Admin
-            <br>
-            <br>
-            Click the Button to SIGNUP
+        <h2 class="text-2xl font-bold text-coffee mb-6">
+            Hello,<br><br>
+            Currently, there are no Admins for the Admin Panel.<br>
+            Please sign up to become the first Admin.<br><br>
+            Click the button below to SIGN UP.
         </h2>
-        <br>
-        <a href="admin/admin-signup" class="btn btn-primary btn-lg">Signup</a>
+        <a href="admin/admin-signup"
+            class="px-4 py-2 bg-blue-600 text-beige font-bold rounded-lg hover:bg-blue-700 transition">Signup</a>
         {{/if}}
     </div>
 </section>

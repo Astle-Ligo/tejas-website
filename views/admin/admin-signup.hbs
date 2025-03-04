@@ -1,26 +1,26 @@
-<section class="admin-section">
-    <div class="admin-container">
-        <h2>Create New Account</h2>
-        <form action="/admin/admin-signup" method="post">
-
-            <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" name="Name" class="form-control" placeholder="Enter Name" id="name" required>
+{{!-- adminSignup.hbs --}}
+<section class="py-20 px-6 bg-beige text-bistre flex justify-center items-center min-h-screen">
+    <div class="bg-white p-8 shadow-lg rounded-lg max-w-md w-full">
+        <h2 class="text-3xl font-bold text-coffee text-center mb-6 font-handwritten">Create New Account</h2>
+        <form action="/admin/admin-signup" method="post" class="space-y-4">
+            <div>
+                <label for="name" class="block font-semibold text-bistre font-handwritten">Name</label>
+                <input type="text" name="Name" id="name" class="w-full p-2 border border-khaki rounded"
+                    placeholder="Enter Name" required>
             </div>
-
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" name="Email" class="form-control" placeholder="Enter Email" id="email" required>
+            <div>
+                <label for="email" class="block font-semibold text-bistre font-handwritten">Email Address</label>
+                <input type="email" name="Email" id="email" class="w-full p-2 border border-khaki rounded"
+                    placeholder="Enter Email" required>
             </div>
-
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" name="Password" class="form-control" placeholder="Enter Password" id="password"
-                    required>
+            <div>
+                <label for="password" class="block font-semibold text-bistre font-handwritten">Password</label>
+                <input type="password" name="Password" id="password" class="w-full p-2 border border-khaki rounded"
+                    placeholder="Enter Password" required>
             </div>
-
-            <button type="submit" class="btn btn-primary">SignUp</button>
-
+            <button type="submit"
+                class="w-full py-2 bg-coffee text-beige font-bold rounded-lg hover:bg-bistre transition font-handwritten">Sign
+                Up</button>
         </form>
     </div>
 </section>

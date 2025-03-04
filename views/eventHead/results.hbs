@@ -1,17 +1,15 @@
-<h2 class="text-center mb-4">Results Entry</h2>
-<p class="text-center">Welcome, <strong>{{eventHeadUser.Name}}</strong></p>
-
-
-<!-- Form for Adding or Editing Results -->
-<div class="card">
-    <div class="card-header bg-success text-white" id="formTitle">Add Results</div>
-    <div class="card-body">
-        <form id="resultsForm" action="/eventHead/results" method="POST">
-            <input type="hidden" name="resultId" id="resultId"> <!-- Hidden input for editing -->
-
-            <div class="mb-3">
-                <label for="event" class="form-label">Select Event:</label>
-                <select name="eventId" id="event" class="form-select" required onchange="loadParticipants(this)">
+{{!-- resultsEntry.hbs --}}
+<section class="py-20 px-6 bg-beige text-bistre min-h-screen flex justify-center items-center">
+    <div class="bg-white p-8 shadow-lg rounded-lg max-w-2xl w-full">
+        <h2 class="text-3xl font-bold text-coffee text-center mb-6">Results Entry</h2>
+        <p class="text-center text-lg text-bistre">Welcome, <strong>{{eventHeadUser.Name}}</strong></p>
+        <div class="bg-green-600 text-beige p-3 text-center rounded-lg mb-4" id="formTitle">Add Results</div>
+        <form id="resultsForm" action="/eventHead/results" method="POST" class="space-y-4">
+            <input type="hidden" name="resultId" id="resultId">
+            <div>
+                <label class="block font-semibold">Select Event:</label>
+                <select name="eventId" id="event" class="w-full p-2 border border-khaki rounded" required
+                    onchange="loadParticipants(this)">
                     <option value="">-- Select an Event --</option>
                     {{#each events}}
                     <option value="{{this._id}}" data-event-name="{{this.eventName}}">{{this.eventName}}</option>
@@ -19,31 +17,28 @@
                 </select>
                 <input type="hidden" name="eventName" id="eventName">
             </div>
-
-            <div class="mb-3">
-                <label for="firstPlace" class="form-label">First Place Winner:</label>
-                <select name="firstPlace" id="firstPlace" class="form-select" required>
+            <div>
+                <label class="block font-semibold">First Place Winner:</label>
+                <select name="firstPlace" id="firstPlace" class="w-full p-2 border border-khaki rounded" required>
                     <option value="">-- Select First Place Winner --</option>
                 </select>
             </div>
-
-            <div class="mb-3">
-                <label for="secondPlace" class="form-label">Second Place Winner:</label>
-                <select name="secondPlace" id="secondPlace" class="form-select" required>
+            <div>
+                <label class="block font-semibold">Second Place Winner:</label>
+                <select name="secondPlace" id="secondPlace" class="w-full p-2 border border-khaki rounded" required>
                     <option value="">-- Select Second Place Winner --</option>
                 </select>
             </div>
-
-            <button type="submit" class="btn btn-primary w-100">Submit Results</button>
+            <button type="submit"
+                class="w-full py-2 bg-coffee text-beige font-bold rounded-lg hover:bg-bistre transition">Submit
+                Results</button>
         </form>
     </div>
-</div>
-
+</section>
 <script>
     async function loadParticipants(eventSelect) {
         const eventId = eventSelect.value;
         const eventName = eventSelect.options[eventSelect.selectedIndex].getAttribute("data-event-name");
-
         document.getElementById("eventName").value = eventName || "";
 
         const firstPlaceSelect = document.getElementById("firstPlace");
@@ -73,7 +68,6 @@
         document.getElementById("resultId").value = resultId;
         document.getElementById("event").value = eventId;
         loadParticipants(document.getElementById("event"));
-
         setTimeout(() => {
             document.getElementById("firstPlace").value = firstPlace;
             document.getElementById("secondPlace").value = secondPlace;

@@ -4,6 +4,7 @@
 <head>
     <title>{{title}}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     {{!--
     <link rel='stylesheet' href='/stylesheets/style.css' /> --}}
     <link rel="stylesheet" href="/stylesheets/landingStyle.css">
@@ -28,65 +29,58 @@
     {{/if}}
 
     {{{body}}}
+
     <footer class="py-12 px-6 bg-coffee text-beige">
         <div class="container mx-auto">
             <div class="grid md:grid-cols-3 gap-8">
-                <div>
-                    <div class="flex items-center gap-2 mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="text-beige">
-                            <path d="M12 3a4 4 0 0 0-4 4v1h8V7a4 4 0 0 0-4-4Z"></path>
-                            <path d="M8 8h8"></path>
-                            <path d="m19.5 9.5-.5.5"></path>
-                            <path d="m18.5 11.5-.5.5"></path>
-                            <path d="m16.5 10.5-.5.5"></path>
-                            <path d="m15.5 12.5-.5.5"></path>
-                            <path d="m12.5 10.5-.5.5"></path>
-                            <path d="m11.5 12.5-.5.5"></path>
-                            <path d="m9.5 11.5-.5.5"></path>
-                            <path d="m8.5 9.5-.5.5"></path>
-                            <path d="M14.5 8.5c-.43 0-.9.1-1.41.2a8.3 8.3 0 0 0-2.18.7"></path>
-                            <path d="M16.5 10.5c0 .53-.1 1.1-.2 1.61a8.3 8.3 0 0 1-.7 2.18"></path>
-                            <path d="M12.5 16.5c.43 0 .9-.1 1.41-.2a8.3 8.3 0 0 0 2.18-.7"></path>
-                            <path d="M10.5 14.5c0-.53.1-1.1.2-1.61a8.3 8.3 0 0 1 .7-2.18"></path>
-                            <path d="m8.5 14.5.5-.5"></path>
-                            <path d="m9.5 12.5.5-.5"></path>
-                            <path d="m11.5 11.5.5-.5"></path>
-                            <path d="m12.5 13.5.5-.5"></path>
-                            <path d="m14.5 12.5.5-.5"></path>
-                            <path d="m15.5 14.5.5-.5"></path>
-                            <path d="m17.5 13.5.5-.5"></path>
-                            <path d="m18.5 15.5.5-.5"></path>
-                            <path d="M15.5 17.5c-.43 0-.9-.1-1.41-.2a8.3 8.3 0 0 1-2.18-.7"></path>
-                            <path d="M9.5 15.5c0-.53.1-1.1.2-1.61a8.3 8.3 0 0 1 .7-2.18"></path>
-                            <path d="M7.5 11.5c.43 0 .9.1 1.41.2a8.3 8.3 0 0 1 2.18.7"></path>
-                            <path d="M13.5 9.5c0 .53-.1 1.1-.2 1.61a8.3 8.3 0 0 1-.7 2.18"></path>
-                        </svg>
-                        <h3 class="text-2xl font-bold">Tejas '25</h3>
-                    </div>
-                    <p class="mb-4">A celebration of creativity, resilience, and childhood joy.</p>
+
+                <!-- Left Section (Tejas and Existing Things) -->
+                <div class="font-handwritten footer-center">
+                    <h4 class="text-xl font-bold mb-4">Tejas '25</h4>
+                    <p class="mb-2">A celebration of creativity, resilience, and childhood joy.</p>
                     <p>© 2025 Tejas Festival. All rights reserved.</p>
-                </div>
-
-                <div>
-                    <h4 class="text-xl font-bold mb-4">Contact Us</h4>
-                    <p class="mb-2">Email: info@tejas25.edu</p>
-                    <p class="mb-2">Phone: +91 123 456 7890</p>
-                    <p>Address: University Campus, City, State, India</p>
-                </div>
-
-                <div>
-                    <h4 class="text-xl font-bold mb-4">Follow Us</h4>
-                    <div class="flex gap-4">
-                        <a href="#" class="social-link">Instagram</a>
-                        <a href="#" class="social-link">Twitter</a>
-                        <a href="#" class="social-link">Facebook</a>
+                    <div class="mt-4">
+                        <a href="https://instagram.com/tejas25" class="text-beige"
+                            style="text-decoration: none;">Instagram</a>
                     </div>
                 </div>
+
+                <!-- Center Section (Contact Us) -->
+                <div class="font-handwritten footer-center">
+                    <h4 class="text-xl font-bold mb-4">Contact Us</h4>
+                    <h5 class="font-semibold">Teacher Coordinators</h5>
+                    <p class="mb-2">Prof. Arpitha Jain: [Phone Number]</p>
+                    <p class="mb-2">Prof. Prem Sagar: [Phone Number]</p>
+                </div>
+
+                <!-- Right Section (Made By and Aid with Assistance) -->
+                <div class="font-handwritten footer-center">
+                    <h4 class="text-xl font-bold mb-4">Made By</h4>
+                    <p class="mb-2">
+                        Astle
+                        <a href="https://instagram.com/your-username" class="text-beige"
+                            style="text-decoration: none;">Instagram</a> |
+                        <a href="https://github.com/your-username" class="text-beige"
+                            style="text-decoration: none;">GitHub</a>
+                    </p>
+                    <p class="mb-2">
+                        Adwaid
+                        <a href="https://instagram.com/your-username" class="text-beige"
+                            style="text-decoration: none;">Instagram</a>
+                    </p>
+                    <p class="mb-2">
+                        Divyansh
+                        <a href="https://instagram.com/your-username" class="text-beige"
+                            style="text-decoration: none;">Instagram</a>
+                    </p>
+                </div>
+
             </div>
         </div>
     </footer>
+
+
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

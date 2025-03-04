@@ -1089,3 +1089,15 @@ body {
 .-bottom-2 {
     bottom: -0.5rem;
 }
+
+.header-spacing{
+    height: 4rem;
+    width: 100%;
+}
+
+.footer-center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}

@@ -1,54 +1,48 @@
-<section class="admin-section">
-    <div class="row">
-        <div class="col">
-            <div class="container-fluid">
-                <h2 class="text-center">Create Event Head</h2>
-                <form action="/admin/event-head-signup" method="post">
-
-                    <div class="form-group">
-                        <label for="">Name</label>
-                        <input type="text" name="Name" class="form-control" placeholder="Enter Name" id="name">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">Register Number</label>
-                        <input type="text" name="regNum" class="form-control" placeholder="Enter Register Number"
-                            id="regNum">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">Event(s)</label>
-                        <div class="form-group">
-                            {{#each events}} <!-- Handlebars template to loop through events -->
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" name="events" value="{{this._id}}"
-                                    id="event-{{this._id}}">
-                                <label class="form-check-label" for="event-{{this._id}}">{{this.eventName}}</label>
-                            </div>
-                            {{/each}}
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">Email Address</label>
-                        <input type="email" name="Email" class="form-control" placeholder="Enter Email" id="email">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">Phone Number</label>
-                        <input type="number" name="phoneNumber" class="form-control" placeholder="Enter Phone"
-                            id="phoneNumber">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">Password</label>
-                        <input type="password" name="Password" class="form-control" placeholder="Password"
-                            id="password">
-                    </div>
-
-                    <button type="submit" class="btn btn-primary float-right">SignUp</button>
-                </form>
+{{!-- eventHeadSignup.hbs --}}
+<section class="py-20 px-6 bg-beige text-bistre flex justify-center items-center min-h-screen">
+    <div class="bg-white p-8 shadow-lg rounded-lg max-w-lg w-full">
+        <h2 class="text-3xl font-bold text-coffee text-center mb-6 font-handwritten">Create Event Head</h2>
+        <form action="/admin/event-head-signup" method="post" class="space-y-4">
+            <div>
+                <label class="block font-semibold">Name</label>
+                <input type="text" name="Name" class="w-full p-2 border border-khaki rounded" placeholder="Enter Name"
+                    required>
             </div>
-        </div>
+            <div>
+                <label class="block font-semibold">Register Number</label>
+                <input type="text" name="regNum" class="w-full p-2 border border-khaki rounded"
+                    placeholder="Enter Register Number" required>
+            </div>
+            <div>
+                <label class="block font-semibold">Event(s)</label>
+                <div class="space-y-2">
+                    {{#each events}}
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" name="events" value="{{this._id}}" id="event-{{this._id}}"
+                            class="form-checkbox border-khaki">
+                        <label for="event-{{this._id}}">{{this.eventName}}</label>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+            <div>
+                <label class="block font-semibold">Email Address</label>
+                <input type="email" name="Email" class="w-full p-2 border border-khaki rounded"
+                    placeholder="Enter Email" required>
+            </div>
+            <div>
+                <label class="block font-semibold">Phone Number</label>
+                <input type="number" name="phoneNumber" class="w-full p-2 border border-khaki rounded"
+                    placeholder="Enter Phone" required>
+            </div>
+            <div>
+                <label class="block font-semibold">Password</label>
+                <input type="password" name="Password" class="w-full p-2 border border-khaki rounded"
+                    placeholder="Password" required>
+            </div>
+            <button type="submit"
+                class="w-full py-2 bg-coffee text-beige font-bold rounded-lg hover:bg-bistre transition">Sign
+                Up</button>
+        </form>
     </div>
 </section>

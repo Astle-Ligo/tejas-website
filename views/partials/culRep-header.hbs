@@ -1,25 +1,25 @@
+{{!-- culRepNavbar.hbs --}}
 <header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/culRep" id="logo">Cultural Rep ({{culRepUser.class}})</a>
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-coffee text-beige shadow-md py-4 px-6">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- Logo -->
+            <a class="text-2xl font-bold" href="/culRep" id="logo">Cultural Rep ({{culRepUser.class}})</a>
 
             <!-- Mobile Toggle Button -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+            <button class="md:hidden" id="menu-toggle">
+                <div class="w-6 h-0.5 bg-beige mb-1.5"></div>
+                <div class="w-6 h-0.5 bg-beige mb-1.5"></div>
+                <div class="w-6 h-0.5 bg-beige"></div>
             </button>
 
-            <!-- Navbar Items (Aligned Right) -->
-            <div class="collapse navbar-collapse ms-auto" id="navbarNav">
+            <!-- Navbar Items -->
+            <div class="hidden md:flex items-center gap-8" id="navbarNav">
                 {{#if culRepUser}}
-                <ul class="navbar-nav ms-auto"> <!-- Add ms-auto here -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="/culRep/registrations">Registered Events</a>
-                    </li>
-                </ul>
+                <a class="px-3 py-2 hover:text-khaki" href="/culRep/registrations">Registered Events</a>
 
                 <!-- Logout Button -->
-                <a class="btn btn-danger ms-3" href="/culRep/cultural_rep-log-out">Logout</a>
+                <a class="px-4 py-2 bg-red-600 text-beige rounded-lg hover:bg-red-700 transition"
+                    href="/culRep/cultural_rep-log-out">Logout</a>
                 {{/if}}
             </div>
         </div>

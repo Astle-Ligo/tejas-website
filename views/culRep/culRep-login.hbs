@@ -1,26 +1,23 @@
-<section class="admin-section">
-    <div class="row">
-        <div class="col">
-            <div class="container-fluid">
-                <h2 class="text-center">Login</h2>
-                <form action="/culRep/culRep-login" method="post">  <!-- Fixed form action -->
-                    {{#if loginError}}  <!-- Fixed error condition -->
-                    <p class="error">{{loginError}}</p>
-                    {{/if}}
-
-                    <div class="form-group">
-                        <label for="">Email Address</label>
-                        <input type="email" name="Email" class="form-control" placeholder="Enter Email" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">Password</label>
-                        <input type="password" name="Password" class="form-control" placeholder="Password" required>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary float-right">Login</button>
-                </form>
+{{!-- culRepLogin.hbs --}}
+<section class="py-20 px-6 bg-beige text-bistre flex justify-center items-center min-h-screen">
+    <div class="bg-white p-8 shadow-lg rounded-lg max-w-md w-full">
+        <h2 class="text-3xl font-bold text-coffee text-center mb-6">Login</h2>
+        {{#if loginError}}
+        <p class="text-red-600 text-center mb-4">{{loginError}}</p>
+        {{/if}}
+        <form action="/culRep/culRep-login" method="post" class="space-y-4">
+            <div>
+                <label class="block font-semibold">Email Address</label>
+                <input type="email" name="Email" class="w-full p-2 border border-khaki rounded"
+                    placeholder="Enter Email" required>
             </div>
-        </div>
+            <div>
+                <label class="block font-semibold">Password</label>
+                <input type="password" name="Password" class="w-full p-2 border border-khaki rounded"
+                    placeholder="Password" required>
+            </div>
+            <button type="submit"
+                class="w-full py-2 bg-coffee text-beige font-bold rounded-lg hover:bg-bistre transition">Login</button>
+        </form>
     </div>
 </section>

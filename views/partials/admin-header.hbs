@@ -1,40 +1,54 @@
-<header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container">
-            <!-- Logo -->
-            <a class="navbar-brand" href="/admin" id="logo">Tejas Admin {{#if adminUser}}: {{adminUser.Name}}{{/if}}</a>
+{{!-- adminNavbar.hbs --}}
+<header class="fixed top-0 left-0 right-0 z-50 bg-coffee text-beige shadow-md py-2 px-6">
+    <div class="container mx-auto flex justify-between items-center">
+        <!-- Logo -->
+        <a class="text-2xl font-bold font-handwritten" href="/admin" id="logo">Tejas Admin {{#if adminUser}}:
+            {{adminUser.Name}}{{/if}}</a>
 
-            <!-- Mobile Menu Toggle Button -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span> <!-- Bootstrap Icon -->
-            </button>
+        <!-- Mobile Menu Toggle Button -->
+        <button class="md:hidden" id="menu-toggle">
+            <div class="w-6 h-0.5 bg-beige mb-1.5"></div>
+            <div class="w-6 h-0.5 bg-beige mb-1.5"></div>
+            <div class="w-6 h-0.5 bg-beige"></div>
+        </button>
 
-            <!-- Navbar Items -->
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                {{#if adminUser}}
-                <ul class="navbar-nav">
-                    <!-- Dropdown Menu -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle px-3" href="#" id="adminDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            {{adminUser.Name}}
-                        </a>
-
-
-                        <ul class="dropdown-menu dropdown-menu-end w-auto" aria-labelledby="adminDropdown">
-                            <li><a class="dropdown-item" href="/admin/admin-signup">Add New Admin</a></li>
-                            <li><a class="dropdown-item" href="/admin/cultural-rep-signup">Add New Cultural Rep</a></li>
-                            <li><a class="dropdown-item" href="/admin/event-head-signup">Add New Event Head</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item text-danger" href="/admin/admin-log-out">Logout</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                {{/if}}
+        <!-- Navbar Items -->
+        <div class="hidden md:flex items-center gap-8" id="navbarNav">
+            {{#if adminUser}}
+            <div class="relative">
+                <button id="dropdown-btn" class="px-3 py-2 font-semibold font-handwritten">
+                    {{adminUser.Name}}
+                </button>
+                <div id="dropdown-menu"
+                    class="absolute right-0 mt-2 w-48 bg-beige text-bistre shadow-lg rounded-lg opacity-0 invisible transition-all duration-300">
+                    <a class="block px-4 py-2 hover:bg-khaki" href="/admin/admin-signup">Add New Admin</a>
+                    <a class="block px-4 py-2 hover:bg-khaki" href="/admin/cultural-rep-signup">Add New Cultural Rep</a>
+                    <a class="block px-4 py-2 hover:bg-khaki" href="/admin/event-head-signup">Add New Event Head</a>
+                    <hr class="my-1 border-bistre">
+                    <a class="block px-4 py-2 text-red-600 hover:bg-khaki" href="/admin/admin-log-out">Logout</a>
+                </div>
             </div>
+            {{/if}}
         </div>
-    </nav>
+    </div>
 </header>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const dropdownBtn = document.getElementById("dropdown-btn");
+        const dropdownMenu = document.getElementById("dropdown-menu");
+
+        dropdownBtn.addEventListener("click", function (event) {
+            event.stopPropagation();
+            dropdownMenu.classList.toggle("opacity-0");
+            dropdownMenu.classList.toggle("invisible");
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", function (event) {
+            if (!dropdownBtn.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                dropdownMenu.classList.add("opacity-0", "invisible");
+            }
+        });
+    });
+</script>

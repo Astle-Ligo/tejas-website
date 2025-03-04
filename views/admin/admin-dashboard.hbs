@@ -1,25 +1,36 @@
-<section class="admin-dashboard">
-    <div class="admin-dashboard-box">
-        <a href="/admin/events">
-            <div class="events admin-dashboard-element">EVENTS</div>
-        </a>
-        <a href="/admin/cultural-reps">
-            <div class="culturalReps admin-dashboard-element">CULTURAL REPS</div>
-        </a>
-        <a href="/admin/event-heads">
-            <div class="eventHeads admin-dashboard-element">EVENT HEADS</div>
-        </a>
-        <a href="/admin/classRegistrations">
-            <div class="classReg admin-dashboard-element">CLASS WISE REGISTRATION</div>
-        </a>
-        <a href="/admin/eventRegistrations">
-            <div class="eventReg admin-dashboard-element">EVENT WISE REGISTRATION</div>
-        </a>
-        <a href="/admin/results">
-            <div class="results admin-dashboard-element">RESULTS</div>
-        </a>
-        <a href="/admin/leaderboard">
-            <div class="leaderboard admin-dashboard-element">LEADERBOARD</div>
-        </a>
+{{!-- adminDashboard.hbs --}}
+<section class="py-20 pt-24 px-6 bg-beige text-bistre min-h-screen">
+    <div class="container mx-auto max-w-4xl bg-white p-8 shadow-lg rounded-lg">
+        <h2 class="text-3xl font-bold text-coffee text-center mb-6 font-handwritten">Admin Dashboard</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <a href="/admin/events"
+                class="block bg-coffee text-beige p-4 text-center rounded-lg hover:bg-bistre transition font-handwritten">
+                EVENTS
+            </a>
+            <a href="/admin/cultural-reps"
+                class="block bg-coffee text-beige p-4 text-center rounded-lg hover:bg-bistre transition font-handwritten">
+                CULTURAL REPS
+            </a>
+            <a href="/admin/event-heads"
+                class="block bg-coffee text-beige p-4 text-center rounded-lg hover:bg-bistre transition font-handwritten">
+                EVENT HEADS
+            </a>
+            <a href="/admin/classRegistrations"
+                class="block bg-coffee text-beige p-4 text-center rounded-lg hover:bg-bistre transition font-handwritten">
+                CLASS WISE REGISTRATION
+            </a>
+            <a href="/admin/eventRegistrations"
+                class="block bg-coffee text-beige p-4 text-center rounded-lg hover:bg-bistre transition font-handwritten">
+                EVENT WISE REGISTRATION
+            </a>
+            <a href="/admin/results"
+                class="block bg-coffee text-beige p-4 text-center rounded-lg hover:bg-bistre transition font-handwritten">
+                RESULTS
+            </a>
+            <a href="/admin/leaderboard"
+                class="block bg-coffee text-beige p-4 text-center rounded-lg hover:bg-bistre transition font-handwritten">
+                LEADERBOARD
+            </a>
+        </div>
     </div>
 </section>

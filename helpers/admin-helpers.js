@@ -75,9 +75,23 @@ module.exports = {
     getEventDetails: (eventId) => {
         return new Promise(async (resolve, reject) => {
             try {
-                let event = await db.get().collection(collection.EVENT_COLLECTION).findOne({ _id: new ObjectId(eventId) });
+                console.log("Received eventId:", eventId); // Debugging
+
+                // Validate eventId
+                if (!eventId || typeof eventId !== 'string' || eventId.length !== 24) {
+                    return reject(new Error("Invalid event ID format"));
+                }
+
+                let event = await db.get().collection(collection.EVENT_COLLECTION)
+                    .findOne({ _id: new ObjectId(eventId) });
+
+                if (!event) {
+                    return reject(new Error("Event not found"));
+                }
+
                 resolve(event);
             } catch (error) {
+                console.error("Error in getEventDetails:", error);
                 reject(error);
             }
         });
@@ -100,6 +114,8 @@ module.exports = {
                             classReg: eventDetails.classReg,
                             timeLimit: eventDetails.timeLimit,
                             venue: eventDetails.venue,
+                            eventTimeRaw:eventDetails.eventTimeRaw,
+                            eventTime:eventDetails.eventTime,
                             eventHead: eventDetails.eventHead,
                             eventHeadContact: eventDetails.eventHeadContact,
                             eventDate: eventDetails.eventDate

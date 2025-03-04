@@ -1,73 +1,70 @@
-<section class="culRepSignup-section">
-    <div class="row">
-        <div class="col">
-            <div class="container-fluid">
-                <h2 class="text-center">Create Cultural Rep</h2>
-                <form action="/admin/cultural-rep-signup" method="post">
-
-                    <div class="form-group">
-                        <label for="">Name</label>
-                        <input type="text" name="Name" class="form-control" placeholder="Enter Name" id="">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">Register Number</label>
-                        <input type="text" name="regNum" class="form-control" placeholder="Enter Register Number" id="">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">Class</label>
-                        <select name="class" id="" class="form-control">
-                            <option value="I BA">I BA</option>
-                            <option value="II BA">II BA</option>
-                            <option value="III BA">III BA</option>
-                            <option value="I BBA C">I BBA C</option>
-                            <option value="I BBA D">I BBA D</option>
-                            <option value="I BBA SF">I BBA SF</option>
-                            <option value="II BBA C">II BBA C</option>
-                            <option value="II BBA D">II BBA D</option>
-                            <option value="III BBA C">III BBA C</option>
-                            <option value="III BBA D">III BBA D</option>
-                            <option value="III BBA SF">III BBA SF</option>
-                            <option value="I BCA A">I BCA A</option>
-                            <option value="I BCA B">I BCA B</option>
-                            <option value="II BCA B">II BCA B</option>
-                            <option value="II BCA C">II BCA C</option>
-                            <option value="III BCA B">III BCA B</option>
-                            <option value="III BCA C">III BCA C</option>
-                            <option value="I BCOM E">I BCOM E</option>
-                            <option value="I BCOM F">I BCOM F</option>
-                            <option value="I BCOM G">I BCOM G</option>
-                            <option value="I BCOM IFA">I BCOM IFA</option>
-                            <option value="II BCOM E">II BCOM E</option>
-                            <option value="II BCOM F">II BCOM F</option>
-                            <option value="II BCOM G">II BCOM G</option>
-                            <option value="II BCOM IFA">II BCOM IFA</option>
-                            <option value="III BCOM E">III BCOM E</option>
-                            <option value="III BCOM F">III BCOM F</option>
-                            <option value="I and II MA">I and II MA</option>
-                            <option value="I and II MCOM">I and II MCOM</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">Email Address</label>
-                        <input type="email" name="Email" class="form-control" placeholder="Enter Email" id="">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">Phone Number</label>
-                        <input type="number" name="phoneNumber" class="form-control" placeholder="Enter Phone" id="">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">Password</label>
-                        <input type="password" name="Password" class="form-control" placeholder="Password" id="">
-                    </div>
-
-                    <button type="submit" class="btn btn-primary float-right">SignUp</button>
-                </form>
+{{!-- culRepSignup.hbs --}}
+<section class="py-20 px-6 bg-beige text-bistre flex justify-center items-center min-h-screen">
+    <div class="bg-white p-8 shadow-lg rounded-lg max-w-lg w-full">
+        <h2 class="text-3xl font-bold text-coffee text-center mb-6 font-handwritten">Create Cultural Rep</h2>
+        <form action="/admin/cultural-rep-signup" method="post" class="space-y-4">
+            <div>
+                <label class="block font-semibold font-handwritten">Name</label>
+                <input type="text" name="Name" class="w-full p-2 border border-khaki rounded" placeholder="Enter Name"
+                    required>
             </div>
-        </div>
+            <div>
+                <label class="block font-semibold font-handwritten">Register Number</label>
+                <input type="text" name="regNum" class="w-full p-2 border border-khaki rounded"
+                    placeholder="Enter Register Number" required>
+            </div>
+            <div>
+                <label class="block font-semibold font-handwritten">Class</label>
+                <select name="class" class="w-full p-2 border border-khaki rounded">
+                    <option value="I BA">I BA</option>
+                    <option value="II BA">II BA</option>
+                    <option value="III BA">III BA</option>
+                    <option value="I BBA C">I BBA C</option>
+                    <option value="I BBA D">I BBA D</option>
+                    <option value="I BBA SF">I BBA SF</option>
+                    <option value="II BBA C">II BBA C</option>
+                    <option value="II BBA D">II BBA D</option>
+                    <option value="III BBA C">III BBA C</option>
+                    <option value="III BBA D">III BBA D</option>
+                    <option value="III BBA SF">III BBA SF</option>
+                    <option value="I BCA A">I BCA A</option>
+                    <option value="I BCA B">I BCA B</option>
+                    <option value="II BCA B">II BCA B</option>
+                    <option value="II BCA C">II BCA C</option>
+                    <option value="III BCA B">III BCA B</option>
+                    <option value="III BCA C">III BCA C</option>
+                    <option value="I BCOM E">I BCOM E</option>
+                    <option value="I BCOM F">I BCOM F</option>
+                    <option value="I BCOM G">I BCOM G</option>
+                    <option value="I BCOM IFA">I BCOM IFA</option>
+                    <option value="II BCOM E">II BCOM E</option>
+                    <option value="II BCOM F">II BCOM F</option>
+                    <option value="II BCOM G">II BCOM G</option>
+                    <option value="II BCOM IFA">II BCOM IFA</option>
+                    <option value="III BCOM E">III BCOM E</option>
+                    <option value="III BCOM F">III BCOM F</option>
+                    <option value="I and II MA">I and II MA</option>
+                    <option value="I and II MCOM">I and II MCOM</option>
+                </select>
+            </div>
+            <div>
+                <label class="block font-semibold font-handwritten">Email Address</label>
+                <input type="email" name="Email" class="w-full p-2 border border-khaki rounded"
+                    placeholder="Enter Email" required>
+            </div>
+            <div>
+                <label class="block font-semibold font-handwritten">Phone Number</label>
+                <input type="number" name="phoneNumber" class="w-full p-2 border border-khaki rounded"
+                    placeholder="Enter Phone" required>
+            </div>
+            <div>
+                <label class="block font-semibold font-handwritten">Password</label>
+                <input type="password" name="Password" class="w-full p-2 border border-khaki rounded"
+                    placeholder="Password" required>
+            </div>
+            <button type="submit"
+                class="w-full py-2 bg-coffee text-beige font-bold rounded-lg hover:bg-bistre transition font-handwritten">Sign
+                Up</button>
+        </form>
     </div>
 </section>

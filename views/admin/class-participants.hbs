@@ -1,49 +1,52 @@
-<div class="container my-4">
-    <h2 class="mb-4 text-center">Your Registered Events</h2>
+{{!-- registeredEvents.hbs --}}
+<section class="py-20 px-6 bg-beige text-bistre">
+    <div class="container mx-auto max-w-4xl bg-white p-8 shadow-lg rounded-lg">
+        <h2 class="text-3xl font-bold text-coffee text-center mb-6 font-handwritten">Your Registered Events</h2>
 
-    {{#if registrations.length}}
-    <div class="table-container">
-        <table class="table table-striped table-bordered">
-            <thead class="table-dark">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Event Name</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Participants</th>
-                    <th scope="col">Phone Number</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each registrations}}
-                <tr>
-                    <th scope="row">{{inc @index}}</th>
-                    <td>{{this.eventDetails.eventName}}</td>
-                    <td>{{this.eventDetails.eventDate}}</td>
-                    <td class="text-capitalize">{{this.type}}</td>
-                    <td>
-                        {{#if (eq this.type "individual")}}
-                        {{this.participant.name}} ({{this.participant.regNum}})
-                        {{else}}
-                        <strong>Team Name: {{this.teamName}}</strong><br>
-                        {{#each teamMembers}}
-                        {{this.name}} ({{this.regNum}}) <br>
-                        {{/each}}
-                        {{/if}}
-                    </td>
-                    <td>
-                        {{#if (eq this.type "individual")}}
-                        {{this.participant.phone}}
-                        {{else}}
-                        {{this.contact.teamPhone}} / {{this.contact.altPhone}}
-                        {{/if}}
-                    </td>
-                </tr>
-                {{/each}}
-            </tbody>
-        </table>
+        {{#if registrations.length}}
+        <div class="overflow-x-auto">
+            <table class="w-full border border-khaki text-left">
+                <thead class="bg-coffee text-beige">
+                    <tr>
+                        <th class="p-3 border-b">#</th>
+                        <th class="p-3 border-b">Event Name</th>
+                        <th class="p-3 border-b">Date</th>
+                        <th class="p-3 border-b">Type</th>
+                        <th class="p-3 border-b">Participants</th>
+                        <th class="p-3 border-b">Phone Number</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each registrations}}
+                    <tr class="border-b">
+                        <td class="p-3">{{inc @index}}</td>
+                        <td class="p-3">{{this.eventDetails.eventName}}</td>
+                        <td class="p-3">{{this.eventDetails.eventDate}}</td>
+                        <td class="p-3 text-capitalize">{{this.type}}</td>
+                        <td class="p-3">
+                            {{#if (eq this.type "individual")}}
+                            {{this.participant.name}} ({{this.participant.regNum}})
+                            {{else}}
+                            <strong>Team Name: {{this.teamName}}</strong><br>
+                            {{#each teamMembers}}
+                            {{this.name}} ({{this.regNum}}) <br>
+                            {{/each}}
+                            {{/if}}
+                        </td>
+                        <td class="p-3">
+                            {{#if (eq this.type "individual")}}
+                            {{this.participant.phone}}
+                            {{else}}
+                            {{this.contact.teamPhone}} / {{this.contact.altPhone}}
+                            {{/if}}
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        {{else}}
+        <p class="text-muted text-center">No events registered yet.</p>
+        {{/if}}
     </div>
-    {{else}}
-    <p class="text-muted text-center">No events registered yet.</p>
-    {{/if}}
-</div>
+</section>

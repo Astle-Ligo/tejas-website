@@ -37,7 +37,8 @@ module.exports = {
                     return acc;
                 }, {})
             ).map(([date, data]) => data);
-
+            console.log(groupedEvents[0]);
+            
             return groupedEvents;
         } catch (error) {
             console.error("Database error:", error);
