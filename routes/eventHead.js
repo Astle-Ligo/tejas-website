@@ -111,7 +111,7 @@ router.get("/registrations/:eventId", async (req, res) => {
 
         console.log("Registrations:", registrations);
         console.log("Event Details:", eventDetails);
-
+        
         res.render("eventHead/registrations", {
             eventHead: true,
             eventHeadUser,

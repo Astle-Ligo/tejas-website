@@ -1,81 +1,83 @@
-<section class="admin-section page">
-    <div class="container-fluid">
-        <h2 class="text-center">Add an Event</h2>
-        <form action="/admin/add-event" method="post" enctype="multipart/form-data" class="form">
+<section class="addEvent-section">
+    <div class="addEvent-container">
+        <h2 class="addEvent-title">Add an Event</h2>
+        <form action="/admin/add-event" method="post" enctype="multipart/form-data" class="addEvent-form">
 
-            <div class="form-object">
-                <label for="eventName" class="formLabel">Event Name : </label>
-                <input type="text" name="eventName" class="form-control">
+            <div class="addEvent-form-group">
+                <label for="eventName" class="addEvent-label">Event Name:</label>
+                <input type="text" name="eventName" class="addEvent-input">
             </div>
 
-            <div class="form-object">
-                <label for="eventSubName" class="formLabel">Event Sub Name : </label>
-                <input type="text" name="eventSubName" class="form-control">
+            <div class="addEvent-form-group">
+                <label for="eventSubName" class="addEvent-label">Event Sub Name:</label>
+                <input type="text" name="eventSubName" class="addEvent-input">
             </div>
 
-            <div class="form-object">
-                <label for="eventImageUrl" class="formLabel">Event Image URL : </label>
-                <input type="text" name="eventImageUrl" class="form-control">
+            <div class="addEvent-form-group">
+                <label for="eventImageUrl" class="addEvent-label">Event Image URL:</label>
+                <input type="text" name="eventImageUrl" class="addEvent-input">
             </div>
 
-            <div class="form-object">
-                <label for="description" class="formLabel">Description :</label>
-                <textarea name="description" rows="4" class="form-control"></textarea>
+            <div class="addEvent-form-group">
+                <label for="description" class="addEvent-label">Description:</label>
+                <textarea name="description" rows="4" class="addEvent-input"></textarea>
             </div>
 
-            <div class="form-object">
-                <label for="eventStrength" class="formLabel">Participation Strength : </label>
-                <select name="eventStrength" id="eventStrength" class="form-control" onchange="toggleGroupFields()">
+            <div class="addEvent-form-group">
+                <label for="eventStrength" class="addEvent-label">Participation Strength:</label>
+                <select name="eventStrength" id="eventStrength" class="addEvent-input" onchange="toggleGroupFields()">
                     <option value="individual">Individual</option>
                     <option value="group">Group</option>
                 </select>
             </div>
 
-            <!-- Min & Max input fields (Initially Hidden) -->
-            <div id="groupFields" style="display: none; margin-top: 10px;">
-                <div class="form-object">
-                    <label for="minParticipants" class="formLabel">Min Participants :</label>
-                    <input type="number" name="minParticipants" id="minParticipants" class="form-control"
-                        placeholder="Min Participants">
+            <div id="groupFields" class="addEvent-groupFields">
+                <div class="addEvent-form-group">
+                    <label for="minParticipants" class="addEvent-label">Min Participants:</label>
+                    <input type="number" name="minParticipants" id="minParticipants" class="addEvent-input">
                 </div>
 
-                <div class="form-object">
-                    <label for="maxParticipants" class="formLabel">Max Participants :</label>
-                    <input type="number" name="maxParticipants" id="maxParticipants" class="form-control"
-                        placeholder="Max Participants">
+                <div class="addEvent-form-group">
+                    <label for="maxParticipants" class="addEvent-label">Max Participants:</label>
+                    <input type="number" name="maxParticipants" id="maxParticipants" class="addEvent-input">
                 </div>
             </div>
 
-            <div class="form-object">
-                <label for="classReg" class="formLabel">Registrations from a class :</label>
-                <select name="classReg" class="form-control">
+            <div class="addEvent-form-group">
+                <label for="classReg" class="addEvent-label">Registrations from a class:</label>
+                <select name="classReg" class="addEvent-input">
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="unlimited">Unlimited</option>
                 </select>
             </div>
 
-            <div class="form-object">
-                <label for="timeLimit" class="formLabel">Time Limit</label>
-                <input type="text" name="timeLimit" class="form-control">
+            <div class="addEvent-form-group">
+                <label for="timeLimit" class="addEvent-label">Time Limit:</label>
+                <input type="text" name="timeLimit" class="addEvent-input">
             </div>
 
-            <div class="form-object">
-                <label for="eventHead" class="formLabel">Event Head</label>
-                <input type="text" name="eventHead" class="form-control">
+            <div class="addEvent-form-group">
+                <label for="venue" class="addEvent-label">Venue :</label>
+                <input type="text" name="venue" class="addEvent-input">
             </div>
 
-            <div class="form-object">
-                <label for="eventHeadContact" class="formLabel">Event Head Contact</label>
-                <input type="number" name="eventHeadContact" class="form-control">
+            <div class="addEvent-form-group">
+                <label for="eventHead" class="addEvent-label">Event Head:</label>
+                <input type="text" name="eventHead" class="addEvent-input">
             </div>
 
-            <div class="form-object">
-                <label for="eventDate" class="formLabel">Date</label>
-                <input type="date" name="eventDate" class="form-control">
+            <div class="addEvent-form-group">
+                <label for="eventHeadContact" class="addEvent-label">Event Head Contact:</label>
+                <input type="tel" name="eventHeadContact" class="addEvent-input">
             </div>
 
-            <button class="btn btn-success form-control" type="submit">Submit</button>
+            <div class="addEvent-form-group">
+                <label for="eventDate" class="addEvent-label">Date:</label>
+                <input type="date" name="eventDate" class="addEvent-input">
+            </div>
+
+            <button class="addEvent-button" type="submit">Submit</button>
         </form>
     </div>
 </section>
@@ -86,9 +88,9 @@
         let groupFields = document.getElementById("groupFields");
 
         if (selection === "group") {
-            groupFields.style.display = "block"; // Show fields
+            groupFields.style.display = "block";
         } else {
-            groupFields.style.display = "none"; // Hide fields
+            groupFields.style.display = "none";
         }
     }
 </script>

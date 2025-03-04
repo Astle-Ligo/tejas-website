@@ -45,13 +45,15 @@ router.get('/admin-signup', (req, res) => {
 
 router.post('/admin-signup', async (req, res) => {
   try {
-    await adminHelpers.doSignup(req.body);
-    res.redirect('/admin');
+    const adminData = await adminHelpers.doSignup(req.body);
+    req.session.admin = adminData; // Store admin data in session
+    res.redirect('/admin'); // Redirect to admin dashboard
   } catch (error) {
     console.error("Error signing up admin:", error);
     res.status(500).send("Error signing up admin.");
   }
 });
+
 
 /* Admin Login */
 router.get('/admin-login', (req, res) => {

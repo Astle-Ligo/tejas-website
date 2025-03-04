@@ -11,9 +11,13 @@ router.get('/', async (req, res) => {
 
   if (culRepUser) {
     try {
+      const events = await culRepHelpers.getAllEvents(); // Fetch events
+      console.log(events);
+
       res.render('culRep/culRep-dashboard', {
         culRep: true,
         culRepUser,
+        events
       });
     } catch (error) {
       console.error("Error loading culRep dashboard:", error);
@@ -27,6 +31,7 @@ router.get('/', async (req, res) => {
     req.session.loginError = null; // Clear error after displaying
   }
 });
+
 
 // Route to render the login page
 router.get('/culRep-login', (req, res) => {
@@ -67,19 +72,6 @@ router.get('/cultural_rep-log-out', (req, res) => {
     }
     res.redirect('/culRep');
   });
-});
-
-router.get('/events', async (req, res) => {
-  try {
-
-    let culRepUser = req.session.culRep;
-    const events = await culRepHelpers.getAllEvents();
-    console.log(events);
-    res.render('culRep/events', { culRep: true, culRepUser, events });
-  } catch (error) {
-    console.error("Error fetching events:", error);
-    res.status(500).send("Error fetching events.");
-  }
 });
 
 router.get('/events/:id', async (req, res) => {

@@ -99,6 +99,7 @@ module.exports = {
                             maxParticipants: eventDetails.maxParticipants,
                             classReg: eventDetails.classReg,
                             timeLimit: eventDetails.timeLimit,
+                            venue: eventDetails.venue,
                             eventHead: eventDetails.eventHead,
                             eventHeadContact: eventDetails.eventHeadContact,
                             eventDate: eventDetails.eventDate

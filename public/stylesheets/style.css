@@ -1,131 +1,600 @@
+:root {
+  --background-color: #F8F9FA;
+  --primary-color: #0F3446;
+  /* Deep Teal */
+  --secondary-color: #369090;
+  /* Muted Cyan */
+  --card-background: #FFFFFF;
+  --text-color: #212529;
+  --accent-color: #D49A89;
+  /* Muted Coral */
+  --border-color: #B0C4C4;
+  /* Light Gray-Cyan */
+  --header-background: #0F3446;
+  /* Matching Primary */
+}
+
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
 }
 
-body{
+body {
   height: 100%;
-  padding-top: 10vh;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: Arial, sans-serif;
 }
 
-header{
+/* HEADER & FOOTER */
+.navbar,
+footer {
   position: fixed;
-  top: 0;
   width: 100%;
+  background-color: var(--header-background) !important;
+  color: white !important;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 footer {
   bottom: 0;
-  /* position: fixed; */
-  height: 5rem;
-  width: 100%;
-  display: flex;
-  align-items: center;
+  height: 3rem;
   justify-content: center;
-  background-color: red;
-  z-index: 10;
+  position: relative;
 }
 
-/* .page {
-  width: calc(100dvw-17px);
-  height: 100dvh;
-} */
-
-/* FORMS */
-
-.form-object {
-  width: 100%;
+/* ADD EVENT FORM */
+.addEvent-section {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem;
-}
-
-.formLabel {
-  width: 20%;
-}
-
-/* FORMS */
-
-
-
-
-/* ADMIN */
-
-/* .admin-section {
-  display: flex;
-  align-items: center;
   justify-content: center;
-} */
-
-.card-box {
-  width: 100%;
-  display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 2rem;
-  flex-wrap: wrap;
+  min-height: 100vh;
+  padding: 5%;
 }
 
-.card-img-top {
-  height: 8rem;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
+.addEvent-container {
+  width: 100%;
+  max-width: 50rem;
+  background: var(--card-background);
+  border-radius: 1rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  padding: 3%;
 }
 
-.center {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.addEvent-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2%;
+  color: var(--primary-color);
 }
 
-.card-details-box {
-  width: 100%;
+.addEvent-form {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 2rem;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-.classwise-box {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 2rem;
+.addEvent-input {
   width: 100%;
+  padding: 0.8rem;
+  border: 0.1rem solid var(--border-color);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  outline: none;
+}
+
+.addEvent-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0.2rem var(--primary-color);
+}
+
+.addEvent-button {
+  background: var(--secondary-color);
+  color: white;
+  padding: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s;
+}
+
+.addEvent-button:hover {
+  background: var(--primary-color);
+  transform: scale(1.05);
+}
+
+/* ADMIN DASHBOARD */
+.admin-dashboard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 3rem 2rem;
 }
 
 .admin-dashboard-box {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2rem;
   flex-wrap: wrap;
-  width: 100%;
-  height: 100%;
-  padding: 2rem;
-}
-
-.admin-dashboard-element {
-  width: 20rem;
-  height: 10rem;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
+  gap: 2rem;
   justify-content: center;
-  font-size: 1.5rem;
-  background-color: #D1E7DD;
-  color: #0C4128;
+  width: 100%;
+  max-width: 70rem;
 }
 
-.admin-dashboard-box>a {
+.admin-dashboard-box a {
   text-decoration: none;
 }
 
-/* ADMIN */
+.admin-dashboard-element {
+  width: 18rem;
+  height: 10rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: bold;
+  text-align: center;
+  background-color: var(--card-background);
+  color: var(--text-color);
+  border: 3px solid var(--border-color);
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.admin-dashboard-element:hover {
+  background-color: var(--secondary-color);
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 0.7rem 1.5rem rgba(0, 0, 0, 0.15);
+}
+
+/* RESPONSIVE STYLES */
+@media (max-width: 768px) {
+  .admin-dashboard-box {
+    gap: 1.5rem;
+  }
+
+  .admin-dashboard-element {
+    width: 15rem;
+    height: 8rem;
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-dashboard-box {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .admin-dashboard-element {
+    width: 90%;
+    height: 7rem;
+  }
+}
+
+/* ADMIN LOGIN  */
+.admin-login-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 4rem);
+  /* Adjusted height to prevent footer overlap */
+  padding: 3rem 1rem;
+}
+
+.admin-login-container {
+  width: 100%;
+  max-width: 420px;
+  /* Slightly wider */
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.admin-login-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #0F3446;
+  font-size: 1.8rem;
+  /* Bigger heading */
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.2rem;
+}
+
+.form-label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.form-control {
+  width: 100% !important;
+  padding: 1rem;
+  font-size: 1.2rem;
+  border-radius: 6px;
+  border: 1.5px solid #ccc;
+  outline: none;
+  transition: border 0.3s ease-in-out;
+}
+
+.form-control:focus {
+  border-color: #0F3446;
+  box-shadow: 0 0 5px rgba(15, 52, 70, 0.3);
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.2rem;
+  background-color: #0F3446;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #09202b;
+}
+
+
+/* Mobile Optimization */
+@media (max-width: 480px) {
+  .admin-login-container {
+    width: 90%;
+    padding: 1.5rem;
+  }
+}
+
+
+/* ADMIN SIGNUP */
+
+.admin-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 4rem);
+  padding: 2rem;
+  background-color: #f8f9fa;
+}
+
+.admin-container {
+  width: 100%;
+  max-width: 450px;
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.admin-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #0F3446;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-control {
+  padding: 0.85rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 0.85rem;
+  font-size: 1rem;
+  background-color: #0F3446;
+  border: none;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #09202b;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .admin-container {
+    padding: 1.5rem;
+  }
+}
+
+/* CLASS PARTICIPANTS */
+
+:root {
+  --primary-color: #0F3446;
+  /* Dark Teal */
+  --secondary-color: #369090;
+  /* Muted Cyan */
+  --table-border: #B0C4C4;
+  /* Light Gray-Cyan */
+  --text-color: #212529;
+  --background-color: #F8F9FA;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  /* Enables horizontal scroll on small screens */
+  padding: 1rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: white;
+}
+
+.table th,
+.table td {
+  padding: 0.8rem;
+  text-align: left;
+  border: 1px solid var(--table-border);
+}
+
+.table th {
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: bold;
+}
+
+.table tbody tr:nth-child(odd) {
+  background-color: #f2f2f2;
+  /* Light gray for alternating rows */
+}
+
+.table tbody tr:hover {
+  background-color: rgba(54, 144, 144, 0.1);
+  /* Subtle hover effect */
+}
+
+.text-muted {
+  text-align: center;
+  font-size: 1rem;
+  color: gray;
+  padding: 1rem;
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+  .table-container {
+    padding: 0.5rem;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .table-container {
+    overflow-x: auto;
+    /* Ensures scrollability */
+  }
+
+  .table th,
+  .table td {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* CLASS WISE PARTICIPANT */
+
+.classwise-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.class-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.5rem;
+  background-color: #e3f2fd;
+  /* Light Blue */
+  border: 1px solid #90caf9;
+  border-radius: 10px;
+  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.1);
+  transition: 0.3s;
+  width: 250px;
+  text-align: center;
+}
+
+.class-box:hover {
+  background-color: #d1ecf1;
+  /* Slightly darker blue */
+  transform: scale(1.05);
+}
+
+.class-link {
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #0f3446;
+  /* Darker text color for readability */
+  transition: color 0.3s ease-in-out;
+}
+
+.class-box:hover .class-link {
+  color: #034752;
+  /* Slightly darker on hover */
+  text-decoration: underline;
+}
+
+.text-muted {
+  text-align: center;
+  font-size: 1rem;
+  color: gray;
+  padding: 1rem;
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+  .classwise-box {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .class-box {
+    width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .class-box {
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  .class-link {
+    font-size: 1rem;
+  }
+}
+
+/* CULTURAL REP SIGNUP */
+
+/* General form styling */
+.culRepSignup-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  /* Light gray background */
+}
+
+.container-fluid {
+  max-width: 500px;
+  width: 100%;
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Form heading */
+h2 {
+  color: #343a40;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+/* Form fields */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+label {
+  font-weight: bold;
+  color: #495057;
+}
+
+.form-control {
+  border-radius: 5px;
+  border: 1px solid #ced4da;
+  padding: 0.75rem;
+  font-size: 1rem;
+}
+
+.form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+/* Dropdown styling */
+select.form-control {
+  appearance: none;
+  background: #fff;
+  cursor: pointer;
+}
+
+/* Submit button */
+.btn-primary {
+  padding: 0.75rem;
+  font-size: 1rem;
+  width: 100%;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+/* Responsive Design */
+@media (max-width: 576px) {
+  .container-fluid {
+    max-width: 100%;
+    padding: 1.5rem;
+  }
+
+  .btn-primary {
+    font-size: 0.9rem;
+  }
+}
+
+/* Event Page */
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.event-card {
+  width: 70rem;
+  max-width: 100vh;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-img-top {
+  max-height: 300px;
+  object-fit: cover;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.card-details-box p {
+  margin: 5px 0;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}

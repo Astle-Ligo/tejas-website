@@ -1,10 +1,15 @@
-<h2>Class Registrations</h2>
-<div class="classwise-box">
-    {{#each classes}}
-    <div class="alert alert-primary" role="alert">
-        <a href="/admin/classRegistrations/{{this}}" class="class-link">{{this}}</a>
+<div class="container my-4">
+    <h2 class="text-center">Class Registrations</h2>
+
+    <div class="classwise-box">
+        {{#if classes.length}}
+        {{#each classes}}
+        <div class="alert alert-primary class-box" role="alert">
+            <a href="/admin/classRegistrations/{{this}}" class="class-link">{{this}}</a>
+        </div>
+        {{/each}}
+        {{else}}
+        <p class="text-muted text-center">No classes found.</p>
+        {{/if}}
     </div>
-    {{else}}
-    <p>No classes found.</p>
-    {{/each}}
 </div>

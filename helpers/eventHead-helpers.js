@@ -233,11 +233,11 @@ module.exports = {
 
             const results = await db.get().collection(collection.RESULTS_COLLECTION).aggregate([
                 {
-                    $match: { eventHeadId: new ObjectId(eventHeadId) } // ✅ Ensure eventHeadId is an ObjectId
+                    $match: { eventHeadId: new ObjectId(eventHeadId) }
                 },
                 {
                     $lookup: {
-                        from: collection.REGISTRATION_COLLECTION, // ✅ Change if class details are stored elsewhere
+                        from: collection.REGISTRATION_COLLECTION,
                         localField: "firstPlace",
                         foreignField: "_id",
                         as: "firstWinner"
@@ -245,7 +245,7 @@ module.exports = {
                 },
                 {
                     $lookup: {
-                        from: collection.REGISTRATION_COLLECTION, // ✅ Change if necessary
+                        from: collection.REGISTRATION_COLLECTION,
                         localField: "secondPlace",
                         foreignField: "_id",
                         as: "secondWinner"
@@ -254,10 +254,22 @@ module.exports = {
                 {
                     $project: {
                         eventName: 1,
-                        firstPlaceName: { $arrayElemAt: ["$firstWinner.name", 0] },
-                        classFirst: { $arrayElemAt: ["$firstWinner.classId", 0] }, // ✅ Ensure correct field
-                        secondPlaceName: { $arrayElemAt: ["$secondWinner.name", 0] },
-                        classSecond: { $arrayElemAt: ["$secondWinner.classId", 0] } // ✅ Ensure correct field
+                        firstPlaceName: {
+                            $cond: {
+                                if: { $eq: [{ $arrayElemAt: ["$firstWinner.type", 0] }, "individual"] },
+                                then: { $arrayElemAt: ["$firstWinner.participant.name", 0] },
+                                else: { $arrayElemAt: ["$firstWinner.teamName", 0] }
+                            }
+                        },
+                        classFirst: { $arrayElemAt: ["$firstWinner.classId", 0] },
+                        secondPlaceName: {
+                            $cond: {
+                                if: { $eq: [{ $arrayElemAt: ["$secondWinner.type", 0] }, "individual"] },
+                                then: { $arrayElemAt: ["$secondWinner.participant.name", 0] },
+                                else: { $arrayElemAt: ["$secondWinner.teamName", 0] }
+                            }
+                        },
+                        classSecond: { $arrayElemAt: ["$secondWinner.classId", 0] }
                     }
                 }
             ]).toArray();
@@ -269,4 +281,5 @@ module.exports = {
             throw error;
         }
     }
+
 }

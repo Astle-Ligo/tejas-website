@@ -1,18 +1,19 @@
-<section class="admin-section page">
-    <div class="conatiner-fluid">
-        <h2 class="text-center">Admin Login</h2>
-        <form action="admin-login" method="post">
-            <div class="form-object">
-                <label for="" class="formLabel">Email Address</label>
-                <input type="email" name="Email" class="form-control" placeholder="Enter Email" id="">
+<section class="admin-login-section">
+    <div class="admin-login-container">
+        <h2>Admin Login</h2>
+        <form action="/admin/admin-login" method="post">
+            <div class="input-group">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" id="email" name="Email" class="form-control" placeholder="Enter Email" required>
             </div>
 
-            <div class="form-object">
-                <label for="" class="formLabel">Password</label>
-                <input type="password" name="Password" class="form-control" placeholder="Password" id="">
+            <div class="input-group">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="Password" class="form-control" placeholder="Enter Password"
+                    required>
             </div>
 
-            <button type="submit" class="btn btn-primary float-right">Login</button>
+            <button type="submit" class="btn btn-primary">Login</button>
         </form>
     </div>
 </section>

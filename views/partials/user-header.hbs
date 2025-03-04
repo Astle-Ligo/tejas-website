@@ -1,19 +1,58 @@
-<header>
-    <nav class="navbar navbar-expand-lg" id="navbar">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/" id="logo">Visages Treasure Hunt</a>
-
-            {{#if User}} <!-- Check if User exists -->
-            <div id="navbarNav">
-                <ul class="navbar-nav ms-auto"> <!-- Moves items to the right -->
-                    <li class="nav-item">
-                        {{User.Name}} <!-- Fixed variable case -->
-                    </li>
-                    <li class="nav-item"><a href="/user-log-out">Logout</a></li>
-                </ul>
-            </div>
-            {{/if}}
-
+<nav class="fixed top-0 left-0 right-0 z-50 bg-beige bg-opacity-95 shadow-md py-4 px-6">
+    <div class="container mx-auto flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="text-coffee">
+                <path d="M12 3a4 4 0 0 0-4 4v1h8V7a4 4 0 0 0-4-4Z"></path>
+                <path d="M8 8h8"></path>
+                <path d="m19.5 9.5-.5.5"></path>
+                <path d="m18.5 11.5-.5.5"></path>
+                <path d="m16.5 10.5-.5.5"></path>
+                <path d="m15.5 12.5-.5.5"></path>
+                <path d="m12.5 10.5-.5.5"></path>
+                <path d="m11.5 12.5-.5.5"></path>
+                <path d="m9.5 11.5-.5.5"></path>
+                <path d="m8.5 9.5-.5.5"></path>
+                <path d="M14.5 8.5c-.43 0-.9.1-1.41.2a8.3 8.3 0 0 0-2.18.7"></path>
+                <path d="M16.5 10.5c0 .53-.1 1.1-.2 1.61a8.3 8.3 0 0 1-.7 2.18"></path>
+                <path d="M12.5 16.5c.43 0 .9-.1 1.41-.2a8.3 8.3 0 0 0 2.18-.7"></path>
+                <path d="M10.5 14.5c0-.53.1-1.1.2-1.61a8.3 8.3 0 0 1 .7-2.18"></path>
+                <path d="m8.5 14.5.5-.5"></path>
+                <path d="m9.5 12.5.5-.5"></path>
+                <path d="m11.5 11.5.5-.5"></path>
+                <path d="m12.5 13.5.5-.5"></path>
+                <path d="m14.5 12.5.5-.5"></path>
+                <path d="m15.5 14.5.5-.5"></path>
+                <path d="m17.5 13.5.5-.5"></path>
+                <path d="m18.5 15.5.5-.5"></path>
+                <path d="M15.5 17.5c-.43 0-.9-.1-1.41-.2a8.3 8.3 0 0 1-2.18-.7"></path>
+                <path d="M9.5 15.5c0-.53.1-1.1.2-1.61a8.3 8.3 0 0 1 .7-2.18"></path>
+                <path d="M7.5 11.5c.43 0 .9.1 1.41.2a8.3 8.3 0 0 1 2.18.7"></path>
+                <path d="M13.5 9.5c0 .53-.1 1.1-.2 1.61a8.3 8.3 0 0 1-.7 2.18"></path>
+            </svg>
+            <h1 class="text-2xl font-bold text-coffee">Tejas '25</h1>
         </div>
-    </nav>
-</header>
+
+        <div class="hidden md:flex items-center gap-8">
+            <a href="/#about" class="nav-link">About</a>
+            <a href="/events" class="nav-link">Events</a>
+            <a href="/schedule" class="nav-link">Schedule</a>
+        </div>
+
+        <button class="md:hidden" id="menu-toggle">
+            <div class="w-6 h-0.5 bg-coffee mb-1.5"></div>
+            <div class="w-6 h-0.5 bg-coffee mb-1.5"></div>
+            <div class="w-6 h-0.5 bg-coffee"></div>
+        </button>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="md:hidden bg-beige py-4 px-6 shadow-inner hidden">
+        <div class="flex flex-col gap-4">
+            <a href="/#about" class="nav-link mobile-link">About</a>
+            <a href="/events" class="nav-link mobile-link">Events</a>
+            <a href="/schedule" class="nav-link mobile-link">Schedule</a>
+        </div>
+    </div>
+</nav>
