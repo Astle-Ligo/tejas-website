@@ -1,9 +1,11 @@
 {{!-- culRepNavbar.hbs --}}
 <header>
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-coffee text-beige shadow-md py-4 px-6">
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-coffee text-beige shadow-md py-2 px-6">
         <div class="container mx-auto flex justify-between items-center">
             <!-- Logo -->
-            <a class="text-2xl font-bold" href="/culRep" id="logo">Cultural Rep ({{culRepUser.class}})</a>
+            <a class="text-2xl font-bold font-handwritten" href="/culRep" id="logo">
+                Cultural Rep ({{culRepUser.class}})
+            </a>
 
             <!-- Mobile Toggle Button -->
             <button class="md:hidden" id="menu-toggle">
@@ -15,11 +17,15 @@
             <!-- Navbar Items -->
             <div class="hidden md:flex items-center gap-8" id="navbarNav">
                 {{#if culRepUser}}
-                <a class="px-3 py-2 hover:text-khaki" href="/culRep/registrations">Registered Events</a>
+                <a class="px-3 py-2 hover:text-khaki font-handwritten" href="/culRep/registrations">
+                    Registered Events
+                </a>
 
                 <!-- Logout Button -->
-                <a class="px-4 py-2 bg-red-600 text-beige rounded-lg hover:bg-red-700 transition"
-                    href="/culRep/cultural_rep-log-out">Logout</a>
+                <a class="px-4 py-2 bg-red-600 text-beige rounded-lg hover:bg-red-700 transition font-handwritten"
+                    href="/culRep/cultural_rep-log-out">
+                    Logout
+                </a>
                 {{/if}}
             </div>
         </div>

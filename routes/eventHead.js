@@ -111,7 +111,7 @@ router.get("/registrations/:eventId", async (req, res) => {
 
         console.log("Registrations:", registrations);
         console.log("Event Details:", eventDetails);
-        
+
         res.render("eventHead/registrations", {
             eventHead: true,
             eventHeadUser,
@@ -161,9 +161,9 @@ router.post("/results", async (req, res) => {
     }
 
     try {
-        console.log("dfdfdf ",req.session.eventHead);
-        
-        const response = await eventHeadHelpers.saveEventResults(req.body,req.session.eventHead._id);
+        console.log("dfdfdf ", req.session.eventHead);
+
+        const response = await eventHeadHelpers.saveEventResults(req.body, req.session.eventHead._id);
         res.status(200).redirect('results');
     } catch (error) {
         console.error("Error submitting results:", error);
@@ -205,6 +205,70 @@ router.get("/view-results", async (req, res) => {
     } catch (error) {
         console.error("Error fetching results:", error);
         res.status(500).send("Internal Server Error");
+    }
+});
+
+router.get("/addWhatsAppLink/:eventId", async (req, res) => {
+    try {
+        const event = await eventHeadHelpers.getEventDetailsById(req.params.eventId);
+        res.render("eventHead/addWhatsAppLink", { event, eventHead: true, eventHeadUser: req.session.eventHead });
+    } catch (error) {
+        console.error(error);
+        res.redirect("/eventHead");
+    }
+});
+
+router.post("/addWhatsAppLink/:eventId", async (req, res) => {
+    try {
+        await eventHeadHelpers.addWhatsAppLink(req.params.eventId, req.body.whatsappLink);
+        res.redirect("/eventHead");
+    } catch (error) {
+        console.error(error);
+        res.redirect("/eventHead");
+    }
+});
+
+router.get("/edit-result/:eventId", async (req, res) => {
+    try {
+        const eventId = req.params.eventId;
+        const result = await eventHeadHelpers.getResultByEvent(eventId);
+        console.log("Fetched Result:", result);
+
+        if (result) {
+            res.render("eventHead/edit-results", { result, eventHead: true, eventHeadUser: req.session.eventHead });
+        } else {
+            res.render("eventHead/edit-results", { result: null, message: "No result found for this event." });
+        }
+    } catch (error) {
+        console.error("Error fetching result:", error);
+        res.status(500).render("error", { message: "Internal Server Error" });
+    }
+});
+
+
+router.post("/editResult", async (req, res) => {
+    try {
+        await eventHeadHelpers.editResult(req.body);
+        res.redirect("/eventHead");
+    } catch (error) {
+        console.error("Error editing result:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+router.get("/delete-result/:id", async (req, res) => {
+    try {
+        const resultId = req.params.id;
+        const isDeleted = await eventHeadHelpers.deleteResult(resultId);
+
+        if (isDeleted) {
+            res.redirect("/eventHead/view-results"); // Redirect to results page after deletion
+        } else {
+            res.status(404).send("Result not found");
+        }
+    } catch (error) {
+        console.error("Error deleting result:", error);
+        res.status(500).send("Internal server error");
     }
 });
 

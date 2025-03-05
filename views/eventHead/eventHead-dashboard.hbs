@@ -1,17 +1,32 @@
 {{!-- eventHeadDashboard.hbs --}}
 <section class="py-20 px-6 bg-beige text-bistre min-h-screen">
     <div class="container mx-auto max-w-4xl bg-white p-8 shadow-lg rounded-lg">
-        <h2 class="text-3xl font-bold text-coffee text-center mb-6">Event Head Dashboard</h2>
-        <p class="text-center text-lg text-bistre">Welcome, <strong>{{eventHeadUser.Name}}</strong></p>
-        <h3 class="text-2xl font-semibold text-center text-coffee mt-6">Your Events</h3>
+        <h2 class="text-3xl font-bold text-coffee text-center mb-6 font-handwritten">
+            Event Head Dashboard
+        </h2>
+        <p class="text-center text-lg text-bistre font-handwritten">
+            Welcome, <strong>{{eventHeadUser.Name}}</strong>
+        </p>
+        <h3 class="text-2xl font-semibold text-center text-coffee mt-6 font-handwritten">
+            Your Events
+        </h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6">
             {{#each events}}
-            <a href="/eventHead/registrations/{{this._id}}"
-                class="block bg-coffee text-beige p-4 text-center rounded-lg hover:bg-bistre transition">
-                {{this.eventName}}
-            </a>
+            <div class="bg-coffee text-beige p-4 text-center rounded-lg hover:bg-bistre transition font-handwritten">
+                <p class="text-lg font-bold">{{this.eventName}}</p>
+
+                <a href="/eventHead/registrations/{{this._id}}"
+                    class="mt-2 inline-block bg-khaki text-bistre px-4 py-2 rounded hover:bg-golden transition">
+                    View Registrations
+                </a>
+
+                <a href="/eventHead/addWhatsAppLink/{{this._id}}"
+                    class="mt-2 inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-800 transition">
+                    Add WhatsApp Link
+                </a>
+            </div>
             {{else}}
-            <p class="text-muted text-center w-full">No events found.</p>
+            <p class="text-muted text-center w-full font-handwritten">No events found.</p>
             {{/each}}
         </div>
     </div>

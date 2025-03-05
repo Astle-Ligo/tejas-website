@@ -146,6 +146,15 @@ router.get("/registrations", async (req, res) => {
 
     // Get registrations of the logged-in cultural representative
     const registrations = await culRepHelpers.getRegistrationsByCulturalRep(culRepUser._id);
+    let indIndex = 1, grpIndex = 1;
+
+    registrations.forEach((reg) => {
+      if (reg.type === "individual") {
+        reg.indIndex = indIndex++;
+      } else if (reg.type === "group") {
+        reg.grpIndex = grpIndex++;
+      }
+    });
     res.render("culRep/registrations", {
       culRep: true,
       culRepUser,

@@ -30,19 +30,21 @@ app.engine(
     defaultLayout: "layout",
     layoutsDir: path.join(__dirname, "views", "layout"),
     helpers: {
-      eq: function (a, b) {
-        return a === b;
-      },
-      inc: function (value) {
-        return parseInt(value) + 1; // Convert to number and increment
-      },
-      isArray: function (value) {
-        return Array.isArray(value); // ✅ Returns true if value is an array
-      }
+      eq: (a, b) => a === b,
+      inc: (value) => parseInt(value) + 1,
+      isArray: (value) => Array.isArray(value),
+      lookup: (obj, index) => (obj ? obj[index] : undefined),
+      mod: (index, divisor) => index % divisor === 0,
+      formatDate: (date) => moment(date).format("YYYY-MM-DD HH:mm:ss"),
+      concat: (...args) => args.slice(0, -1).join(""), // Concatenates all arguments except the last one (Handlebars options object)
+      encodeURI: (str) => encodeURIComponent(str), // Encodes strings for URLs
+      some: (array, key, value) => array.some(item => item[key] === value),
+
+      // ✅ Add the missing "even" helper
+      even: (index) => index % 2 === 0
     }
   })
 );
-
 
 app.use(logger('dev'));
 app.use(express.json());

@@ -1,33 +1,61 @@
-{{!-- eventDetails.hbs --}}
-<section class="py-20 px-6 bg-beige text-bistre flex justify-center items-center min-h-screen">
-    <div class="bg-white p-8 shadow-lg rounded-lg max-w-4xl w-full">
-        <img src="{{event.eventImageUrl}}" class="w-full h-64 object-cover rounded-lg mb-6" alt="Event Image">
-        <h2 class="text-3xl font-bold text-coffee text-center">{{event.eventName}}
-            {{#if event.eventSubName}}
-            <span class="text-lg">({{event.eventSubName}})</span>
+<section class="py-16 px-6 bg-beige text-bistre flex justify-center items-center min-h-screen">
+    <div class="bg-white p-8 shadow-lg rounded-lg max-w-3xl w-full">
+        {{#if event.eventImageUrl}}
+        <img src="{{event.eventImageUrl}}" class="w-full aspect-video object-cover rounded-lg mb-6"
+            alt="{{event.eventName}} Image">
+        {{/if}}
+
+        <div class="text-center">
+            <h2 class="text-4xl font-bold text-coffee font-handwritten">
+                {{event.eventName}}
+                {{#if event.eventSubName}}
+                <span class="text-lg text-bistre block mt-1 font-handwritten">({{event.eventSubName}})</span>
+                {{/if}}
+            </h2>
+            {{#if event.description}}
+            <p class="text-lg text-gray-700 mt-4 font-handwritten">{{event.description}}</p>
             {{/if}}
-        </h2>
-        <p class="text-center text-bistre mt-2">{{event.description}}</p>
-        <div class="mt-6 space-y-2 text-center">
-            <p><strong>Strength:</strong> {{event.eventStrength}}</p>
-            {{#if (eq event.eventStrength "group")}}
-            <p><strong>Group Size:</strong> {{#if event.minParticipants}}{{event.minParticipants}} -
-                {{/if}}{{event.maxParticipants}}</p>
-            {{/if}}
-            <p><strong>Max Registrations from a Class:</strong> {{event.classReg}}</p>
-            <p><strong>Time Limit:</strong> {{event.timeLimit}}</p>
-            <p><strong>Event Venue:</strong> {{event.venue}}</p>
-            <p><strong>Event Head:</strong> {{event.eventHead}}</p>
-            <p><strong>Event Head Contact:</strong> {{event.eventHeadContact}}</p>
-            <p><strong>Date:</strong> {{event.eventDate}}</p>
         </div>
+
+        <div class="mt-6 border-t border-gray-300 pt-4">
+            <h3 class="text-xl font-semibold text-coffee mb-2 text-center font-handwritten">Event Details</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-800 font-handwritten">
+                <p><strong>Strength:</strong> {{event.eventStrength}}</p>
+                <p><strong>Max from a Class:</strong> {{event.classReg}}</p>
+
+                {{#if event.isGroupEvent}}
+                <p><strong>Group Size:</strong>
+                    {{#if event.minParticipants}} {{event.minParticipants}} - {{/if}}{{event.maxParticipants}}
+                </p>
+                {{/if}}
+
+                <p><strong>Time Limit:</strong> {{event.timeLimit}}</p>
+                <p><strong>Event Venue:</strong> {{event.venue}}</p>
+                <p><strong>Date:</strong> {{event.eventDate}}</p>
+                {{#if event.eventTime}}
+                <p><strong>Time:</strong> {{event.eventTime}}</p>
+                {{/if}}
+            </div>
+        </div>
+
+        <div class="mt-6 border-t border-gray-300 pt-4">
+            <h3 class="text-xl font-semibold text-coffee mb-2 text-center font-handwritten">Event Head</h3>
+            <p class="text-center text-lg font-handwritten"><strong>{{event.eventHead}}</strong></p>
+            <p class="text-center text-gray-700 font-handwritten">{{event.eventHeadContact}}</p>
+        </div>
+
         <div class="mt-6 flex justify-center">
             {{#if canRegister}}
             <a href="/culRep/register-event/{{event._id}}"
-                class="px-4 py-2 bg-green-600 text-beige font-bold rounded-lg hover:bg-green-700 transition">Register</a>
+                class="px-5 py-2 bg-green-600 text-beige font-bold rounded-lg hover:bg-green-700 transition shadow-md hover:shadow-lg font-handwritten">
+                Register
+            </a>
             {{else}}
-            <button class="px-4 py-2 bg-gray-400 text-white font-bold rounded-lg cursor-not-allowed" disabled>You have
-                already Registered</button>
+            <button
+                class="px-5 py-2 bg-gray-400 text-white font-bold rounded-lg cursor-not-allowed shadow-md font-handwritten"
+                disabled>
+                Already Registered
+            </button>
             {{/if}}
         </div>
     </div>

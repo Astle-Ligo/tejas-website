@@ -139,26 +139,37 @@ module.exports = {
 
             registrations.forEach(reg => {
                 if (reg.type === "group" && reg.teamMembers && Array.isArray(reg.teamMembers)) {
-                    // Extract members from group registrations
-                    reg.teamMembers.forEach(member => {
-                        participants.push({
-                            _id: reg._id.toString(),  // Use the team's registration ID
+                    // Group Registration - Include Team Name & Contact
+                    participants.push({
+                        _id: reg._id.toString(),
+                        teamName: reg.teamName || "Unnamed Team",
+                        class: reg.classId,
+                        teamMembers: reg.teamMembers.map(member => ({
                             name: member.name,
-                            class: reg.classId  // Use the class from registration
-                        });
+                            regNum: member.regNum
+                        })),
+                        contact: {
+                            teamPhone: reg.contact?.teamPhone || "N/A",
+                            altPhone: reg.contact?.altPhone || "N/A"
+                        },
+                        timestamp: reg.timestamp?.$date || "N/A",
+                        type: "group"
                     });
                 } else if (reg.type === "individual" && reg.participant) {
-                    // Extract participant from individual registration
+                    // Individual Registration - Include Name, Reg Number & Phone
                     participants.push({
                         _id: reg._id.toString(),
                         name: reg.participant.name,
-                        class: reg.classId
+                        regNum: reg.participant.regNum,
+                        class: reg.classId,
+                        phone: reg.participant.phone || "N/A",
+                        timestamp: reg.timestamp?.$date || "N/A",
+                        type: "individual"
                     });
                 }
             });
 
             console.log("Formatted Participants:", participants);
-
             return participants;
         } catch (error) {
             console.error("Error fetching registrations:", error);
@@ -254,6 +265,7 @@ module.exports = {
                 {
                     $project: {
                         eventName: 1,
+                        eventId: 1,
                         firstPlaceName: {
                             $cond: {
                                 if: { $eq: [{ $arrayElemAt: ["$firstWinner.type", 0] }, "individual"] },
@@ -280,6 +292,88 @@ module.exports = {
             console.error("Error fetching results:", error);
             throw error;
         }
+    },
+
+    addWhatsAppLink: async (eventId, whatsappLink) => {
+        try {
+            await db.get().collection(collection.EVENT_COLLECTION).updateOne(
+                { _id: new ObjectId(eventId) },
+                { $set: { whatsappLink } }
+            );
+            return true;
+        } catch (error) {
+            console.error("Error adding WhatsApp link:", error);
+            throw new Error("Unable to add WhatsApp link.");
+        }
+    },
+
+    getResultByEvent: async (eventId) => {
+        console.log(eventId);
+
+        try {
+            // Validate if eventId is a valid ObjectId
+            if (!ObjectId.isValid(eventId)) {
+                console.error("Invalid ObjectId:", eventId);
+                return null;
+            }
+
+            const result = await db.get().collection(collection.RESULTS_COLLECTION).findOne({
+                eventId: new ObjectId(eventId) // Convert eventId to ObjectId
+            });
+
+            console.log("Query Result:", result); // Debugging output
+            return result;
+        } catch (error) {
+            console.error("Error fetching result:", error);
+            return null;
+        }
+    },
+
+    editResult: async (data) => {
+        const { resultId, firstPlace, secondPlace } = data;
+
+        if (!resultId) throw new Error("Result ID is required for editing.");
+
+        // Fetch the class ID of both winners
+        const firstPlaceData = await db.get().collection(collection.REGISTRATION_COLLECTION).findOne(
+            { _id: new ObjectId(firstPlace) },
+            { projection: { classId: 1 } }
+        );
+
+        const secondPlaceData = await db.get().collection(collection.REGISTRATION_COLLECTION).findOne(
+            { _id: new ObjectId(secondPlace) },
+            { projection: { classId: 1 } }
+        );
+
+        console.log(firstPlaceData, secondPlaceData);
+
+
+        if (!firstPlaceData || !secondPlaceData) throw new Error("Invalid participant selection.");
+
+        return db.get().collection(collection.RESULTS_COLLECTION).updateOne(
+            { _id: new ObjectId(resultId) },
+            {
+                $set: {
+                    firstPlace: new ObjectId(firstPlace),
+                    secondPlace: new ObjectId(secondPlace),
+                    classFirst: firstPlaceData.classId,
+                    classSecond: secondPlaceData.classId,
+                    timestamp: new Date(),
+                },
+            }
+        );
+    },
+
+    deleteResult: async (resultId) => {
+        if (!ObjectId.isValid(resultId)) {
+            throw new Error("Invalid result ID");
+        }
+
+        const deleteResponse = await db.get().collection(collection.RESULTS_COLLECTION).deleteOne({
+            _id: new ObjectId(resultId),
+        });
+
+        return deleteResponse.deletedCount === 1;
     }
 
 }

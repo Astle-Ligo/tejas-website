@@ -1,6 +1,6 @@
 {{!-- culRepDashboard.hbs --}}
 <section class="py-20 px-6 bg-beige text-bistre">
-    <h1 class="text-3xl font-bold text-coffee text-center mb-6">Event Details</h1>
+    <h1 class="text-3xl font-bold text-coffee text-center mb-6 font-handwritten">Event Details</h1>
     <div class="container mx-auto flex justify-center">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {{#each events}}
@@ -8,11 +8,12 @@
                 class="block bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition">
                 <img src="{{this.eventImageUrl}}" alt="Event Image" class="w-full h-48 object-cover">
                 <div class="p-4 text-center">
-                    <h5 class="text-xl font-bold text-coffee">
+                    <h5 class="text-xl font-bold text-coffee font-handwritten">
                         {{this.eventName}}
-                        {{#if this.eventSubName}}<span class="text-sm">({{this.eventSubName}})</span>{{/if}}
+                        {{#if this.eventSubName}}<span
+                            class="text-sm font-handwritten">({{this.eventSubName}})</span>{{/if}}
                     </h5>
-                    <p class="text-bistre">Date: {{this.eventDate}}</p>
+                    <p class="text-bistre font-handwritten">Date: {{this.eventDate}}</p>
                 </div>
             </a>
             {{/each}}

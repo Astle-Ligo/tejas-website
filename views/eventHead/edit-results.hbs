@@ -1,30 +1,30 @@
-{{!-- resultsEntry.hbs --}}
 <section class="py-20 px-6 bg-beige text-bistre min-h-screen flex justify-center items-center">
     <div class="bg-white p-8 shadow-lg rounded-lg max-w-2xl w-full">
-        <h2 class="text-3xl font-bold text-coffee text-center mb-6 font-handwritten">Results Entry</h2>
+        <h2 class="text-3xl font-bold text-coffee text-center mb-6 font-handwritten">Edit Result</h2>
+
+        {{#if message}}
+        <p class="text-center text-red-500">{{message}}</p>
+        {{/if}}
+
         <p class="text-center text-lg text-bistre">
             Welcome, <strong class="font-handwritten">{{eventHeadUser.Name}}</strong>
         </p>
-        <form id="resultsForm" action="/eventHead/results" method="POST" class="space-y-4">
-            <input type="hidden" name="resultId" id="resultId">
+
+        <form id="resultsForm" action="/eventHead/editResult" method="POST" class="space-y-4">
+            <input type="hidden" name="resultId" id="resultId" value="{{result._id}}">
 
             <div>
-                <label class="block font-semibold">Select Event:</label>
-                <select name="eventId" id="event" class="w-full p-2 border border-khaki rounded font-handwritten"
-                    required onchange="loadParticipants(this)">
-                    <option value="">-- Select an Event --</option>
-                    {{#each events}}
-                    <option value="{{this._id}}" data-event-name="{{this.eventName}}">{{this.eventName}}</option>
-                    {{/each}}
-                </select>
-                <input type="hidden" name="eventName" id="eventName">
+                <label class="block font-semibold">Event Name:</label>
+                <input type="text" name="eventName" id="eventName"
+                    class="w-full p-2 border border-khaki rounded font-handwritten" value="{{result.eventName}}"
+                    readonly>
             </div>
 
             <div>
                 <label class="block font-semibold">First Place Winner:</label>
                 <select name="firstPlace" id="firstPlace"
                     class="w-full p-2 border border-khaki rounded font-handwritten" required>
-                    <option value="">-- Select First Place Winner --</option>
+                    <option value="">-- Loading Participants --</option>
                 </select>
             </div>
 
@@ -32,7 +32,7 @@
                 <label class="block font-semibold">Second Place Winner:</label>
                 <select name="secondPlace" id="secondPlace"
                     class="w-full p-2 border border-khaki rounded font-handwritten" required>
-                    <option value="">-- Select Second Place Winner --</option>
+                    <option value="">-- Loading Participants --</option>
                 </select>
             </div>
 
@@ -45,11 +45,7 @@
 </section>
 
 <script>
-    async function loadParticipants(eventSelect) {
-        const eventId = eventSelect.value;
-        const eventName = eventSelect.options[eventSelect.selectedIndex].getAttribute("data-event-name");
-        document.getElementById("eventName").value = eventName || "";
-
+    async function loadParticipants(eventId, firstPlaceId, secondPlaceId) {
         const firstPlaceSelect = document.getElementById("firstPlace");
         const secondPlaceSelect = document.getElementById("secondPlace");
 
@@ -63,24 +59,32 @@
             const participants = await response.json();
 
             participants.forEach(participant => {
-                let displayName = "";
-
-                if (participant.type === "individual") {
-                    displayName = `${participant.name} (${participant.class})`;
-                } else if (participant.type === "group") {
-                    displayName = `Team - ${participant.teamName}  (${participant.class})`;
-                }
+                let displayName = participant.type === "individual"
+                    ? `${participant.name} (${participant.class})`
+                    : `Team - ${participant.teamName} (${participant.class})`;
 
                 const option = `<option value="${participant._id}" class="font-handwritten">
-                ${displayName}
-            </option>`;
+                    ${displayName}
+                </option>`;
 
                 firstPlaceSelect.innerHTML += option;
                 secondPlaceSelect.innerHTML += option;
             });
+
+            // Pre-select winners
+            if (firstPlaceId) firstPlaceSelect.value = firstPlaceId;
+            if (secondPlaceId) secondPlaceSelect.value = secondPlaceId;
+
         } catch (error) {
             console.error("Error fetching participants:", error);
         }
     }
 
+    document.addEventListener("DOMContentLoaded", function () {
+        const eventId = "{{result.eventId}}";
+        const firstPlaceId = "{{result.firstPlace}}";
+        const secondPlaceId = "{{result.secondPlace}}";
+
+        loadParticipants(eventId, firstPlaceId, secondPlaceId);
+    });
 </script>

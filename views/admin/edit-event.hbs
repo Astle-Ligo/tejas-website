@@ -124,11 +124,5 @@
             formattedTimeInput.value = formatTime(this.value);
         });
 
-        document.getElementById("eventForm").addEventListener("submit", function (event) {
-            if (!formattedTimeInput.value) {
-                event.preventDefault(); // Prevent form submission if time is empty
-                alert("Please select a time.");
-            }
-        });
     });
 </script>

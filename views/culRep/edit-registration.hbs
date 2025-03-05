@@ -1,53 +1,62 @@
 {{!-- editRegistration.hbs --}}
 <section class="py-20 px-6 bg-beige text-bistre flex justify-center items-center min-h-screen">
     <div class="bg-white p-8 shadow-lg rounded-lg max-w-2xl w-full">
-        <h2 class="text-3xl font-bold text-coffee text-center mb-6">Edit Registration for {{event.eventName}}</h2>
+        <h2 class="text-3xl font-bold text-coffee text-center mb-6 font-handwritten">Edit Registration for
+            {{event.eventName}}</h2>
         <form action="/culRep/edit-registration/{{event._id}}" method="post" class="space-y-4">
             <input type="hidden" name="eventId" value="{{event._id}}">
             <div>
-                <label class="block font-semibold">Event Name</label>
+                <label class="block font-semibold font-handwritten">Event Name</label>
                 <input type="text" class="w-full p-2 border border-khaki rounded" value="{{event.eventName}}" readonly>
             </div>
             <div>
-                <label class="block font-semibold">Event Sub Name</label>
+                <label class="block font-semibold font-handwritten">Event Sub Name</label>
                 <input type="text" class="w-full p-2 border border-khaki rounded" value="{{event.eventSubName}}"
                     readonly>
             </div>
             <div>
-                <label class="block font-semibold">Participation Type</label>
+                <label class="block font-semibold font-handwritten">Participation Type</label>
                 <input type="text" class="w-full p-2 border border-khaki rounded" value="{{event.eventStrength}}"
                     readonly>
             </div>
             <div>
-                <label class="block font-semibold">Class</label>
+                <label class="block font-semibold font-handwritten">Class</label>
                 <input type="text" class="w-full p-2 border border-khaki rounded" value="{{culRepUser.class}}" readonly>
             </div>
+
             <div id="individualFields">
-                <label class="block font-semibold">Participant Name</label>
+                <label class="block font-semibold font-handwritten">Participant Name</label>
                 <input type="text" name="participantName" class="w-full p-2 border border-khaki rounded"
                     value="{{registration.participant.name}}">
-                <label class="block font-semibold">Registration Number</label>
+
+                <label class="block font-semibold font-handwritten">Registration Number</label>
                 <input type="text" name="regNum" class="w-full p-2 border border-khaki rounded"
                     value="{{registration.participant.regNum}}">
-                <label class="block font-semibold">Email</label>
+
+                <label class="block font-semibold font-handwritten">Email</label>
                 <input type="email" name="email" class="w-full p-2 border border-khaki rounded"
                     value="{{registration.participant.email}}">
-                <label class="block font-semibold">Phone Number</label>
+
+                <label class="block font-semibold font-handwritten">Phone Number</label>
                 <input type="tel" name="phone" class="w-full p-2 border border-khaki rounded"
                     value="{{registration.participant.phone}}">
             </div>
+
             <div id="groupFields" class="hidden">
-                <label class="block font-semibold">Team Name</label>
+                <label class="block font-semibold font-handwritten">Team Name</label>
                 <input type="text" name="teamName" class="w-full p-2 border border-khaki rounded"
                     value="{{registration.teamName}}">
-                <label class="block font-semibold">Team Contact Number</label>
+
+                <label class="block font-semibold font-handwritten">Team Contact Number</label>
                 <input type="tel" name="teamPhone" class="w-full p-2 border border-khaki rounded"
                     value="{{registration.contact.teamPhone}}">
-                <label class="block font-semibold">Alternate Phone Number</label>
+
+                <label class="block font-semibold font-handwritten">Alternate Phone Number</label>
                 <input type="tel" name="altPhone" class="w-full p-2 border border-khaki rounded"
                     value="{{registration.contact.altPhone}}">
+
                 <div id="teamMembers">
-                    <label class="block font-semibold">Team Members</label>
+                    <label class="block font-semibold font-handwritten">Team Members</label>
                     {{#each registration.teamMembers}}
                     <div class="team-member mt-2">
                         <input type="text" name="teamMembers[]" class="w-full p-2 border border-khaki rounded"
@@ -60,15 +69,19 @@
                     </div>
                     {{/each}}
                 </div>
+
                 <button type="button" class="px-4 py-2 bg-blue-600 text-beige rounded-lg hover:bg-blue-700 transition"
                     id="addMemberBtn" onclick="addTeamMember()">+ Add Member</button>
             </div>
+
             <button type="submit"
-                class="w-full py-2 bg-green-600 text-beige font-bold rounded-lg hover:bg-green-700 transition">Update
-                Registration</button>
+                class="w-full py-2 bg-green-600 text-beige font-bold rounded-lg hover:bg-green-700 transition font-handwritten">
+                Update Registration
+            </button>
         </form>
     </div>
 </section>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const eventStrength = "{{event.eventStrength}}";
@@ -77,16 +90,18 @@
             document.getElementById("groupFields").classList.remove("hidden");
         }
     });
+
     function removeTeamMember(button) {
         button.parentElement.remove();
     }
+
     function addTeamMember() {
         let teamMembersDiv = document.getElementById("teamMembers");
         let newMemberDiv = document.createElement("div");
         newMemberDiv.classList.add("team-member", "mt-2");
         newMemberDiv.innerHTML = `
-            <input type="text" name="teamMembers[]" class="w-full p-2 border border-khaki rounded" placeholder="Member Name" required>
-            <input type="text" name="teamRegNums[]" class="w-full p-2 border border-khaki rounded" placeholder="Reg No." required>
+            <input type="text" name="teamMembers[]" class="w-full p-2 border border-khaki rounded font-handwritten" placeholder="Member Name" required>
+            <input type="text" name="teamRegNums[]" class="w-full p-2 border border-khaki rounded font-handwritten" placeholder="Reg No." required>
             <button type="button" class="px-3 py-2 bg-red-600 text-beige rounded-lg hover:bg-red-700 transition remove-member" onclick="removeTeamMember(this)">Delete</button>
         `;
         teamMembersDiv.appendChild(newMemberDiv);
