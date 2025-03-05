@@ -46,10 +46,11 @@
             <div>
                 <label class="block font-semibold">Registrations from a Class</label>
                 <select name="classReg" class="w-full p-2 border border-khaki rounded">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="unlimited">Unlimited</option>
+                    <option value="1" {{#if (eq event.classReg "1" )}}selected{{/if}}>1</option>
+                    <option value="2" {{#if (eq event.classReg "2" )}}selected{{/if}}>2</option>
+                    <option value="unlimited" {{#if (eq event.classReg "unlimited" )}}selected{{/if}}>Unlimited</option>
                 </select>
+
             </div>
             <div>
                 <label class="block font-semibold">Time Limit</label>

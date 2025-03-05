@@ -3,9 +3,8 @@
     <nav class="fixed top-0 left-0 right-0 z-50 bg-coffee text-beige shadow-md py-2 px-6">
         <div class="container mx-auto flex justify-between items-center">
             <!-- Logo -->
-            <a class="text-2xl font-bold font-handwritten" href="/eventHead" id="logo">
-                Event Head ({{eventHeadUser.Name}})
-            </a>
+            <a class="text-2xl font-bold font-handwritten" href="/eventHead" id="logo"> Event Head {{#if
+                eventHeadUser}}: {{eventHeadUser.Name}}{{/if}} </a>
 
             <!-- Mobile Toggle Button -->
             <button class="md:hidden" id="menu-toggle">

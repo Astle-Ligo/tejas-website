@@ -159,53 +159,53 @@ module.exports = {
         }
     },
 
-    getRegistrationsByCulturalRep: async (culturalRepId) => {
+    getRegistrationsByClass: async (classId) => {
         try {
-            const userIdString = culturalRepId.toString();
-
-            // Fetch registrations for the given cultural representative
-            const registrations = await db.get()
-                .collection(collection.REGISTRATION_COLLECTION)
-                .find({ userId: userIdString }) // Match userId as a string
-                .toArray();
-
-            console.log("Fetched Registrations:", registrations); // Debugging log
-
-            if (registrations.length === 0) {
-                console.log("No registrations found for user:", userIdString);
+            if (!classId) {
+                console.error("Invalid classId received:", classId);
                 return [];
             }
 
-            // Extract unique event IDs and convert them to ObjectId
-            const eventIds = [...new Set(registrations.map(reg => new ObjectId(reg.eventId)))];
+            console.log("Searching for classId:", classId.trim());
 
-            // Fetch event details using the converted event IDs
-            const events = await db.get()
-                .collection(collection.EVENT_COLLECTION)
-                .find({ _id: { $in: eventIds } }) // Query with ObjectId
+            const registrations = await db.get()
+                .collection(collection.REGISTRATION_COLLECTION)
+                .find({ classId: { $regex: `^${classId.trim()}$`, $options: "i" } }) // Case-insensitive match
                 .toArray();
 
-            console.log("Fetched Events:", events); // Debugging log
+            console.log("Registrations Found:", registrations.length);
 
-            // Create a mapping of eventId (string) -> event details
+            if (registrations.length === 0) {
+                console.log("No registrations found for class:", classId);
+                return [];
+            }
+
+            const eventIds = [...new Set(registrations.map(reg => reg.eventId))];
+
+            const events = await db.get()
+                .collection(collection.EVENT_COLLECTION)
+                .find({ _id: { $in: eventIds.map(id => new ObjectId(id)) } })
+                .toArray();
+
+            console.log("Fetched Events:", events.length);
+
             const eventMap = events.reduce((map, event) => {
-                map[event._id.toString()] = event; // Store event using string key
+                map[event._id.toString()] = event;
                 return map;
             }, {});
 
-            // Attach event details to each registration
             registrations.forEach(reg => {
                 reg.eventDetails = eventMap[reg.eventId] || { eventName: "Unknown Event" };
             });
 
-            console.log("Final Registrations with Event Details:", registrations); // Debugging log
-
+            console.log("Final Processed Registrations:", registrations);
             return registrations;
         } catch (error) {
-            console.error("Error fetching cultural rep registrations:", error);
+            console.error("Error fetching class registrations:", error);
             throw error;
         }
     },
+
 
     getClassRegistrations: async (eventId, classId) => {
         try {

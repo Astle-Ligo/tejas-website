@@ -16,6 +16,7 @@ router.get('/', async (req, res) => {
             loginError: req.session.loginError || null
         });
     }
+    req.session.loginError = null
 
     try {
         // Get all events managed by the event head
@@ -72,7 +73,7 @@ router.post('/eventHead-login', async (req, res) => {
             res.redirect('/eventHead');
         } else {
             req.session.loginError = "Invalid username or password";  // Fix error message key
-            res.redirect('/eventHead-login');
+            res.redirect('/eventHead');
         }
     } catch (error) {
         console.error("Error during eventHead login:", error);

@@ -56,7 +56,7 @@ router.post('/culRep-login', async (req, res) => {
       res.redirect('/culRep');
     } else {
       req.session.loginError = "Invalid username or password";  // Fix error message key
-      res.redirect('/culRep-login');
+      res.redirect('/culRep');
     }
   } catch (error) {
     console.error("Error during culRep login:", error);
@@ -144,10 +144,11 @@ router.get("/registrations", async (req, res) => {
       return res.redirect("/culRep"); // Redirect to login if not authenticated
     }
 
-    // Get registrations of the logged-in cultural representative
-    const registrations = await culRepHelpers.getRegistrationsByCulturalRep(culRepUser._id);
-    let indIndex = 1, grpIndex = 1;
+    const classId = culRepUser.class; // Get the class ID from session
+    const registrations = await culRepHelpers.getRegistrationsByClass(classId);
+    console.log(registrations);
 
+    let indIndex = 1, grpIndex = 1;
     registrations.forEach((reg) => {
       if (reg.type === "individual") {
         reg.indIndex = indIndex++;
@@ -155,6 +156,7 @@ router.get("/registrations", async (req, res) => {
         reg.grpIndex = grpIndex++;
       }
     });
+
     res.render("culRep/registrations", {
       culRep: true,
       culRepUser,
@@ -165,6 +167,7 @@ router.get("/registrations", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
 
 router.get('/edit-registration/:id', async (req, res) => {
   try {

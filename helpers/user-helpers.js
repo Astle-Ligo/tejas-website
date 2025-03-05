@@ -1,4 +1,5 @@
 var db = require('../config/connection');
+const bcrypt = require('bcryptjs');
 var collection = require('../config/collection');
 const { ObjectId } = require('mongodb');
 
@@ -68,6 +69,32 @@ module.exports = {
                 resolve(event);
             } catch (error) {
                 console.error("Error in getEventDetails:", error);
+                reject(error);
+            }
+        });
+    },
+
+    doCulturalRepSignup: (adminData) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                adminData.Password = await bcrypt.hash(adminData.Password, 10);
+                let data = await db.get().collection(collection.CULTURAL_REP_COLLECTION).insertOne(adminData);
+                adminData._id = data.insertedId;
+                resolve(adminData);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    },
+
+    doEventHeadSignup: (adminData) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                adminData.Password = await bcrypt.hash(adminData.Password, 10);
+                let data = await db.get().collection(collection.EVENT_HEAD_COLLECTION).insertOne(adminData);
+                adminData._id = data.insertedId;
+                resolve(adminData);
+            } catch (error) {
                 reject(error);
             }
         });

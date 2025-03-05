@@ -58,8 +58,10 @@ router.post('/admin-signup', async (req, res) => {
 /* Admin Login */
 router.get('/admin-login', (req, res) => {
   console.log("hai");
+  const errorMessage = req.session.errorMessage;
+  req.session.errorMessage = null; // Clear error after displaying
 
-  res.render('admin/admin-login', { admin: true });
+  res.render('admin/admin-login', { admin: true, errorMessage });
 });
 
 router.post('/admin-login', async (req, res) => {
@@ -71,13 +73,16 @@ router.post('/admin-login', async (req, res) => {
       req.session.admin = response.admin;
       res.redirect('/admin');
     } else {
-      res.redirect('/admin-login');
+      req.session.errorMessage = "Invalid email or password"; // Store error in session
+      res.redirect('/admin/admin-login'); // Redirect back to login page
     }
   } catch (error) {
     console.error("Error during admin login:", error);
-    res.status(500).send("Error during admin login.");
+    req.session.errorMessage = "An error occurred. Please try again.";
+    res.redirect('/admin');
   }
 });
+
 
 /* Admin Logout */
 router.get('/admin-log-out', (req, res) => {
@@ -132,7 +137,7 @@ router.get('/edit-event/:id', isAdminLoggedIn, async (req, res) => {
 router.post('/edit-event/:id', isAdminLoggedIn, async (req, res) => {
   try {
     console.log(req.body);
-    
+
     await adminHelpers.updateEvent(req.params.id, req.body);
     res.redirect('/admin/events');
   } catch (error) {
@@ -151,7 +156,7 @@ router.get('/delete-event/:id', isAdminLoggedIn, async (req, res) => {
   }
 });
 
-router.get('/events/:id', async (req, res) => {
+router.get('/events/:id', isAdminLoggedIn, async (req, res) => {
   let event = await adminHelpers.getEventDetails(req.params.id)
   console.log(event);
   res.render('admin/event-page', { event, admin: true, adminUser: req.session.admin })
@@ -201,13 +206,13 @@ router.post('/event-head-signup', async (req, res) => {
 
 
 
-router.get('/cultural-reps', async (req, res) => {
+router.get('/cultural-reps', isAdminLoggedIn, async (req, res) => {
   let cultural_reps = await adminHelpers.getAllCulturalReps()
   console.log(cultural_reps);
   res.render('admin/cultural-reps', { cultural_reps, admin: true, adminUser: req.session.admin })
 })
 
-router.get("/classRegistrations", async (req, res) => {
+router.get("/classRegistrations", isAdminLoggedIn, async (req, res) => {
   try {
     const classes = await adminHelpers.getAllClasses();
     res.render("admin/classwise-registration", {
@@ -222,7 +227,7 @@ router.get("/classRegistrations", async (req, res) => {
 });
 
 // Get registrations for a specific class
-router.get('/classRegistrations/:classId', async (req, res) => {
+router.get('/classRegistrations/:classId', isAdminLoggedIn, async (req, res) => {
   try {
     const classId = req.params.classId;
     const registrations = await adminHelpers.getRegistrationsForClass(classId);
@@ -243,7 +248,7 @@ router.get('/classRegistrations/:classId', async (req, res) => {
 });
 
 // Route to display all events for admin
-router.get("/eventRegistrations", async (req, res) => {
+router.get("/eventRegistrations", isAdminLoggedIn, async (req, res) => {
   try {
     const events = await adminHelpers.getAllEvents();
     res.render("admin/event-registration", {
@@ -258,7 +263,7 @@ router.get("/eventRegistrations", async (req, res) => {
 });
 
 // Route to display registrations for a specific event
-router.get('/eventRegistrations/:eventId', async (req, res) => {
+router.get('/eventRegistrations/:eventId', isAdminLoggedIn, async (req, res) => {
   try {
     const eventId = req.params.eventId;
     const registrations = await adminHelpers.getRegistrationsForEvent(eventId);
@@ -278,7 +283,7 @@ router.get('/eventRegistrations/:eventId', async (req, res) => {
   }
 });
 
-router.get('/event-heads', async (req, res) => {
+router.get('/event-heads', isAdminLoggedIn, async (req, res) => {
   try {
     let eventHeads = await adminHelpers.getAllEventHeads();
     console.log(eventHeads);
@@ -294,7 +299,7 @@ router.get('/event-heads', async (req, res) => {
   }
 });
 
-router.get('/delete-eventHead/:id', async (req, res) => {
+router.get('/delete-eventHead/:id', isAdminLoggedIn, async (req, res) => {
   try {
     const eventHeadId = req.params.id;
     await adminHelpers.deleteEventHead(eventHeadId);
