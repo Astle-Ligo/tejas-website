@@ -530,10 +530,10 @@ body {
 
 /* Navigation */
 .nav-link {
-    color: var(--coffee);
+    color: var(--coffee) !important;
     transition: color 0.3s;
     position: relative;
-    font-size: 1.125rem;
+    font-size: 1.125rem !important;
 }
 
 .nav-link:hover {
@@ -690,16 +690,47 @@ body {
 }
 
 .schedule-item {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 60px 100px auto;
+    /* Time, Location, Event */
     align-items: center;
-    border-bottom: 1px solid rgba(245, 245, 220, 0.3);
-    padding-bottom: 0.5rem;
+    gap: 20px;
+    padding: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    /* Light divider */
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .schedule-item .time {
-    font-weight: 700;
+    font-weight: bold;
+    text-align: left;
+    color: #f4e1c1;
 }
+
+.schedule-item .location {
+    font-style: italic;
+    color: #d8c3a5;
+}
+
+.event-container {
+    display: flex;
+    flex-direction: column;
+    /* Stack event and subName */
+}
+
+.schedule-item .event {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+.schedule-item .subName {
+    font-size: 1rem;
+    color: #ccc;
+    margin-top: 2px;
+    /* Small space between event and subName */
+}
+
 
 /* Form elements */
 .register-form {
@@ -1090,12 +1121,12 @@ body {
     bottom: -0.5rem;
 }
 
-.header-spacing{
+.header-spacing {
     height: 4rem;
     width: 100%;
 }
 
-.footer-center{
+.footer-center {
     display: flex;
     align-items: center;
     justify-content: center;

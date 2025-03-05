@@ -99,6 +99,8 @@ module.exports = {
 
     updateEvent: (eventId, eventDetails) => {
         return new Promise(async (resolve, reject) => {
+            console.log(eventDetails.formattedDate);
+
             try {
                 await db.get().collection(collection.EVENT_COLLECTION).updateOne(
                     { _id: new ObjectId(eventId) },
@@ -114,11 +116,12 @@ module.exports = {
                             classReg: eventDetails.classReg,
                             timeLimit: eventDetails.timeLimit,
                             venue: eventDetails.venue,
-                            eventTimeRaw:eventDetails.eventTimeRaw,
-                            eventTime:eventDetails.eventTime,
+                            eventTimeRaw: eventDetails.eventTimeRaw,
+                            eventTime: eventDetails.eventTime,
                             eventHead: eventDetails.eventHead,
                             eventHeadContact: eventDetails.eventHeadContact,
-                            eventDate: eventDetails.eventDate
+                            eventDate: eventDetails.eventDate,
+                            formattedDate:eventDetails.formattedDate
                         }
                     }
                 );

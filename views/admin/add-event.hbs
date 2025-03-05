@@ -1,24 +1,34 @@
-{{!-- addEvent.hbs --}}
 <section class="py-20 px-6 bg-beige text-bistre">
     <div class="container mx-auto max-w-2xl bg-white p-8 shadow-lg rounded-lg">
         <h2 class="text-3xl font-bold text-coffee text-center mb-6 font-handwritten">Add an Event</h2>
-        <form action="/admin/add-event" method="post" enctype="multipart/form-data" class="space-y-4">
+
+        <form id="eventForm" action="/admin/add-event" method="post" enctype="multipart/form-data" class="space-y-4">
+
+            <!-- Event Name -->
             <div>
                 <label class="block font-semibold text-bistre font-handwritten">Event Name:</label>
                 <input type="text" name="eventName" class="w-full p-2 border border-khaki rounded">
             </div>
+
+            <!-- Event Sub Name -->
             <div>
                 <label class="block font-semibold text-bistre font-handwritten">Event Sub Name:</label>
                 <input type="text" name="eventSubName" class="w-full p-2 border border-khaki rounded">
             </div>
+
+            <!-- Event Image -->
             <div>
                 <label class="block font-semibold text-bistre font-handwritten">Event Image URL:</label>
                 <input type="text" name="eventImageUrl" class="w-full p-2 border border-khaki rounded">
             </div>
+
+            <!-- Description -->
             <div>
                 <label class="block font-semibold text-bistre font-handwritten">Description:</label>
                 <textarea name="description" rows="4" class="w-full p-2 border border-khaki rounded"></textarea>
             </div>
+
+            <!-- Participation Strength -->
             <div>
                 <label class="block font-semibold text-bistre font-handwritten">Participation Strength:</label>
                 <select name="eventStrength" id="eventStrength" class="w-full p-2 border border-khaki rounded"
@@ -27,6 +37,8 @@
                     <option value="group">Group</option>
                 </select>
             </div>
+
+            <!-- Group Fields (Hidden Initially) -->
             <div id="groupFields" class="hidden">
                 <div>
                     <label class="block font-semibold text-bistre font-handwritten">Min Participants:</label>
@@ -39,6 +51,8 @@
                         class="w-full p-2 border border-khaki rounded">
                 </div>
             </div>
+
+            <!-- Class Registrations -->
             <div>
                 <label class="block font-semibold text-bistre font-handwritten">Registrations from a class:</label>
                 <select name="classReg" class="w-full p-2 border border-khaki rounded">
@@ -47,48 +61,63 @@
                     <option value="unlimited">Unlimited</option>
                 </select>
             </div>
+
+            <!-- Time Limit -->
             <div>
                 <label class="block font-semibold text-bistre font-handwritten">Time Limit:</label>
                 <input type="text" name="timeLimit" class="w-full p-2 border border-khaki rounded">
             </div>
+
+            <!-- Venue -->
             <div>
                 <label class="block font-semibold text-bistre font-handwritten">Venue:</label>
                 <input type="text" name="venue" class="w-full p-2 border border-khaki rounded">
             </div>
+
+            <!-- Time Input -->
             <div>
-                <label class="block font-semibold text-bistre font-handwritten">Time :</label>
+                <label class="block font-semibold text-bistre font-handwritten">Time:</label>
                 <input type="time" id="eventTime" name="eventTimeRaw" class="w-full p-2 border border-khaki rounded">
-                <!-- Hidden field to store 12-hour formatted time -->
                 <input type="hidden" id="formattedEventTime" name="eventTime">
             </div>
+
+            <!-- Event Head -->
             <div>
                 <label class="block font-semibold text-bistre font-handwritten">Event Head:</label>
                 <input type="text" name="eventHead" class="w-full p-2 border border-khaki rounded">
             </div>
+
+            <!-- Event Head Contact -->
             <div>
                 <label class="block font-semibold text-bistre font-handwritten">Event Head Contact:</label>
                 <input type="tel" name="eventHeadContact" class="w-full p-2 border border-khaki rounded">
             </div>
+
+            <!-- Event Date -->
             <div>
                 <label class="block font-semibold text-bistre font-handwritten">Date:</label>
-                <input type="date" name="eventDate" class="w-full p-2 border border-khaki rounded">
+                <input type="date" id="eventDate" name="eventDate" class="w-full p-2 border border-khaki rounded">
+                <input type="hidden" name="formattedDate" id="formattedDate">
             </div>
+
+            <!-- Submit Button -->
             <button
                 class="w-full py-2 bg-coffee text-beige font-bold rounded-lg hover:bg-bistre transition font-handwritten"
-                type="submit">Submit</button>
+                type="submit">
+                Submit
+            </button>
         </form>
     </div>
 </section>
+
 <script>
     function toggleGroupFields() {
         let selection = document.getElementById("eventStrength").value;
         let groupFields = document.getElementById("groupFields");
-        if (selection === "group") {
-            groupFields.classList.remove("hidden");
-        } else {
-            groupFields.classList.add("hidden");
-        }
+        groupFields.classList.toggle("hidden", selection !== "group");
     }
+
+    // Format Time to 12-hour format before submission
     document.getElementById("eventTime").addEventListener("change", function () {
         let timeValue = this.value;
         if (!timeValue) return;
@@ -98,16 +127,21 @@
         hours = hours % 12 || 12; // Convert to 12-hour format
 
         let formattedTime = `${hours}:${minutes.toString().padStart(2, "0")} ${period}`;
-
-        // Store the formatted time in the hidden input
         document.getElementById("formattedEventTime").value = formattedTime;
     });
 
+    // Format Date to DD/MM/YYYY before submission
     document.getElementById("eventForm").addEventListener("submit", function (event) {
+        let eventDate = document.getElementById("eventDate").value;
+        if (eventDate) {
+            let [year, month, day] = eventDate.split("-");
+            document.getElementById("formattedDate").value = `${day}-${month}-${year}`;
+        }
+
         let formattedTime = document.getElementById("formattedEventTime").value;
         if (!formattedTime) {
-            event.preventDefault(); // Prevent form submission if time is empty
-            alert("Please select a time.");
+            event.preventDefault(); // Prevent submission if time is empty
+            alert("Please select a valid time.");
         }
     });
 </script>

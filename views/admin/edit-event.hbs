@@ -64,7 +64,6 @@
                 <label class="block font-semibold text-bistre font-handwritten">Time:</label>
                 <input type="time" id="eventTime" name="eventTimeRaw" class="w-full p-2 border border-khaki rounded"
                     value="{{event.eventTimeRaw}}">
-                <!-- Hidden field to store 12-hour formatted time -->
                 <input type="hidden" id="formattedEventTime" name="eventTime">
             </div>
             <div>
@@ -79,10 +78,11 @@
             </div>
             <div>
                 <label class="block font-semibold">Date</label>
-                <input type="date" name="eventDate" class="w-full p-2 border border-khaki rounded"
+                <input type="date" id="eventDate" name="eventDate" class="w-full p-2 border border-khaki rounded"
                     value="{{event.eventDate}}">
+                <input type="hidden" name="formattedDate" id="formattedDate">
             </div>
-            <button type="submit"
+            <button type=" submit"
                 class="w-full py-2 bg-coffee text-beige font-bold rounded-lg hover:bg-bistre transition">Submit</button>
         </form>
     </div>
@@ -104,6 +104,23 @@
     document.addEventListener("DOMContentLoaded", function () {
         toggleGroupFields();
 
+        // Date Formatting
+        let eventDateInput = document.getElementById("eventDate");
+        let formattedDateInput = document.getElementById("formattedDate");
+
+        function updateFormattedDate() {
+            let eventDate = eventDateInput.value;
+            if (eventDate) {
+                let [year, month, day] = eventDate.split("-");
+                formattedDateInput.value = `${day}-${month}-${year}`;
+                console.log("Formatted Date:", formattedDateInput.value);
+            }
+        }
+
+        eventDateInput.addEventListener("change", updateFormattedDate);
+        updateFormattedDate(); // Ensure formatted date is set on load
+
+        // Time Formatting
         let eventTimeInput = document.getElementById("eventTime");
         let formattedTimeInput = document.getElementById("formattedEventTime");
 
@@ -115,7 +132,6 @@
             return `${hours}:${minutes.toString().padStart(2, "0")} ${period}`;
         }
 
-        // Set the initial formatted time if an existing value is present
         if (eventTimeInput.value) {
             formattedTimeInput.value = formatTime(eventTimeInput.value);
         }

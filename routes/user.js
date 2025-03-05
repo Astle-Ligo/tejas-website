@@ -24,7 +24,7 @@ router.get('/schedule', async (req, res) => {
   try {
     const eventsByDate = await userHelpers.getEventsGroupedByDate();
     console.log(eventsByDate);
-    
+
     res.render('user/schedule', { eventsByDate });
   } catch (error) {
     console.error("Error fetching events:", error);
@@ -32,5 +32,10 @@ router.get('/schedule', async (req, res) => {
   }
 });
 
+router.get('/events/:id', async (req, res) => {
+  let event = await userHelpers.getEventDetails(req.params.id)
+  console.log(event);
+  res.render('user/event-page', { event })
+})
 
 module.exports = router;
