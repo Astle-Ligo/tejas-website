@@ -1,54 +1,60 @@
-<section
-    class="py-20 px-6 bg-light-beige text-dark-bistre flex justify-center items-center min-h-screen font-handwritten">
-    <div class="bg-white p-8 shadow-lg rounded-lg max-w-2xl w-full">
-        <h2 class="text-3xl font-bold text-dark-coffee text-center mb-6 font-handwritten">
-            Register for {{event.eventName}}
-        </h2>
-        <form action="/culRep/register-event/{{event._id}}" method="post" class="space-y-4 font-handwritten">
-            <input type="hidden" name="eventId" value="{{event._id}}">
+<section id="register" class="py-20 px-6 bg-beige relative">
+    <div class="container mx-auto relative z-10">
+        <div class="section-title">
+            <h2 class="text-4xl md:text-5xl font-bold mb-16 text-coffee text-center w-full hand-drawn">
+                Register for {{event.eventName}}
+            </h2>
 
-            <!-- Individual Registration Fields -->
-            <div id="individualFields" class="form-section">
-                <label class="block font-semibold font-handwritten">Participant Name</label>
-                <input type="text" name="participantName" class="input-field font-handwritten"
-                    placeholder="Enter your name">
+        </div>
 
-                <label class="block font-semibold font-handwritten">Registration Number</label>
-                <input type="text" name="regNum" class="input-field font-handwritten"
-                    placeholder="Enter registration number">
+        <div class="max-w-2xl mx-auto">
+            <div class="register-form bg-white p-8 shadow-lg rounded-lg">
+                <form action="/culRep/register-event/{{event._id}}" method="post" class="space-y-6">
+                    <input type="hidden" name="eventId" value="{{event._id}}">
 
-                <label class="block font-semibold font-handwritten">Phone Number</label>
-                <input type="tel" name="phone" class="input-field font-handwritten" placeholder="Enter phone number">
+                    <!-- Individual Registration Fields -->
+                    <div id="individualFields" class="form-section">
+                        <label for="participantName" class="block text-bistre text-lg">Participant Name</label>
+                        <input type="text" id="participantName" name="participantName" class="form-input"
+                            placeholder="Your name" required>
+
+                        <label for="regNum" class="block text-bistre text-lg">Registration Number</label>
+                        <input type="text" id="regNum" name="regNum" class="form-input"
+                            placeholder="Registration number" required>
+
+                        <label for="phone" class="block text-bistre text-lg">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" class="form-input" placeholder="Phone number"
+                            required>
+                    </div>
+
+                    <!-- Group Registration Fields -->
+                    <div id="groupFields" class="hidden form-section">
+                        <label for="teamName" class="block text-bistre text-lg">Team Name</label>
+                        <input type="text" id="teamName" name="teamName" class="form-input" placeholder="Team name">
+
+                        <label for="teamPhone" class="block text-bistre text-lg">Team Contact Number</label>
+                        <input type="tel" id="teamPhone" name="teamPhone" class="form-input"
+                            placeholder="Contact number">
+
+                        <label for="altPhone" class="block text-bistre text-lg">Alternate Phone Number</label>
+                        <input type="tel" id="altPhone" name="altPhone" class="form-input"
+                            placeholder="Alternate contact number">
+
+                        <div id="teamMembers" class="mt-4">
+                            <label class="block text-bistre text-lg">Team Members</label>
+                        </div>
+
+                        <button type="button" id="addMemberBtn" class="btn-primary mt-4" onclick="addTeamMember()">+ Add
+                            Member</button>
+                    </div>
+
+                    <button type="submit" class="btn-primary w-full flex justify-center items-center text-center">
+                        Register
+                    </button>
+
+                </form>
             </div>
-
-            <!-- Group Registration Fields -->
-            <div id="groupFields" class="hidden form-section">
-                <label class="block font-semibold font-handwritten">Team Name</label>
-                <input type="text" name="teamName" class="input-field font-handwritten" placeholder="Enter team name">
-
-                <label class="block font-semibold font-handwritten">Team Contact Number</label>
-                <input type="tel" name="teamPhone" class="input-field font-handwritten"
-                    placeholder="Enter team contact number">
-
-                <label class="block font-semibold font-handwritten">Alternate Phone Number</label>
-                <input type="tel" name="altPhone" class="input-field font-handwritten"
-                    placeholder="Enter alternate contact number">
-
-                <!-- Team Members Section -->
-                <div id="teamMembers" class="mt-4">
-                    <label class="block font-semibold font-handwritten">Team Members</label>
-                </div>
-
-                <!-- Add Team Member Button -->
-                <button type="button" id="addMemberBtn" class="btn-primary mt-4 font-handwritten"
-                    onclick="addTeamMember()">
-                    + Add Member
-                </button>
-            </div>
-
-            <!-- Submit Button -->
-            <button type="submit" class="btn-submit w-full font-handwritten">Register</button>
-        </form>
+        </div>
     </div>
 </section>
 
@@ -64,103 +70,64 @@
         if (eventStrength === "group") {
             document.getElementById("individualFields").classList.add("hidden");
             document.getElementById("groupFields").classList.remove("hidden");
-
             let initialParticipants = minParticipants !== null ? minParticipants : maxParticipants;
             for (let i = 0; i < initialParticipants; i++) {
                 addTeamMember(false);
             }
         }
 
-        checkAddMemberButton();
-
         function addTeamMember(allowDelete = true) {
             let currentMembers = document.querySelectorAll(".team-member").length;
             if (currentMembers >= maxParticipants) return;
-
             let newMemberDiv = document.createElement("div");
-            newMemberDiv.classList.add("team-member", "flex", "gap-2", "items-center", "opacity-0", "transition-opacity", "duration-300");
-
+            newMemberDiv.classList.add("team-member", "flex", "gap-2", "py-2", "items-center");
             let inputWrapper = document.createElement("div");
             inputWrapper.classList.add("flex", "gap-2", "w-full");
-
             let nameInput = document.createElement("input");
             nameInput.type = "text";
             nameInput.name = "teamMembers[]";
-            nameInput.className = "input-field font-handwritten";
+            nameInput.className = "form-input";
             nameInput.placeholder = "Member Name";
             nameInput.required = true;
-
             let regNumInput = document.createElement("input");
             regNumInput.type = "text";
             regNumInput.name = "teamRegNums[]";
-            regNumInput.className = "input-field font-handwritten";
+            regNumInput.className = "form-input";
             regNumInput.placeholder = "Reg No.";
             regNumInput.required = true;
-
             inputWrapper.appendChild(nameInput);
             inputWrapper.appendChild(regNumInput);
-
             if (allowDelete) {
                 let deleteBtn = document.createElement("button");
                 deleteBtn.type = "button";
-                deleteBtn.className = "btn-danger remove-member font-handwritten";
+                deleteBtn.className = "btn-danger remove-member";
                 deleteBtn.innerText = "Delete";
                 deleteBtn.onclick = function () {
                     removeTeamMember(newMemberDiv);
                 };
-
-                let deleteBtnWrapper = document.createElement("div");
-                deleteBtnWrapper.classList.add("w-[100px]");
-                deleteBtnWrapper.appendChild(deleteBtn);
-                newMemberDiv.appendChild(deleteBtnWrapper);
-            } else {
-                let emptySpace = document.createElement("div");
-                emptySpace.classList.add("w-[100px]");
-                newMemberDiv.appendChild(emptySpace);
+                newMemberDiv.appendChild(deleteBtn);
             }
-
             newMemberDiv.insertBefore(inputWrapper, newMemberDiv.firstChild);
             teamMembersDiv.appendChild(newMemberDiv);
-
-            setTimeout(() => newMemberDiv.classList.remove("opacity-0"), 10);
-
             checkAddMemberButton();
         }
 
         function removeTeamMember(memberDiv) {
-            memberDiv.classList.add("opacity-0");
-            setTimeout(() => {
-                memberDiv.remove();
-                checkAddMemberButton();
-            }, 300);
+            memberDiv.remove();
+            checkAddMemberButton();
         }
 
         function checkAddMemberButton() {
             let currentMembers = document.querySelectorAll(".team-member").length;
             addMemberBtn.style.display = currentMembers >= maxParticipants ? "none" : "block";
-
-            let memberElements = document.querySelectorAll(".team-member");
-            memberElements.forEach((member, index) => {
-                let deleteBtn = member.querySelector(".remove-member");
-                if (deleteBtn) {
-                    deleteBtn.style.display = index > (minParticipants || 0) ? "inline-block" : "none";
-                }
-            });
-
-            addMemberBtn.classList.add("mt-4", "block");
         }
 
         form.addEventListener("submit", function (event) {
             let currentMembers = document.querySelectorAll(".team-member").length;
-
             if (minParticipants !== null && currentMembers < minParticipants) {
                 alert(`At least ${minParticipants} participants are required to register.`);
                 event.preventDefault();
             }
         });
-
-        window.addTeamMember = addTeamMember;
-        window.removeTeamMember = removeTeamMember;
     });
-
 </script>

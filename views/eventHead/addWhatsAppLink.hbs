@@ -1,17 +1,22 @@
-<section class="py-20 px-6 bg-beige text-bistre min-h-screen">
+<section class="py-20 px-6 bg-beige text-bistre min-h-screen flex justify-center items-center">
     <div class="container mx-auto max-w-lg bg-white p-8 shadow-lg rounded-lg">
         <h2 class="text-2xl font-bold text-coffee text-center mb-6 font-handwritten">
             Add WhatsApp Group Link
         </h2>
+
         <p class="text-center text-lg text-bistre font-handwritten">
             Event: <strong>{{event.eventName}}</strong>
         </p>
-        <form action="/eventHead/addWhatsAppLink/{{event._id}}" method="POST" class="mt-6">
-            <label class="block mb-2 font-bold">WhatsApp Group Link:</label>
-            <input type="text" name="whatsappLink" required placeholder="https://chat.whatsapp.com/..."
-                class="w-full p-2 border border-gray-300 rounded">
+
+        <form action="/eventHead/addWhatsAppLink/{{event._id}}" method="POST" class="mt-6 space-y-4">
+            <div>
+                <label class="block mb-2 font-bold font-handwritten">WhatsApp Group Link:</label>
+                <input type="url" name="whatsappLink" required placeholder="https://chat.whatsapp.com/..."
+                    class="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-green-500">
+            </div>
+
             <button type="submit"
-                class="mt-4 w-full bg-green-600 text-white px-4 py-2 rounded hover:bg-green-800 transition">
+                class="w-full bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition duration-200">
                 Save Link
             </button>
         </form>

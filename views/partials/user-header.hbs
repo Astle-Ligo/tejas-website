@@ -1,18 +1,40 @@
 <nav class="fixed top-0 left-0 right-0 z-50 bg-beige bg-opacity-95 shadow-md py-2 px-6">
     <div class="container mx-auto flex justify-between items-center">
         <div class="flex items-center gap-2">
-
             <a href="/">
-                <img src="/images/tejas_logo.png" alt="Tejas '25" style="width: 5rem; height:3rem">
+                <h1 class="text-2xl font-bold text-coffee font-handwritten">Tejas '25</h1>
             </a>
         </div>
 
         <div class="hidden md:flex items-center gap-8">
-            <a href="/#about" class="nav-link font-semibold font-handwritten text-coffe">About</a>
+            <a href="/#about" class="nav-link font-semibold font-handwritten text-coffee">About</a>
             <a href="/events" class="nav-link font-semibold font-handwritten">Events</a>
             <a href="/schedule" class="nav-link font-semibold font-handwritten">Schedule</a>
         </div>
 
+        <!-- Desktop Login Dropdown -->
+        <div class="hidden md:flex items-center relative">
+            <button id="login-toggle"
+                class="bg-coffee text-beige font-semibold py-2 px-4 rounded-lg shadow-md transition hover:bg-opacity-80 flex items-center gap-2">
+                Login
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m6 9 6 6 6-6"></path>
+                </svg>
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div id="login-dropdown"
+                class="absolute right-0 top-full mt-2 w-48 bg-beige shadow-lg rounded-lg hidden z-50">
+
+                <a href="/culRep"
+                    class="block px-4 py-2 text-coffee hover:bg-chamoisee rounded-t-lg">Cultural Rep Login</a>
+                <a href="/eventHead" class="block px-4 py-2 text-coffee hover:bg-chamoisee rounded-b-lg">Event
+                    Head Login</a>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Toggle -->
         <button class="md:hidden" id="menu-toggle">
             <div class="w-6 h-0.5 bg-coffee mb-1.5"></div>
             <div class="w-6 h-0.5 bg-coffee mb-1.5"></div>
@@ -26,6 +48,90 @@
             <a href="/#about" class="nav-link mobile-link font-semibold font-handwritten">About</a>
             <a href="/schedule" class="nav-link mobile-link font-semibold font-handwritten">Schedule</a>
             <a href="/events" class="nav-link mobile-link font-semibold font-handwritten">Events</a>
+
+            <!-- Mobile Login Dropdown -->
+            <div class="relative">
+                <button id="mobile-login-toggle"
+                    class="bg-coffee text-beige font-semibold py-2 px-4 rounded-lg shadow-md transition hover:bg-opacity-80 w-full text-center">
+                    Login
+                </button>
+                <div id="mobile-login-dropdown"
+                    class="absolute left-0 mt-2 w-full bg-beige shadow-lg rounded-lg hidden border border-gray-300">
+                    <a href="/culRep"
+                        class="block px-4 py-2 text-coffee hover:bg-chamoisee rounded-t-lg">Cultural Rep Login</a>
+                    <a href="/eventHead"
+                        class="block px-4 py-2 text-coffee hover:bg-chamoisee rounded-b-lg">Event Head Login</a>
+                </div>
+            </div>
         </div>
     </div>
 </nav>
+
+<!-- JavaScript for Menu and Dropdowns -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Mobile Menu Toggle
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        if (menuToggle && mobileMenu) {
+            menuToggle.addEventListener('click', function () {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', function () {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+        }
+
+        // Desktop Login Dropdown
+        const loginToggle = document.getElementById('login-toggle');
+        const loginDropdown = document.getElementById('login-dropdown');
+
+        if (loginToggle && loginDropdown) {
+            loginToggle.addEventListener('click', function (event) {
+                event.stopPropagation();
+                loginDropdown.classList.toggle('hidden');
+            });
+        }
+
+        // Mobile Login Dropdown
+        const mobileLoginToggle = document.getElementById('mobile-login-toggle');
+        const mobileLoginDropdown = document.getElementById('mobile-login-dropdown');
+
+        if (mobileLoginToggle && mobileLoginDropdown) {
+            mobileLoginToggle.addEventListener('click', function (event) {
+                event.stopPropagation();
+                mobileLoginDropdown.classList.toggle('hidden');
+            });
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function (event) {
+            if (!event.target.closest('#login-toggle')) {
+                loginDropdown.classList.add('hidden');
+            }
+            if (!event.target.closest('#mobile-login-toggle')) {
+                mobileLoginDropdown.classList.add('hidden');
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    });
+</script>
