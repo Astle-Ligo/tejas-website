@@ -121,7 +121,7 @@ module.exports = {
                             eventHead: eventDetails.eventHead,
                             eventHeadContact: eventDetails.eventHeadContact,
                             eventDate: eventDetails.eventDate,
-                            formattedDate:eventDetails.formattedDate
+                            formattedDate: eventDetails.formattedDate
                         }
                     }
                 );
@@ -360,8 +360,40 @@ module.exports = {
             console.error("Error deleting event head:", error);
             throw error;
         }
+    },
+
+    getResultsByClass: async (classId) => {
+        try {
+            let results = await db.get().collection(collection.RESULTS_COLLECTION).find({ classId }).toArray();
+
+            for (let result of results) {
+                let event = await db.get().collection(collection.EVENT_HEAD_COLLECTION).findOne({ _id: result.eventId });
+                result.eventName = event ? event.name : 'Unknown Event';
+
+                // Assign points based on position
+                result.points = result.position === "First" ? 10 : result.position === "Second" ? 5 : 0;
+            }
+
+            return results;
+        } catch (error) {
+            console.error('Error fetching results:', error);
+            throw error;
+        }
+    },
+
+    getRegistrationsByClass: async (classId) => {
+        try {
+            let registrations = await db
+                .get()
+                .collection(collection.REGISTRATION_COLLECTION)
+                .find({ classId: classId })
+                .toArray();
+
+            return registrations;
+        } catch (error) {
+            console.error('Error fetching registrations:', error);
+            throw error;
+        }
     }
-
-
 
 };

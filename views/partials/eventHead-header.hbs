@@ -1,20 +1,14 @@
 {{!-- eventHeadNavbar.hbs --}}
 <header>
     <nav class="fixed top-0 left-0 right-0 z-50 bg-coffee text-beige shadow-md py-2 px-6">
-        <div class="container mx-auto flex justify-between items-center">
+        <div class="container mx-auto flex justify-between items-center relative">
             <!-- Logo -->
-            <a class="text-2xl font-bold font-handwritten" href="/eventHead" id="logo"> Event Head {{#if
-                eventHeadUser}}: {{eventHeadUser.Name}}{{/if}} </a>
+            <a class="text-2xl font-bold font-handwritten" href="/eventHead" id="logo">
+                Event Head {{#if eventHeadUser}}: {{eventHeadUser.Name}}{{/if}}
+            </a>
 
-            <!-- Mobile Toggle Button -->
-            <button class="md:hidden" id="menu-toggle">
-                <div class="w-6 h-0.5 bg-beige mb-1.5"></div>
-                <div class="w-6 h-0.5 bg-beige mb-1.5"></div>
-                <div class="w-6 h-0.5 bg-beige"></div>
-            </button>
-
-            <!-- Navbar Items -->
-            <div class="hidden md:flex items-center gap-8 font-handwritten" id="navbarNav">
+            <!-- Desktop Navbar (Hidden on Mobile) -->
+            <div class="hidden md:flex items-center gap-8 font-handwritten">
                 {{#if eventHeadUser}}
                 <a class="px-3 py-2 hover:text-khaki" href="/eventHead/results">
                     Results Entry
@@ -22,14 +16,50 @@
                 <a class="px-3 py-2 hover:text-khaki" href="/eventHead/view-results">
                     Edit Results
                 </a>
-
-                <!-- Logout Button -->
                 <a class="px-4 py-2 bg-red-600 text-beige rounded-lg hover:bg-red-700 transition"
                     href="/eventHead/eventHead-log-out">
                     Logout
                 </a>
                 {{/if}}
             </div>
+
+            <!-- Mobile Toggle Button -->
+            <button class="md:hidden flex flex-col items-center justify-center" id="menu-toggle">
+                <div class="w-6 h-0.5 bg-beige mb-1.5"></div>
+                <div class="w-6 h-0.5 bg-beige mb-1.5"></div>
+                <div class="w-6 h-0.5 bg-beige"></div>
+            </button>
+        </div>
+
+        <!-- Mobile Navbar Dropdown (Appears Below Navbar) -->
+        <div class="hidden absolute left-0 top-full w-full bg-coffee shadow-lg py-4 flex-col items-center"
+            id="navbarNav">
+            {{#if eventHeadUser}}
+            <a class="block px-3 py-2 hover:text-khaki" href="/eventHead/results">
+                Results Entry
+            </a>
+            <a class="block px-3 py-2 hover:text-khaki" href="/eventHead/view-results">
+                Edit Results
+            </a>
+            <a class="block px-4 py-2 bg-red-600 text-beige rounded-lg hover:bg-red-700 transition mx-4"
+                href="/eventHead/eventHead-log-out">
+                Logout
+            </a>
+            {{/if}}
         </div>
     </nav>
 </header>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const menuToggle = document.getElementById("menu-toggle");
+        const navbarNav = document.getElementById("navbarNav");
+
+        menuToggle.addEventListener("click", function () {
+            navbarNav.classList.toggle("hidden");
+            navbarNav.classList.toggle("flex");
+        });
+    });
+
+</script>

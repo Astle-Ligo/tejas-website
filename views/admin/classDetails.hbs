@@ -1,0 +1,24 @@
+<h2 class="text-2xl font-bold">Class: {{classId}}</h2>
+
+<table class="min-w-full border-collapse border border-gray-300 mt-4">
+    <thead>
+        <tr class="bg-gray-200">
+            <th class="border p-2">Event Name</th>
+            <th class="border p-2">Team/Participant</th>
+            <th class="border p-2">Position</th>
+            <th class="border p-2">Contact</th>
+            <th class="border p-2">Points</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each results}}
+        <tr class="border">
+            <td class="border p-2">{{this.eventName}}</td>
+            <td class="border p-2">{{this.teamOrParticipant}}</td>
+            <td class="border p-2">{{this.position}}</td>
+            <td class="border p-2">{{this.contact}}</td>
+            <td class="border p-2">{{this.points}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

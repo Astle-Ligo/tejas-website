@@ -310,6 +310,43 @@ router.get('/delete-eventHead/:id', isAdminLoggedIn, async (req, res) => {
   }
 });
 
+router.get('/classResults', async (req, res) => {
+  try {
+    let classes = await adminHelpers.getAllClasses();
+    res.render('admin/classResults', { classes });
+  } catch (error) {
+    console.error('Error fetching class results:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+router.get('/classResults/:classId', async (req, res) => {
+  try {
+    let classId = req.params.classId;
+    let results = await adminHelpers.getResultsByClass(classId);
+    let registrations = await adminHelpers.getRegistrationsByClass(classId);
+
+    console.log(classId, results, registrations);
+
+    // Match registrations with results to get contact details
+    results.forEach(result => {
+      let registration = registrations.find(reg => reg.eventId === result.eventId);
+      if (registration) {
+        result.contact = registration.type === 'group' ? registration.contact.teamPhone : registration.participant.phone;
+        result.teamOrParticipant = registration.type === 'group' ? registration.teamName : registration.participant.name;
+      } else {
+        result.contact = 'N/A';
+        result.teamOrParticipant = 'Unknown';
+      }
+    });
+
+    console.log(results);
+    res.render('admin/classDetails', { results, classId });
+  } catch (error) {
+    console.error('Error fetching results for class:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 
 

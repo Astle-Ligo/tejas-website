@@ -165,7 +165,7 @@ router.post("/results", async (req, res) => {
         console.log("dfdfdf ", req.session.eventHead);
 
         const response = await eventHeadHelpers.saveEventResults(req.body, req.session.eventHead._id);
-        res.status(200).redirect('results');
+        res.status(200).redirect('/eventHead');
     } catch (error) {
         console.error("Error submitting results:", error);
         res.status(500).json({ error: "Internal Server Error" });
