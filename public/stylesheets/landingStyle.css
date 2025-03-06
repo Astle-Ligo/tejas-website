@@ -626,7 +626,7 @@ body {
     position: relative;
 }
 
-.section-title::after {
+/* .section-title::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -636,7 +636,7 @@ body {
     height: 3px;
     background-color: currentColor;
     opacity: 0.5;
-}
+} */
 
 /* Event cards */
 .event-card {

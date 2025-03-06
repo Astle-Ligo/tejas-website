@@ -44,7 +44,7 @@
                             <label class="block text-bistre text-lg">Team Members</label>
                         </div>
 
-                        <button type="button" id="addMemberBtn" class="btn-primary mt-4" onclick="addTeamMember()">+ Add
+                        <button type="button" id="addMemberBtn" class="btn-primary mt-4">+ Add
                             Member</button>
                     </div>
 
@@ -76,8 +76,14 @@
             }
         }
 
+        document.getElementById("addMemberBtn").addEventListener("click", function () {
+            addTeamMember();
+        });
+
+
         function addTeamMember(allowDelete = true) {
             let currentMembers = document.querySelectorAll(".team-member").length;
+            console.log(currentMembers)
             if (currentMembers >= maxParticipants) return;
             let newMemberDiv = document.createElement("div");
             newMemberDiv.classList.add("team-member", "flex", "gap-2", "py-2", "items-center");
@@ -100,7 +106,7 @@
             if (allowDelete) {
                 let deleteBtn = document.createElement("button");
                 deleteBtn.type = "button";
-                deleteBtn.className = "btn-danger remove-member";
+                deleteBtn.className = "btn-danger remove-member btn-primary";
                 deleteBtn.innerText = "Delete";
                 deleteBtn.onclick = function () {
                     removeTeamMember(newMemberDiv);

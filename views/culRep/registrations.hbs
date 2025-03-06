@@ -1,9 +1,14 @@
 <section class="py-20 px-6 bg-beige text-bistre font-handwritten">
     <div class="container mx-auto max-w-5xl bg-white p-8 shadow-lg rounded-lg">
-        <h2 class="text-3xl font-bold text-coffee text-center mb-6 font-handwritten">
-            Your Registered Events
-        </h2>
-
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-3xl font-bold text-coffee font-handwritten">
+                Your Registered Events
+            </h2>
+            {{!-- <button onclick="shareEvents()"
+                class="ml-auto px-4 py-2 bg-coffee text-beige rounded-lg hover:bg-bistre transition font-handwritten shadow-md">
+                📢 Share with Class
+            </button> --}}
+        </div>
         {{!-- Individual Events --}}
         {{#if (some registrations "type" "individual")}}
         <h3 class="text-2xl font-semibold text-coffee mb-4 font-handwritten">Individual Events</h3>
@@ -17,7 +22,7 @@
                         <th class="p-3 border-b min-w-[150px] font-handwritten">Participant Name</th>
                         <th class="p-3 border-b min-w-[130px] font-handwritten">Registration Number</th>
                         <th class="p-3 border-b min-w-[140px] font-handwritten">Phone Number</th>
-                        <th class="p-3 border-b min-w-[100px] font-handwritten">Actions</th>
+                      <th class="p-3 border-b min-w-[100px] font-handwritten">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -123,5 +128,25 @@
         {{#unless registrations.length}}
         <p class="text-muted text-center font-handwritten">No events registered yet.</p>
         {{/unless}}
+
     </div>
 </section>
+
+
+{{!-- <script>
+    document.getElementById("shareButton").addEventListener("click", function () {
+        const shareText = "Check out the events I registered for: ";
+        const shareURL = window.location.href;
+
+        if (navigator.share) {
+            navigator.share({
+                title: "Event Registrations",
+                text: shareText,
+                url: shareURL
+            }).catch(err => console.log("Sharing failed", err));
+        } else {
+            navigator.clipboard.writeText(shareText + shareURL);
+            alert("Link copied to clipboard! Share it with your class.");
+        }
+    });
+</script> --}}

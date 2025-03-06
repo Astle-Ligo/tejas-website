@@ -35,7 +35,8 @@ module.exports = {
                     acc[event.eventDate].events.push({
                         time: event.eventTime || "TBA",
                         name: `${event.eventName}`,
-                        subName: `${event.eventSubName}`
+                        subName: `${event.eventSubName}`,
+                        venue : `${event.venue}`
                     });
                     return acc;
                 }, {})

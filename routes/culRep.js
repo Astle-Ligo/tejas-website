@@ -140,9 +140,9 @@ router.get("/registrations", async (req, res) => {
   try {
     let culRepUser = req.session.culRep;
 
-    if (!culRepUser) {
-      return res.redirect("/culRep"); // Redirect to login if not authenticated
-    }
+    // if (!culRepUser) {
+    //   return res.redirect("/culRep"); // Redirect to login if not authenticated
+    // }
 
     const classId = culRepUser.class; // Get the class ID from session
     const registrations = await culRepHelpers.getRegistrationsByClass(classId);
