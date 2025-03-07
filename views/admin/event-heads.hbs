@@ -1,6 +1,6 @@
 {{!-- eventHeadsList.hbs --}}
-<section class="py-20 px-6 bg-beige text-bistre">
-    <div class="container mx-auto max-w-5xl bg-white p-8 shadow-lg rounded-lg">
+<section class="py-20 px-4 bg-beige text-bistre">
+    <div class="container mx-auto w-full bg-white p-8 shadow-lg rounded-lg">
         <h2 class="text-3xl font-bold text-coffee text-center mb-6 font-handwritten">Event Heads List</h2>
         <div class="overflow-x-auto">
             <table class="w-full border border-khaki text-left">
@@ -32,6 +32,7 @@
                         <td class="p-3">
                             {{#each this.eventDetails}}
                             <span class="bg-green-600 text-beige px-2 py-1 rounded-lg">{{this.name}}</span><br>
+                            {{#if this.subName}}<span class="text-sm">({{this.subName}})</span>{{/if}}<br>
                             {{/each}}
                         </td>
                         <td class="p-3">

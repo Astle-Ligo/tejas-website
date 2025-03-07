@@ -337,6 +337,7 @@ module.exports = {
                 eventHead.eventDetails = events.length > 0
                     ? events.map(event => ({
                         name: event.eventName || "Unnamed Event",
+                        subName:event.eventSubName,
                         date: event.eventDate || "No Date"
                     }))
                     : [{ name: "Event Not Found", date: "N/A" }];

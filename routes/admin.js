@@ -286,7 +286,7 @@ router.get('/eventRegistrations/:eventId', isAdminLoggedIn, async (req, res) => 
 router.get('/event-heads', isAdminLoggedIn, async (req, res) => {
   try {
     let eventHeads = await adminHelpers.getAllEventHeads();
-    console.log(eventHeads);
+    console.log(eventHeads[0]);
 
     res.render('admin/event-heads', {
       eventHeads,
