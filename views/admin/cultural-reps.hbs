@@ -1,6 +1,6 @@
 {{!-- culturalReps.hbs --}}
 <section class="py-20 px-6 bg-beige text-bistre">
-    <div class="container mx-auto max-w-4xl bg-white p-8 shadow-lg rounded-lg">
+    <div class="container mx-auto w-full bg-white p-8 shadow-lg rounded-lg">
         <h2 class="text-3xl font-bold text-coffee text-center mb-6 font-handwritten">CULTURAL REPS</h2>
 
         <div class="overflow-x-auto">
@@ -10,6 +10,7 @@
                         <th class="p-3 border-b font-handwritten">#</th>
                         <th class="p-3 border-b font-handwritten">Name</th>
                         <th class="p-3 border-b font-handwritten">Register Number</th>
+                        <th class="p-3 border-b font-handwritten">Email</th>
                         <th class="p-3 border-b font-handwritten">Class</th>
                         <th class="p-3 border-b font-handwritten">Phone Number</th>
                         <th class="p-3 border-b">Actions</th>
@@ -21,6 +22,7 @@
                         <td class="p-3">{{inc @index}}</td>
                         <td class="p-3">{{this.Name}}</td>
                         <td class="p-3">{{this.regNum}}</td>
+                        <td class="p-3">{{this.Email}}</td>
                         <td class="p-3">{{this.class}}</td>
                         <td class="p-3">{{this.phoneNumber}}</td>
                         <td class="p-3">
