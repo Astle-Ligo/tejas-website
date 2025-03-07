@@ -14,6 +14,8 @@
             {{#each events}}
             <div class="bg-coffee text-beige p-4 text-center rounded-lg hover:bg-bistre transition font-handwritten">
                 <p class="text-lg font-bold">{{this.eventName}}</p>
+                {{#if this.eventSubName}}<span class="text-sm">({{this.eventSubName}})</span>{{/if}}
+
 
                 <a href="/eventHead/registrations/{{this._id}}"
                     class="mt-2 inline-block bg-khaki text-bistre px-4 py-2 rounded hover:bg-golden transition">

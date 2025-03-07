@@ -9,10 +9,11 @@
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {{#each events}}
             <a href="events/{{this._id}}">
-                <div class="event-card bg-white shadow-lg rounded-lg overflow-hidden">
+                <div class="event-card bg-white shadow-lg rounded-lg overflow-hidden h-[400px] flex flex-col">
                     <img class="w-full h-48 object-cover" src="{{this.eventImageUrl}}" alt="{{this.eventName}}">
-                    <div class="p-4">
-                        <h3 class="text-2xl font-bold mb-3 text-coffee">{{this.eventName}}</h3>
+                    <div class="p-2 w-full">
+                        <h3 class="text-2xl font-bold mb-1\.5 text-coffee">{{this.eventName}}</h3> {{#if
+                        this.eventSubName}}<span class="text-sm">({{this.eventSubName}})</span>{{/if}}
 
                         <!-- Event Date -->
                         <div class="flex items-center mt-4 text-bistre">

@@ -21,6 +21,7 @@
                         <input type="checkbox" name="events" value="{{this._id}}" id="event-{{this._id}}"
                             class="form-checkbox border-khaki">
                         <label for="event-{{this._id}}">{{this.eventName}}</label>
+                        {{#if this.eventSubName}}<span class="text-sm">({{this.eventSubName}})</span>{{/if}}
                     </div>
                     {{/each}}
                 </div>

@@ -310,6 +310,17 @@ router.get('/delete-eventHead/:id', isAdminLoggedIn, async (req, res) => {
   }
 });
 
+router.get('/delete-culRep/:id', isAdminLoggedIn, async (req, res) => {
+  try {
+    const culRepId = req.params.id;
+    await adminHelpers.deleteCulRep(culRepId);
+    res.redirect('/admin/cultural-reps'); // Redirect back to the event heads list
+  } catch (error) {
+    console.error("Error deleting event head:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 router.get('/classResults', async (req, res) => {
   try {
     let classes = await adminHelpers.getAllClasses();

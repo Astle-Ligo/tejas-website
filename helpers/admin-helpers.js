@@ -362,6 +362,19 @@ module.exports = {
         }
     },
 
+    deleteCulRep: async (culRepId) => {
+        try {
+            await db.get()
+                .collection(collection.CULTURAL_REP_COLLECTION)
+                .deleteOne({ _id: new ObjectId(culRepId) });
+
+            console.log(`Event head with ID ${culRepId} deleted successfully`);
+        } catch (error) {
+            console.error("Error deleting event head:", error);
+            throw error;
+        }
+    },
+
     getResultsByClass: async (classId) => {
         try {
             let results = await db.get().collection(collection.RESULTS_COLLECTION).find({ classId }).toArray();
