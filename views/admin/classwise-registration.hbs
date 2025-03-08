@@ -1,9 +1,9 @@
 {{!-- classRegistrations.hbs --}}
 <section class="py-20 px-6 bg-beige text-bistre">
-    <div class="container mx-auto max-w-4xl bg-white p-8 shadow-lg rounded-lg">
+    <div class="container mx-auto w-full bg-white p-8 shadow-lg rounded-lg">
         <h2 class="text-3xl font-bold text-coffee text-center mb-6 font-handwritten">Class Registrations</h2>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {{#if classes.length}}
             {{#each classes}}
             <a href="/admin/classRegistrations/{{this}}"

@@ -193,11 +193,11 @@ router.get("/getParticipants/:eventId", async (req, res) => {
 
 router.get("/view-results", async (req, res) => {
     try {
-        console.log(req.session);
+        // console.log(req.session);
 
         const eventHeadId = req.session.eventHead._id; // Get event head's ID from session
         const results = await eventHeadHelpers.getResultsByEventHead(eventHeadId);
-        console.log(results);
+        // console.log(results);
 
         res.render("eventHead/view-results", {
             results, eventHead: true,
@@ -208,6 +208,71 @@ router.get("/view-results", async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 });
+
+router.get("/edit-result/:eventId", async (req, res) => {
+    try {
+        const eventId = req.params.eventId;
+        const result = await eventHeadHelpers.getResultByEvent(eventId);
+        console.log("hai", result);
+
+        if (result) {
+            res.render("eventHead/edit-results", {
+                result,
+                eventHead: true,
+                eventHeadUser: req.session.eventHead
+            });
+        } else {
+            res.render("eventHead/edit-results", {
+                result: null,
+                message: "No result found for this event."
+            });
+        }
+    } catch (error) {
+        console.error("Error fetching result:", error);
+        res.status(500).render("error", { message: "Internal Server Error" });
+    }
+});
+
+router.post("/editResult", async (req, res) => {
+    try {
+        const { resultId, FirstPlace, SecondPlace, ThirdPlace } = req.body;
+
+        const updatedResults = [
+            { position: "First", _id: FirstPlace, points: 25 },
+            { position: "Second", _id: SecondPlace, points: 15 },
+            { position: "Third", _id: ThirdPlace, points: 10 }
+        ];
+
+        await eventHeadHelpers.updateResult(resultId, updatedResults);
+
+        res.redirect("/eventHead/view-results");
+    } catch (error) {
+        console.error("Error editing result:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+router.get("/delete-result/:id", async (req, res) => {
+    try {
+        const resultId = req.params.id;
+
+        if (!ObjectId.isValid(resultId)) {
+            return res.status(400).send("Invalid result ID");
+        }
+
+        const isDeleted = await eventHeadHelpers.deleteResult(resultId);
+
+        if (isDeleted) {
+            res.redirect("/eventHead/view-results"); // Redirect after deletion
+        } else {
+            res.status(404).send("Result not found");
+        }
+    } catch (error) {
+        console.error("Error deleting result:", error);
+        res.status(500).send("Internal server error");
+    }
+});
+
 
 router.get("/addWhatsAppLink/:eventId", async (req, res) => {
     try {
@@ -226,50 +291,6 @@ router.post("/addWhatsAppLink/:eventId", async (req, res) => {
     } catch (error) {
         console.error(error);
         res.redirect("/eventHead");
-    }
-});
-
-router.get("/edit-result/:eventId", async (req, res) => {
-    try {
-        const eventId = req.params.eventId;
-        const result = await eventHeadHelpers.getResultByEvent(eventId);
-        console.log("Fetched Result:", result);
-
-        if (result) {
-            res.render("eventHead/edit-results", { result, eventHead: true, eventHeadUser: req.session.eventHead });
-        } else {
-            res.render("eventHead/edit-results", { result: null, message: "No result found for this event." });
-        }
-    } catch (error) {
-        console.error("Error fetching result:", error);
-        res.status(500).render("error", { message: "Internal Server Error" });
-    }
-});
-
-
-router.post("/editResult", async (req, res) => {
-    try {
-        await eventHeadHelpers.editResult(req.body);
-        res.redirect("/eventHead");
-    } catch (error) {
-        console.error("Error editing result:", error);
-        res.status(500).send("Internal Server Error");
-    }
-});
-
-router.get("/delete-result/:id", async (req, res) => {
-    try {
-        const resultId = req.params.id;
-        const isDeleted = await eventHeadHelpers.deleteResult(resultId);
-
-        if (isDeleted) {
-            res.redirect("/eventHead/view-results"); // Redirect to results page after deletion
-        } else {
-            res.status(404).send("Result not found");
-        }
-    } catch (error) {
-        console.error("Error deleting result:", error);
-        res.status(500).send("Internal server error");
     }
 });
 

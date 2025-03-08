@@ -179,52 +179,97 @@ module.exports = {
 
     saveEventResults: async (resultData, eventHeadId) => {
         try {
-            console.log("Event Head ID:", eventHeadId); // ✅ Debugging log
+            console.log("Event Head ID:", eventHeadId);
 
             const dbInstance = db.get();
             if (!dbInstance) throw new Error("Database connection is not initialized.");
 
-            console.log("Raw resultData:", resultData); // ✅ Debugging log
+            console.log("Raw resultData:", resultData);
 
-            // Convert IDs to ObjectId only if they are valid
+            // Convert IDs to ObjectId
             const eventId = ObjectId.isValid(resultData.eventId) ? new ObjectId(resultData.eventId) : null;
             const firstPlace = ObjectId.isValid(resultData.firstPlace) ? new ObjectId(resultData.firstPlace) : null;
             const secondPlace = ObjectId.isValid(resultData.secondPlace) ? new ObjectId(resultData.secondPlace) : null;
-
-            // ✅ Fix: Modify parameter instead of redeclaring
+            const thirdPlace = ObjectId.isValid(resultData.thirdPlace) ? new ObjectId(resultData.thirdPlace) : null;
             eventHeadId = ObjectId.isValid(eventHeadId) ? new ObjectId(eventHeadId) : null;
 
-            if (!eventId || !firstPlace || !secondPlace || !eventHeadId) {
+            if (!eventId || !eventHeadId) {
                 throw new Error("Invalid ObjectId provided.");
             }
 
-            console.log("✅ All ObjectIds are valid:", { eventId, firstPlace, secondPlace, eventHeadId });
+            console.log("✅ All ObjectIds are valid:", { eventId, firstPlace, secondPlace, thirdPlace, eventHeadId });
 
-            // Fetch class details for first and second place winners
-            const firstPlaceReg = await dbInstance.collection(collection.REGISTRATION_COLLECTION).findOne({ _id: firstPlace });
-            const secondPlaceReg = await dbInstance.collection(collection.REGISTRATION_COLLECTION).findOne({ _id: secondPlace });
+            // Fetch participant details
+            const fetchParticipant = async (participantId) => {
+                if (!participantId) return null;
+                return await dbInstance.collection(collection.REGISTRATION_COLLECTION).findOne({ _id: participantId });
+            };
 
-            console.log("First Place Registration:", firstPlaceReg);
-            console.log("Second Place Registration:", secondPlaceReg);
+            const firstPlaceReg = await fetchParticipant(firstPlace);
+            const secondPlaceReg = await fetchParticipant(secondPlace);
+            const thirdPlaceReg = await fetchParticipant(thirdPlace);
 
-            // Extract class names
-            const classFirst = firstPlaceReg?.classId || "Unknown";
-            const classSecond = secondPlaceReg?.classId || "Unknown";
+            console.log("First Place:", firstPlaceReg);
+            console.log("Second Place:", secondPlaceReg);
+            console.log("Third Place:", thirdPlaceReg);
+
+            // Format participant details
+            const formatResult = (registration, position, points) => {
+                if (!registration) return null;
+
+                const baseDetails = {
+                    classId: registration.classId || "Unknown",
+                    position,
+                    points,
+                };
+
+                if (registration.type === "individual") {
+                    return {
+                        ...baseDetails,
+                        type: "individual",
+                        participant: {
+                            name: registration.participant?.name || "Unknown",
+                            regNum: registration.participant?.regNum || "N/A",
+                            phone: registration.participant?.phone || "N/A",
+                        },
+                    };
+                } else if (registration.type === "group") {
+                    return {
+                        ...baseDetails,
+                        type: "group",
+                        teamName: registration.teamName || "Unknown",
+                        contact: {
+                            teamPhone: registration.contact?.teamPhone || "N/A",
+                            altPhone: registration.contact?.altPhone || "N/A",
+                        },
+                        teamMembers: registration.teamMembers?.map(member => ({
+                            name: member.name,
+                            regNum: member.regNum,
+                        })) || [],
+                    };
+                }
+
+                return null;
+            };
+
+            // Create structured results array
+            const resultsArray = [
+                formatResult(firstPlaceReg, "First", 25),
+                formatResult(secondPlaceReg, "Second", 15),
+                formatResult(thirdPlaceReg, "Third", 10)
+            ].filter(Boolean); // Removes null values if places are missing
 
             // Create event results object
             const eventResults = {
                 eventId,
-                eventHeadId, // ✅ Correct usage
+                eventHeadId,
                 eventName: resultData.eventName.trim(),
-                firstPlace,
-                secondPlace,
-                classFirst,
-                classSecond,
+                results: resultsArray,
                 timestamp: new Date(),
             };
 
             console.log("Inserting into collection:", collection.RESULTS_COLLECTION);
-            console.log("Data:", eventResults);
+            console.log("Data:", JSON.stringify(eventResults, null, 2));
 
             // Insert into the database
             const insertedResult = await dbInstance.collection(collection.RESULTS_COLLECTION).insertOne(eventResults);
@@ -247,41 +292,28 @@ module.exports = {
                     $match: { eventHeadId: new ObjectId(eventHeadId) }
                 },
                 {
-                    $lookup: {
-                        from: collection.REGISTRATION_COLLECTION,
-                        localField: "firstPlace",
-                        foreignField: "_id",
-                        as: "firstWinner"
-                    }
+                    $unwind: "$results" // Unwind the results array
                 },
                 {
-                    $lookup: {
-                        from: collection.REGISTRATION_COLLECTION,
-                        localField: "secondPlace",
-                        foreignField: "_id",
-                        as: "secondWinner"
-                    }
-                },
-                {
-                    $project: {
-                        eventName: 1,
-                        eventId: 1,
-                        firstPlaceName: {
-                            $cond: {
-                                if: { $eq: [{ $arrayElemAt: ["$firstWinner.type", 0] }, "individual"] },
-                                then: { $arrayElemAt: ["$firstWinner.participant.name", 0] },
-                                else: { $arrayElemAt: ["$firstWinner.teamName", 0] }
+                    $group: {
+                        _id: "$eventId",
+                        eventName: { $first: "$eventName" },
+                        eventId: { $first: "$eventId" },
+                        firstPlace: {
+                            $push: {
+                                $cond: { if: { $eq: ["$results.position", "First"] }, then: "$results", else: "$$REMOVE" }
                             }
                         },
-                        classFirst: { $arrayElemAt: ["$firstWinner.classId", 0] },
-                        secondPlaceName: {
-                            $cond: {
-                                if: { $eq: [{ $arrayElemAt: ["$secondWinner.type", 0] }, "individual"] },
-                                then: { $arrayElemAt: ["$secondWinner.participant.name", 0] },
-                                else: { $arrayElemAt: ["$secondWinner.teamName", 0] }
+                        secondPlace: {
+                            $push: {
+                                $cond: { if: { $eq: ["$results.position", "Second"] }, then: "$results", else: "$$REMOVE" }
                             }
                         },
-                        classSecond: { $arrayElemAt: ["$secondWinner.classId", 0] }
+                        thirdPlace: {
+                            $push: {
+                                $cond: { if: { $eq: ["$results.position", "Third"] }, then: "$results", else: "$$REMOVE" }
+                            }
+                        }
                     }
                 }
             ]).toArray();
@@ -293,6 +325,97 @@ module.exports = {
             throw error;
         }
     },
+
+    getResultByEvent: async (eventId) => {
+        try {
+            if (!ObjectId.isValid(eventId)) {
+                console.error("Invalid ObjectId:", eventId);
+                return null;
+            }
+
+            const result = await db.get().collection(collection.RESULTS_COLLECTION).findOne({
+                eventId: new ObjectId(eventId)
+            });
+
+            // console.log("Query Result:", result);
+            return result;
+        } catch (error) {
+            console.error("Error fetching result:", error);
+            return null;
+        }
+    },
+
+
+    editResult: async (data) => {
+        const { resultId, firstPlace, secondPlace } = data;
+
+        if (!resultId) throw new Error("Result ID is required for editing.");
+
+        // Fetch existing result document
+        const resultDoc = await db.get().collection(collection.RESULTS_COLLECTION).findOne(
+            { _id: new ObjectId(resultId) }
+        );
+
+        if (!resultDoc) throw new Error("Result not found.");
+
+        // Fetch classId and other details of selected winners
+        const getParticipantDetails = async (participantId) => {
+            return await db.get().collection(collection.REGISTRATION_COLLECTION).findOne(
+                { _id: new ObjectId(participantId) },
+                { projection: { classId: 1, teamName: 1, name: 1, type: 1 } }
+            );
+        };
+
+        const firstPlaceData = await getParticipantDetails(firstPlace);
+        const secondPlaceData = await getParticipantDetails(secondPlace);
+
+        if (!firstPlaceData || !secondPlaceData) throw new Error("Invalid participant selection.");
+
+        // Prepare the updated results array
+        let updatedResults = resultDoc.results || [];
+
+        const updateOrInsert = (position, data) => {
+            const index = updatedResults.findIndex(r => r.position === position);
+            const entry = {
+                position,
+                _id: new ObjectId(data._id),
+                classId: data.classId,
+                teamName: data.type === "group" ? data.teamName : data.name
+            };
+
+            if (index !== -1) {
+                updatedResults[index] = entry;
+            } else {
+                updatedResults.push(entry);
+            }
+        };
+
+        // Update or insert First and Second place winners
+        updateOrInsert("First", firstPlaceData);
+        updateOrInsert("Second", secondPlaceData);
+
+        // Perform the database update
+        return db.get().collection(collection.RESULTS_COLLECTION).updateOne(
+            { _id: new ObjectId(resultId) },
+            { $set: { results: updatedResults } }
+        );
+    },
+
+    deleteResult: async (resultId) => {
+        console.log(resultId);
+
+        if (!ObjectId.isValid(resultId)) {
+            console.error("Invalid ObjectId:", resultId);
+            return false;
+        }
+
+        const deleteResponse = await db.get().collection(collection.RESULTS_COLLECTION).deleteOne({
+            _id: new ObjectId(resultId),
+        });
+
+        return deleteResponse.deletedCount === 1;
+    },
+
 
     addWhatsAppLink: async (eventId, whatsappLink) => {
         try {
@@ -306,74 +429,5 @@ module.exports = {
             throw new Error("Unable to add WhatsApp link.");
         }
     },
-
-    getResultByEvent: async (eventId) => {
-        console.log(eventId);
-
-        try {
-            // Validate if eventId is a valid ObjectId
-            if (!ObjectId.isValid(eventId)) {
-                console.error("Invalid ObjectId:", eventId);
-                return null;
-            }
-
-            const result = await db.get().collection(collection.RESULTS_COLLECTION).findOne({
-                eventId: new ObjectId(eventId) // Convert eventId to ObjectId
-            });
-
-            console.log("Query Result:", result); // Debugging output
-            return result;
-        } catch (error) {
-            console.error("Error fetching result:", error);
-            return null;
-        }
-    },
-
-    editResult: async (data) => {
-        const { resultId, firstPlace, secondPlace } = data;
-
-        if (!resultId) throw new Error("Result ID is required for editing.");
-
-        // Fetch the class ID of both winners
-        const firstPlaceData = await db.get().collection(collection.REGISTRATION_COLLECTION).findOne(
-            { _id: new ObjectId(firstPlace) },
-            { projection: { classId: 1 } }
-        );
-
-        const secondPlaceData = await db.get().collection(collection.REGISTRATION_COLLECTION).findOne(
-            { _id: new ObjectId(secondPlace) },
-            { projection: { classId: 1 } }
-        );
-
-        console.log(firstPlaceData, secondPlaceData);
-
-
-        if (!firstPlaceData || !secondPlaceData) throw new Error("Invalid participant selection.");
-
-        return db.get().collection(collection.RESULTS_COLLECTION).updateOne(
-            { _id: new ObjectId(resultId) },
-            {
-                $set: {
-                    firstPlace: new ObjectId(firstPlace),
-                    secondPlace: new ObjectId(secondPlace),
-                    classFirst: firstPlaceData.classId,
-                    classSecond: secondPlaceData.classId,
-                    timestamp: new Date(),
-                },
-            }
-        );
-    },
-
-    deleteResult: async (resultId) => {
-        if (!ObjectId.isValid(resultId)) {
-            throw new Error("Invalid result ID");
-        }
-
-        const deleteResponse = await db.get().collection(collection.RESULTS_COLLECTION).deleteOne({
-            _id: new ObjectId(resultId),
-        });
-
-        return deleteResponse.deletedCount === 1;
-    }
 
 }

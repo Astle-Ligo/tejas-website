@@ -1,6 +1,20 @@
-<h1>Class Wise Results</h1>
-<ul>
-    {{#each classes}}
-    <li><a href="classResults/{{this}}">{{this}}</a></li>
-    {{/each}}
-</ul>
+<section class="py-20 px-6 bg-beige text-bistre min-h-screen">
+    <div class="container mx-auto w-ful bg-white p-8 shadow-lg rounded-lg">
+        <h2 class="text-3xl font-bold text-coffee text-center mb-6 font-handwritten">
+            Class Wise Results
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {{#if classes.length}}
+            {{#each classes}}
+            <a href="/admin/classResults/{{this}}"
+                class="block bg-coffee text-beige p-4 text-center rounded-lg hover:bg-bistre transition font-handwritten">
+                {{this}}
+            </a>
+            {{/each}}
+            {{else}}
+            <p class="text-bistre text-center w-full">No classes found.</p>
+            {{/if}}
+        </div>
+    </div>
+</section>  

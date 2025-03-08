@@ -337,7 +337,7 @@ module.exports = {
                 eventHead.eventDetails = events.length > 0
                     ? events.map(event => ({
                         name: event.eventName || "Unnamed Event",
-                        subName:event.eventSubName,
+                        subName: event.eventSubName,
                         date: event.eventDate || "No Date"
                     }))
                     : [{ name: "Event Not Found", date: "N/A" }];
@@ -376,21 +376,68 @@ module.exports = {
         }
     },
 
-    getResultsByClass: async (classId) => {
+    getResultsByClass: async (className) => {
         try {
-            let results = await db.get().collection(collection.RESULTS_COLLECTION).find({ classId }).toArray();
+            let results = await db.get().collection(collection.RESULTS_COLLECTION).aggregate([
+                {
+                    $match: {
+                        $or: [{ classFirst: className }, { classSecond: className }]
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collection.EVENT_COLLECTION, // Event details
+                        localField: "eventId",
+                        foreignField: "_id",
+                        as: "eventDetails"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$eventDetails",
+                        preserveNullAndEmptyArrays: true
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collection.EVENT_HEAD_COLLECTION, // Event head details
+                        localField: "eventHeadId",
+                        foreignField: "_id",
+                        as: "eventHeadDetails"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$eventHeadDetails",
+                        preserveNullAndEmptyArrays: true
+                    }
+                },
+                {
+                    $addFields: {
+                        points: {
+                            $switch: {
+                                branches: [
+                                    { case: { $eq: ["$classFirst", className] }, then: 10 },
+                                    { case: { $eq: ["$classSecond", className] }, then: 5 }
+                                ],
+                                default: 0
+                            }
+                        }
+                    }
+                },
+                {
+                    $project: {
+                        "eventDetails._id": 0,  // Remove MongoDB _id from event details
+                        "eventHeadDetails._id": 0,  // Remove MongoDB _id from event head details
+                        "eventHeadDetails.Password": 0  // Exclude sensitive data like password
+                    }
+                }
+            ]).toArray();
 
-            for (let result of results) {
-                let event = await db.get().collection(collection.EVENT_HEAD_COLLECTION).findOne({ _id: result.eventId });
-                result.eventName = event ? event.name : 'Unknown Event';
-
-                // Assign points based on position
-                result.points = result.position === "First" ? 10 : result.position === "Second" ? 5 : 0;
-            }
-
+            // console.log(results);
             return results;
         } catch (error) {
-            console.error('Error fetching results:', error);
+            console.error("Error fetching results:", error);
             throw error;
         }
     },
@@ -402,7 +449,8 @@ module.exports = {
                 .collection(collection.REGISTRATION_COLLECTION)
                 .find({ classId: classId })
                 .toArray();
-
+            console.log(registrations);
+            
             return registrations;
         } catch (error) {
             console.error('Error fetching registrations:', error);

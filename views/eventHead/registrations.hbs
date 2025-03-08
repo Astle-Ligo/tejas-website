@@ -79,7 +79,7 @@
                         <td class="p-3">{{class}}</td>
                         <td class="p-3">{{contact.teamPhone}} / {{contact.altPhone}}</td>
                         <td class="p-3">
-                            <a href="https://wa.me/{{phone}}?text={{encodeURI (concat    'Hey Team ' teamName '! 👋 '  'Congratulations on registering for ' ../eventDetails.eventName ' at Tejas \'25! 🎉 '
+                            <a href="https://wa.me/{{contact.teamPhone}}?text={{encodeURI (concat    'Hey Team ' teamName '! 👋 '  'Congratulations on registering for ' ../eventDetails.eventName ' at Tejas \'25! 🎉 '
   'To stay updated with important announcements, schedules, and event details, please join our official WhatsApp group using the link below: '
  )}}{{../eventDetails.whatsappLink}}" target="_blank"
                                 class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">

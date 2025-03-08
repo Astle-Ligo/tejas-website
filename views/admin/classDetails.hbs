@@ -1,24 +1,74 @@
-<h2 class="text-2xl font-bold">Class: {{classId}}</h2>
+<h2 class="text-3xl font-bold text-coffee text-center mb-6">Class: {{classId}}</h2>
 
-<table class="min-w-full border-collapse border border-gray-300 mt-4">
-    <thead>
-        <tr class="bg-gray-200">
-            <th class="border p-2">Event Name</th>
-            <th class="border p-2">Team/Participant</th>
-            <th class="border p-2">Position</th>
-            <th class="border p-2">Contact</th>
-            <th class="border p-2">Points</th>
-        </tr>
-    </thead>
-    <tbody>
-        {{#each results}}
-        <tr class="border">
-            <td class="border p-2">{{this.eventName}}</td>
-            <td class="border p-2">{{this.teamOrParticipant}}</td>
-            <td class="border p-2">{{this.position}}</td>
-            <td class="border p-2">{{this.contact}}</td>
-            <td class="border p-2">{{this.points}}</td>
-        </tr>
-        {{/each}}
-    </tbody>
-</table>
+<!-- Individual Events Table -->
+<h3 class="text-2xl font-bold text-coffee text-center mb-4">Individual Events</h3>
+<div class="overflow-x-auto mb-6">
+    <table class="w-full border border-gray-300 shadow-lg rounded-lg">
+        <thead>
+            <tr class="bg-coffee text-white text-lg">
+                <th class="border p-4 text-left">Event Name</th>
+                <th class="border p-4 text-left">Participant</th>
+                <th class="border p-4 text-left">Reg. No</th>
+                <th class="border p-4 text-left">Position</th>
+                <th class="border p-4 text-left">Contact</th>
+                <th class="border p-4 text-left">Points</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each results}}
+            {{#if (eq this.eventType "individual")}}
+            <tr class="border even:bg-gray-100 odd:bg-white hover:bg-beige transition">
+                <td class="border p-4">{{this.eventDetails.eventName}} {{#if this.eventDetails.eventSubName}}<span
+                        class="text-sm">({{this.eventDetails.eventSubName}})</span>{{/if}}</td>
+                <td class="border p-4">{{this.teamOrParticipant}}</td>
+                <td class="border p-4">{{this.regNum}}</td>
+                <td class="border p-4 font-semibold text-center">{{this.position}}</td>
+                <td class="border p-4">{{this.contact}}</td>
+                <td class="border p-4 font-bold text-center text-green-600">{{this.points}}</td>
+            </tr>
+            {{/if}}
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+<!-- Group Events Table -->
+<h3 class="text-2xl font-bold text-coffee text-center mb-4">Group Events</h3>
+<div class="overflow-x-auto mb-6">
+    <table class="w-full border border-gray-300 shadow-lg rounded-lg">
+        <thead>
+            <tr class="bg-coffee text-white text-lg">
+                <th class="border p-4 text-left">Event Name</th>
+                <th class="border p-4 text-left">Team Name</th>
+                <th class="border p-4 text-left">Team Members</th>
+                <th class="border p-4 text-left">Position</th>
+                <th class="border p-4 text-left">Contact</th>
+                <th class="border p-4 text-left">Points</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each results}}
+            {{#if (eq this.eventType "group")}}
+            <tr class="border even:bg-gray-100 odd:bg-white hover:bg-beige transition">
+                <td class="border p-4">{{this.eventDetails.eventName}} {{#if this.eventDetails.eventSubName}}<span
+                        class="text-sm">({{this.eventDetails.eventSubName}})</span>{{/if}}</td>
+                <td class="border p-4">{{this.teamOrParticipant}}</td>
+                <td class="border p-4">
+                    <ul class="list-disc pl-4">
+                        {{#each this.teamMembers}}
+                        <li>{{this.name}} ({{this.regNum}})</li>
+                        {{/each}}
+                    </ul>
+                </td>
+                <td class="border p-4 font-semibold text-center">{{this.position}}</td>
+                <td class="border p-4">{{this.contact}}</td>
+                <td class="border p-4 font-bold text-center text-green-600">{{this.points}}</td>
+            </tr>
+            {{/if}}
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+<!-- Total Points -->
+<h3 class="text-2xl font-bold text-coffee text-center mt-6">Total Points: {{totalPoints}}</h3>

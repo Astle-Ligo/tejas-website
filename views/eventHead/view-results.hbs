@@ -10,6 +10,7 @@
                         <th class="p-3 border-b">Event Name</th>
                         <th class="p-3 border-b">First Place</th>
                         <th class="p-3 border-b">Second Place</th>
+                        <th class="p-3 border-b">Third Place</th>
                         <th class="p-3 border-b text-center">Actions</th>
                     </tr>
                 </thead>
@@ -17,19 +18,58 @@
                     {{#each results}}
                     <tr class="border-b {{#if (even @index)}}bg-gray-100{{/if}}">
                         <td class="p-3">{{this.eventName}}</td>
-                        <td class="p-3 font-semibold text-green-700">{{this.firstPlaceName}} ({{this.classFirst}})</td>
-                        <td class="p-3 font-semibold text-blue-700">{{this.secondPlaceName}} ({{this.classSecond}})</td>
+
+                        <!-- First Place -->
+                        <td class="p-3 font-semibold text-green-700">
+                            {{#if this.firstPlace.[0]}}
+                            {{#if (eq this.firstPlace.[0].type "individual")}}
+                            {{this.firstPlace.[0].participant.name}} ({{this.firstPlace.[0].classId}})
+                            {{else}}
+                            {{this.firstPlace.[0].teamName}} ({{this.firstPlace.[0].classId}})
+                            {{/if}}
+                            {{else}}
+                            -
+                            {{/if}}
+                        </td>
+
+                        <!-- Second Place -->
+                        <td class="p-3 font-semibold text-blue-700">
+                            {{#if this.secondPlace.[0]}}
+                            {{#if (eq this.secondPlace.[0].type "individual")}}
+                            {{this.secondPlace.[0].participant.name}} ({{this.secondPlace.[0].classId}})
+                            {{else}}
+                            {{this.secondPlace.[0].teamName}} ({{this.secondPlace.[0].classId}})
+                            {{/if}}
+                            {{else}}
+                            -
+                            {{/if}}
+                        </td>
+
+                        <!-- Third Place -->
+                        <td class="p-3 font-semibold text-orange-700">
+                            {{#if this.thirdPlace.[0]}}
+                            {{#if (eq this.thirdPlace.[0].type "individual")}}
+                            {{this.thirdPlace.[0].participant.name}} ({{this.thirdPlace.[0].classId}})
+                            {{else}}
+                            {{this.thirdPlace.[0].teamName}} ({{this.thirdPlace.[0].classId}})
+                            {{/if}}
+                            {{else}}
+                            -
+                            {{/if}}
+                        </td>
+
                         <td class="p-3 flex justify-center space-x-2">
-                            <a href="/eventHead/edit-result/{{this.eventId}}"
+                            <a href="/eventHead/edit-result/{{this._id}}"
                                 class="px-3 py-2 bg-blue-600 text-beige rounded-lg hover:bg-blue-700 transition">
                                 Edit
                             </a>
                             <a href="/eventHead/delete-result/{{this._id}}"
-                                onclick="return confirm('Are you sure you want to delete this {{this.eventName}} result?');"
-                                class="px-3 py-2 bg-red-600 text-beige rounded-lg hover:bg-red-700 transition">
+                                class="px-3 py-2 bg-red-600 text-beige rounded-lg hover:bg-red-700 transition"
+                                onclick="return confirm('Are you sure you want to delete this {{this.eventName}} result?');">
                                 Delete
                             </a>
                         </td>
+
                     </tr>
                     {{/each}}
                 </tbody>

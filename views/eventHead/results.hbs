@@ -1,4 +1,3 @@
-{{!-- resultsEntry.hbs --}}
 <section class="py-20 px-6 bg-beige text-bistre min-h-screen flex justify-center items-center">
     <div class="bg-white p-8 shadow-lg rounded-lg max-w-2xl w-full">
         <h2 class="text-3xl font-bold text-coffee text-center mb-6 font-handwritten">Results Entry</h2>
@@ -36,6 +35,14 @@
                 </select>
             </div>
 
+            <div>
+                <label class="block font-semibold">Third Place Winner:</label>
+                <select name="thirdPlace" id="thirdPlace"
+                    class="w-full p-2 border border-khaki rounded font-handwritten" required>
+                    <option value="">-- Select Third Place Winner --</option>
+                </select>
+            </div>
+
             <button type="submit"
                 class="w-full py-2 bg-coffee text-beige font-bold rounded-lg hover:bg-bistre transition font-handwritten">
                 Submit Results
@@ -52,9 +59,11 @@
 
         const firstPlaceSelect = document.getElementById("firstPlace");
         const secondPlaceSelect = document.getElementById("secondPlace");
+        const thirdPlaceSelect = document.getElementById("thirdPlace");
 
         firstPlaceSelect.innerHTML = '<option value="">-- Select First Place Winner --</option>';
         secondPlaceSelect.innerHTML = '<option value="">-- Select Second Place Winner --</option>';
+        thirdPlaceSelect.innerHTML = '<option value="">-- Select Third Place Winner --</option>';
 
         if (!eventId) return;
 
@@ -68,19 +77,17 @@
                 if (participant.type === "individual") {
                     displayName = `${participant.name} (${participant.class})`;
                 } else if (participant.type === "group") {
-                    displayName = `Team - ${participant.teamName}  (${participant.class})`;
+                    displayName = `Team - ${participant.teamName} (${participant.class})`;
                 }
 
-                const option = `<option value="${participant._id}" class="font-handwritten">
-                ${displayName}
-            </option>`;
+                const option = `<option value="${participant._id}" class="font-handwritten">${displayName}</option>`;
 
                 firstPlaceSelect.innerHTML += option;
                 secondPlaceSelect.innerHTML += option;
+                thirdPlaceSelect.innerHTML += option;
             });
         } catch (error) {
             console.error("Error fetching participants:", error);
         }
     }
-
 </script>

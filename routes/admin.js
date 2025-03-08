@@ -321,43 +321,87 @@ router.get('/delete-culRep/:id', isAdminLoggedIn, async (req, res) => {
   }
 });
 
-router.get('/classResults', async (req, res) => {
+router.get('/classResults', isAdminLoggedIn, async (req, res) => {
   try {
     let classes = await adminHelpers.getAllClasses();
-    res.render('admin/classResults', { classes });
+    res.render('admin/classResults', {
+      classes,
+      admin: true,
+      adminUser: req.session.admin,
+    });
   } catch (error) {
     console.error('Error fetching class results:', error);
     res.status(500).send('Internal Server Error');
   }
 });
 
-router.get('/classResults/:classId', async (req, res) => {
+router.get('/classResults/:classId', isAdminLoggedIn, async (req, res) => {
   try {
     let classId = req.params.classId;
+
+    // Fetch results and registrations
     let results = await adminHelpers.getResultsByClass(classId);
     let registrations = await adminHelpers.getRegistrationsByClass(classId);
 
-    console.log(classId, results, registrations);
+    // console.log("Results Data:", results);
+    // console.log("Registrations Data:", registrations);
 
-    // Match registrations with results to get contact details
+    let totalPoints = 0;
+
+    // Process results
     results.forEach(result => {
-      let registration = registrations.find(reg => reg.eventId === result.eventId);
-      if (registration) {
-        result.contact = registration.type === 'group' ? registration.contact.teamPhone : registration.participant.phone;
-        result.teamOrParticipant = registration.type === 'group' ? registration.teamName : registration.participant.name;
+      let matchingRegistration = registrations.find(reg =>
+        String(reg.eventId) === String(result.eventId)
+      );
+
+      // Ensure position is set
+      if (classId == result.classFirst)
+        result.position = "First" || 'N/A';
+      else
+        result.position = "Second"
+
+      if (matchingRegistration) {
+        if (matchingRegistration.type === 'group') {
+          result.eventType = "group";
+          result.contact = matchingRegistration.contact?.teamPhone || 'N/A';
+          result.teamOrParticipant = matchingRegistration.teamName || 'Unknown Team';
+          result.teamMembers = matchingRegistration.teamMembers || [];
+        } else if (matchingRegistration.type === 'individual') {
+          result.eventType = "individual";
+          result.contact = matchingRegistration.participant?.phone || 'N/A';
+          result.teamOrParticipant = matchingRegistration.participant?.name || 'Unknown Participant';
+          result.regNum = matchingRegistration.participant?.regNum || 'N/A';
+        }
       } else {
+        console.log(`No registration found for eventId: ${result.eventId}`);
         result.contact = 'N/A';
         result.teamOrParticipant = 'Unknown';
       }
+
+      // Add points to total
+      totalPoints += parseInt(result.points) || 0;
     });
 
-    console.log(results);
-    res.render('admin/classDetails', { results, classId });
+    console.log("Processed Results:", results);
+    console.log("Total Points:", totalPoints);
+
+    res.render('admin/classDetails', {
+      results,
+      classId,
+      registrations,
+      totalPoints,
+      admin: true,
+      adminUser: req.session.admin,
+    });
+
   } catch (error) {
     console.error('Error fetching results for class:', error);
     res.status(500).send('Internal Server Error');
   }
 });
+
+
+
 
 
 
