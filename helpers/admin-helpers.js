@@ -430,7 +430,7 @@ module.exports = {
             console.error("Error fetching results:", error);
             throw error;
         }
-    },    
+    },
 
     getRegistrationsByClass: async (classId) => {
         try {
@@ -439,13 +439,78 @@ module.exports = {
                 .collection(collection.REGISTRATION_COLLECTION)
                 .find({ classId: classId })
                 .toArray();
-            console.log(registrations);
+            // console.log(registrations);
 
             return registrations;
         } catch (error) {
             console.error('Error fetching registrations:', error);
             throw error;
         }
-    }
+    },
 
+    getResultsByEvent: async (eventId) => {
+        try {
+            const event = await db.get().collection(collection.RESULTS_COLLECTION)
+                .findOne({ eventId: new ObjectId(eventId) });
+            return event;
+        } catch (error) {
+            console.error("Error fetching results by event ID:", error);
+            throw error;
+        }
+    },
+
+    getLeaderboard: async () => {
+        try {
+            const events = await db.get().collection(collection.RESULTS_COLLECTION).find({}).toArray();
+
+            let leaderboard = {};
+
+            events.forEach(event => {
+                event.results.forEach(result => {
+                    let classId = result.classId;
+                    let position = result.position;
+                    let points = result.points;
+
+                    // Initialize class in leaderboard if not exists
+                    if (!leaderboard[classId]) {
+                        leaderboard[classId] = {
+                            classId: classId,
+                            firstPlace: 0,
+                            secondPlace: 0,
+                            thirdPlace: 0,
+                            totalPoints: 0
+                        };
+                    }
+
+                    // Count positions
+                    if (position === "First") leaderboard[classId].firstPlace++;
+                    if (position === "Second") leaderboard[classId].secondPlace++;
+                    if (position === "Third") leaderboard[classId].thirdPlace++;
+
+                    // Add points
+                    leaderboard[classId].totalPoints += points;
+                });
+            });
+
+            // Convert to array and sort by total points (descending)
+            return Object.values(leaderboard).sort((a, b) => b.totalPoints - a.totalPoints);
+        } catch (error) {
+            console.error("Error generating leaderboard:", error);
+            return [];
+        }
+    },
+
+    getAllResults: async () => {
+        try {
+            const results = await db
+                .get()
+                .collection(collection.RESULTS_COLLECTION)
+                .find({})
+                .toArray();
+            return results;
+        } catch (error) {
+            console.error("Database error:", error);
+            throw error;
+        }
+    },
 };

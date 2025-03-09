@@ -270,7 +270,9 @@ module.exports = {
                     $set: {
                         eventId,
                         eventName: eventName.eventName,
+                        eventSubName:eventName.eventSubName,
                         eventHeadId,
+                        eventType:eventName.type,
                         results,
                         timestamp: new Date(),
                     },

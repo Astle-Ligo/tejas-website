@@ -39,9 +39,8 @@ app.engine(
       concat: (...args) => args.slice(0, -1).join(""), // Concatenates all arguments except the last one (Handlebars options object)
       encodeURI: (str) => encodeURIComponent(str), // Encodes strings for URLs
       some: (array, key, value) => array.some(item => item[key] === value),
-
-      // ✅ Add the missing "even" helper
-      even: (index) => index % 2 === 0
+      even: (index) => index % 2 === 0,
+      ifCond: (v1, v2, options) => (v1 === v2 ? options.fn(this) : options.inverse(this))
     }
   })
 );

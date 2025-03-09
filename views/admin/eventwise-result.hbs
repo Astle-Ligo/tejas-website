@@ -1,0 +1,17 @@
+{{!-- eventRegistrationsList.hbs --}}
+<section class="py-20 px-6 bg-beige text-bistre">
+    <div class="container max-w-5xl mx-auto bg-white p-8 shadow-lg rounded-lg">
+        <h2 class="text-3xl font-bold text-coffee text-center mb-6">Event Result</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {{#each events}}
+            <a href="/admin/eventResults/{{this._id}}"
+                class="block bg-coffee text-beige p-4 text-center rounded-lg hover:bg-bistre transition">
+                {{this.eventName}}
+            </a>
+            {{else}}
+            <p class="text-muted text-center w-full">No events found.</p>
+            {{/each}}
+        </div>
+    </div>
+</section>

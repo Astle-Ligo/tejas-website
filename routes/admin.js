@@ -345,49 +345,64 @@ router.get('/classResults/:classId', isAdminLoggedIn, async (req, res) => {
 
     let processedResults = [];
     let totalPoints = 0; // Declare total points
+    let firstPlaceCount = 0;
+    let secondPlaceCount = 0;
+    let thirdPlaceCount = 0;
 
     resultsData.forEach(event => {
-      event.results.forEach(result => {
-        if (result.classId === classId) {
-          let processedResult = {
-            eventName: event.eventName,
-            position: result.position || 'N/A',
-            points: result.points || 0,
-            type: result.type,
-          };
+      let resultsArray = Array.isArray(event.results) ? event.results : [event.results];
 
-          let matchingRegistration = registrations.find(reg =>
-            String(reg.eventId) === String(event.eventId)
+      resultsArray.forEach(result => {
+        console.log("Processing result:", JSON.stringify(result, null, 2));
+
+        if (String(result.classId) === String(classId)) {
+          let exists = processedResults.some(
+            (r) => r.eventName === event.eventName && r.teamOrParticipant === result.teamName
           );
 
-          if (matchingRegistration) {
-            if (matchingRegistration.type === 'group') {
-              processedResult.eventType = "group";
-              processedResult.contact = matchingRegistration.contact?.teamPhone || 'N/A';
-              processedResult.teamOrParticipant = matchingRegistration.teamName || 'Unknown Team';
-              processedResult.teamMembers = matchingRegistration.teamMembers || [];
-            } else if (matchingRegistration.type === 'individual') {
-              processedResult.eventType = "individual";
-              processedResult.contact = matchingRegistration.participant?.phone || 'N/A';
-              processedResult.teamOrParticipant = matchingRegistration.participant?.name || 'Unknown Participant';
-              processedResult.regNum = matchingRegistration.participant?.regNum || 'N/A';
-            }
-          } else {
-            processedResult.contact = 'N/A';
-            processedResult.teamOrParticipant = 'Unknown';
-          }
+          if (!exists) {
+            let processedResult = {
+              eventName: event.eventName,
+              position: result.position || 'N/A',
+              points: result.points || 0,
+              type: result.type,
+            };
 
-          totalPoints += parseInt(result.points) || 0;
-          processedResults.push(processedResult);
+            if (result.type === 'group') {
+              processedResult.eventType = "group";
+              processedResult.contact = result.contact?.teamPhone || 'N/A';
+              processedResult.teamOrParticipant = result.teamName || 'Unknown Team';
+              processedResult.teamMembers = result.teamMembers || [];
+            } else if (result.type === 'individual') {
+              processedResult.eventType = "individual";
+              processedResult.contact = result.participant?.phone || 'N/A';
+              processedResult.teamOrParticipant = result.participant?.name || 'Unknown Participant';
+              processedResult.regNum = result.participant?.regNum || 'N/A';
+            }
+
+            // Count positions
+            if (result.position === "First") firstPlaceCount++;
+            if (result.position === "Second") secondPlaceCount++;
+            if (result.position === "Third") thirdPlaceCount++;
+
+            totalPoints += parseInt(result.points) || 0;
+            processedResults.push(processedResult);
+          }
         }
       });
     });
+
+    console.log(processedResults);
+
 
     // Render the page with results
     res.render('admin/classDetails', {
       results: processedResults,
       classId,
       totalPoints,
+      firstPlaceCount,
+      secondPlaceCount,
+      thirdPlaceCount,
       admin: true,
       adminUser: req.session.admin,
     });
@@ -398,11 +413,69 @@ router.get('/classResults/:classId', isAdminLoggedIn, async (req, res) => {
   }
 });
 
+router.get('/eventResults', isAdminLoggedIn, async (req, res) => {
+  try {
+    const events = await adminHelpers.getAllEvents();
+    res.render("admin/eventwise-result", {
+      admin: true,
+      adminUser: req.session.admin,
+      events,
+    });
+  } catch (error) {
+    console.error("❌ Error fetching events:", error);
+    res.status(500).send("Error fetching event registrations.");
+  }
+})
 
+router.get('/eventResults/:eventId', isAdminLoggedIn, async (req, res) => {
+  try {
+    const eventId = req.params.eventId;
+    const eventResults = await adminHelpers.getResultsByEvent(eventId);
+    console.log(eventId, eventResults);
 
+    if (!eventResults) {
+      return res.render("admin/event-Result", { eventResults: null });
+    }
 
+    res.render("admin/event-Result", {
+      eventResults,
+      admin: true,
+      adminUser: req.session.admin,
+    });
+  } catch (error) {
+    console.error("Error fetching event results:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
+router.get("/leaderboard", async (req, res) => {
+  try {
+    const leaderboardData = await adminHelpers.getLeaderboard();
 
+    res.render("admin/leaderboard", {
+      title: "Leaderboard",
+      leaderboardData,
+      admin: true,
+      adminUser: req.session.admin,
+    });
+  } catch (error) {
+    console.error("Error fetching leaderboard:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
+router.get("/results", async (req, res) => {
+  try {
+    const results = await adminHelpers.getAllResults();
+    res.render("admin/results", {
+      results,
+      admin: true,
+      adminUser: req.session.admin,
+    });
+  } catch (error) {
+    console.error("Error fetching results:", error);
+    res.status(500).send("Error fetching results");
+  }
+});
 
 module.exports = router;

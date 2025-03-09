@@ -1,0 +1,70 @@
+{{#if eventResults}}
+<!-- Individual and Group Winners Table -->
+<div class="mt-20"> <!-- Added margin to push content below the navbar -->
+    <h3 class="text-2xl font-bold text-coffee text-center mb-4">Winners of {{eventResults.eventName}}</h3>
+
+    <div class="flex justify-center mb-6">
+        <div class="overflow-x-auto">
+            <table class="w-full max-w-5xl mx-auto border border-gray-300 shadow-lg rounded-lg">
+                <thead>
+                    <tr class="bg-coffee text-white text-lg">
+                        <th class="border p-4 text-left">Class</th>
+                        <th class="border p-4 text-left">Name/Team</th>
+                        <th class="border p-4 text-left">Reg. No / Team Members</th>
+                        <th class="border p-4 text-left">Position</th>
+                        <th class="border p-4 text-left">Contact</th>
+                        <th class="border p-4 text-left">Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each eventResults.results}}
+                    <tr class="border even:bg-gray-100 odd:bg-white hover:bg-beige transition">
+                        <td class="border p-4">{{classId}}</td>
+
+                        <!-- Individual Participant or Team Name -->
+                        <td class="border p-4">
+                            {{#if (eq type "individual")}}
+                            {{participant.name}}
+                            {{else}}
+                            {{teamName}}
+                            {{/if}}
+                        </td>
+
+                        <!-- Registration Number or Team Members -->
+                        <td class="border p-4">
+                            {{#if (eq type "individual")}}
+                            {{participant.regNum}}
+                            {{else}}
+                            <ul class="list-disc pl-4">
+                                {{#each teamMembers}}
+                                <li style="list-style: none;">{{name}} ({{regNum}})</li>
+                                {{/each}}
+                            </ul>
+                            {{/if}}
+                        </td>
+
+                        <!-- Position -->
+                        <td class="border p-4 font-semibold text-center">{{position}}</td>
+
+                        <!-- Contact -->
+                        <td class="border p-4">
+                            {{#if (eq type "individual")}}
+                            {{participant.phone}}
+                            {{else}}
+                            {{contact.teamPhone}}
+                            {{/if}}
+                        </td>
+
+                        <!-- Points -->
+                        <td class="border p-4 font-bold text-center text-green-600">{{points}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{{else}}
+<h2 class="mt-20 text-3xl font-bold text-coffee text-center mb-6">No Results Found</h2> <!-- Added margin -->
+{{/if}}

@@ -1,0 +1,101 @@
+<section class="py-20 px-6 bg-[var(--beige)] text-[var(--bistre)] min-h-screen">
+    <div class="container mx-auto max-w-6xl bg-[var(--khaki)] p-8 shadow-lg rounded-lg">
+        <h2 class="text-4xl font-bold text-[var(--coffee)] text-center mb-8">📢 Event Results</h2>
+
+        {{#if results.length}}
+
+        <!-- Individual Events -->
+        <h3 class="text-2xl font-semibold text-[var(--coffee)] mt-8">🧑‍🎓 Individual Events</h3>
+        <div class="overflow-x-auto mt-4">
+            <table class="w-full border border-[var(--chamoisee)] rounded-lg text-left">
+                <thead class="bg-[var(--coffee)] text-[var(--beige)] text-lg">
+                    <tr>
+                        <th class="p-4 border-b">Event Name</th>
+                        <th class="p-4 border-b">First Place</th>
+                        <th class="p-4 border-b">Second Place</th>
+                        <th class="p-4 border-b">Third Place</th>
+                    </tr>
+                </thead>
+                <tbody class="text-[var(--bistre)]">
+                    {{#each results}}
+                    {{#if (eq this.results.[0].type "individual")}}
+                    <tr class="border-b hover:bg-[var(--chamoisee)] transition duration-200">
+                        <td class="p-4 font-semibold">{{this.eventName}}</td>
+
+                        <td class="p-4 font-semibold text-[var(--bistre)]">
+                            {{#if this.results.[0]}} {{this.results.[0].participant.name}}
+                            ({{this.results.[0].classId}})
+                            {{else}} - {{/if}}
+                        </td>
+
+                        <td class="p-4 font-semibold text-[var(--bistre)]">
+                            {{#if this.results.[1]}} {{this.results.[1].participant.name}}
+                            ({{this.results.[1].classId}})
+                            {{else}} - {{/if}}
+                        </td>
+
+                        <td class="p-4 font-semibold text-[var(--bistre)]">
+                            {{#if this.results.[2]}} {{this.results.[2].participant.name}}
+                            ({{this.results.[2].classId}})
+                            {{else}} - {{/if}}
+                        </td>
+                    </tr>
+                    {{/if}}
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Group Events -->
+        <h3 class="text-2xl font-semibold text-[var(--coffee)] mt-8">👥 Group Events</h3>
+        <div class="overflow-x-auto mt-4">
+            <table class="w-full border border-[var(--chamoisee)] rounded-lg text-left">
+                <thead class="bg-[var(--coffee)] text-[var(--beige)] text-lg">
+                    <tr>
+                        <th class="p-4 border-b">Event Name</th>
+                        <th class="p-4 border-b">First Place</th>
+                        <th class="p-4 border-b">Second Place</th>
+                        <th class="p-4 border-b">Third Place</th>
+                    </tr>
+                </thead>
+                <tbody class="text-[var(--bistre)]">
+                    {{#each results}}
+                    {{#if (eq this.results.[0].type "group")}}
+                    <tr class="border-b hover:bg-[var(--chamoisee)] transition duration-200">
+                        <td class="p-4 font-semibold">{{this.eventName}}
+                            {{#if this.eventSubName}}
+                            <span class="text-sm">({{this.eventSubName}})</span>
+                            {{/if}}
+                        </td>
+
+                        <td class="p-4 font-semibold text-[var(--bistre)]">
+                            {{#if this.results.[0]}} {{this.results.[0].teamName}} ({{this.results.[0].classId}})
+                            {{else}} - {{/if}}
+                        </td>
+
+                        <td class="p-4 font-semibold text-[var(--bistre)]">
+                            {{#if this.results.[1]}} {{this.results.[1].teamName}} ({{this.results.[1].classId}})
+                            {{else}} - {{/if}}
+                        </td>
+
+                        <td class="p-4 font-semibold text-[var(--bistre)]">
+                            {{#if this.results.[2]}} {{this.results.[2].teamName}} ({{this.results.[2].classId}})
+                            {{else}} - {{/if}}
+                        </td>
+                    </tr>
+                    {{/if}}
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+
+        {{else}}
+        <div class="flex justify-center items-center h-40">
+            <div class="bg-[var(--chamoisee)] text-[var(--beige)] p-6 rounded-lg text-center shadow-md">
+                <p class="text-xl font-semibold">No results found for your events.</p>
+                <p class="text-md">You haven't added any results yet.</p>
+            </div>
+        </div>
+        {{/if}}
+    </div>
+</section>
