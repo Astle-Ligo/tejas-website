@@ -58,6 +58,39 @@
                 Already Registered
             </button>
             {{/if}}
+            <button id="closedBtn"
+                class="hidden px-5 py-2 w-full flex justify-center items-center text-center bg-gray-500 text-white font-bold rounded-lg cursor-not-allowed shadow-md font-handwritten"
+                disabled>
+                Registration Closed
+            </button>
         </div>
     </div>
 </section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Set the registration closing time (YYYY, MM (0-indexed), DD, HH, MM, SS)
+        const registrationDeadline = new Date(2025, 2, 10, 00, 00, 00).getTime(); // Adjust time as needed
+        console.log(registrationDeadline)
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const timeLeft = registrationDeadline - now;
+            console.log(now, timeLeft)
+            const registerBtn = document.querySelector("a[href^='/culRep/register-event']");
+            const alreadyRegisteredBtn = document.querySelector("button[disabled]");
+            const closedBtn = document.getElementById("closedBtn");
+
+            if (timeLeft <= 0) {
+                if (registerBtn) registerBtn.classList.add("hidden");
+                if (alreadyRegisteredBtn) alreadyRegisteredBtn.classList.add("hidden");
+                if (closedBtn) closedBtn.classList.remove("hidden");
+
+                clearInterval(timerInterval);
+            }
+        }
+
+        // Initial check
+        updateCountdown();
+        const timerInterval = setInterval(updateCountdown, 1000);
+    });
+</script>

@@ -1,5 +1,10 @@
 {{!-- culRepDashboard.hbs --}}
 <section class="py-20 px-6 bg-beige text-bistre">
+    <div id="countdown"
+        class="text-3xl md:text-4xl font-semibold text-chamoisee hand-drawn-subtitle m-6 flex flex-col justify-center items-center text-center">
+        <div class="text-chamoisee p-2">The Registrations will close in:</div>
+        <span id="timer" class="text-black p-2"></span>
+    </div>
     <h1 class="text-3xl font-bold text-coffee text-center mb-6 font-handwritten">Event Details</h1>
     <div class="container mx-auto flex justify-center">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -20,3 +25,33 @@
         </div>
     </div>
 </section>
+
+<script>
+    function startCountdown(eventDate) {
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const timeLeft = eventDate - now;
+            console.log(now, timeLeft)
+            if (timeLeft <= 0) {
+                document.getElementById("countdown").innerHTML = "<span class='text-chamoisee'>Registration Closed !!</span>";
+                clearInterval(timerInterval);
+                return;
+            }
+
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+            document.getElementById("timer").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        updateCountdown(); // Initial call
+        const timerInterval = setInterval(updateCountdown, 1000);
+    }
+
+    // Set the event date (March 10, 2025, 00:00:00 AM)
+    const eventDate = new Date(2025, 2, 10, 0, 0, 0).getTime();
+    startCountdown(eventDate);
+
+</script>

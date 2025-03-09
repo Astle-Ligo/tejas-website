@@ -340,55 +340,53 @@ router.get('/classResults/:classId', isAdminLoggedIn, async (req, res) => {
     let classId = req.params.classId;
 
     // Fetch results and registrations
-    let results = await adminHelpers.getResultsByClass(classId);
+    let resultsData = await adminHelpers.getResultsByClass(classId);
     let registrations = await adminHelpers.getRegistrationsByClass(classId);
 
-    // console.log("Results Data:", results);
-    // console.log("Registrations Data:", registrations);
+    let processedResults = [];
+    let totalPoints = 0; // Declare total points
 
-    let totalPoints = 0;
+    resultsData.forEach(event => {
+      event.results.forEach(result => {
+        if (result.classId === classId) {
+          let processedResult = {
+            eventName: event.eventName,
+            position: result.position || 'N/A',
+            points: result.points || 0,
+            type: result.type,
+          };
 
-    // Process results
-    results.forEach(result => {
-      let matchingRegistration = registrations.find(reg =>
-        String(reg.eventId) === String(result.eventId)
-      );
+          let matchingRegistration = registrations.find(reg =>
+            String(reg.eventId) === String(event.eventId)
+          );
 
-      // Ensure position is set
-      if (classId == result.classFirst)
-        result.position = "First" || 'N/A';
-      else
-        result.position = "Second"
+          if (matchingRegistration) {
+            if (matchingRegistration.type === 'group') {
+              processedResult.eventType = "group";
+              processedResult.contact = matchingRegistration.contact?.teamPhone || 'N/A';
+              processedResult.teamOrParticipant = matchingRegistration.teamName || 'Unknown Team';
+              processedResult.teamMembers = matchingRegistration.teamMembers || [];
+            } else if (matchingRegistration.type === 'individual') {
+              processedResult.eventType = "individual";
+              processedResult.contact = matchingRegistration.participant?.phone || 'N/A';
+              processedResult.teamOrParticipant = matchingRegistration.participant?.name || 'Unknown Participant';
+              processedResult.regNum = matchingRegistration.participant?.regNum || 'N/A';
+            }
+          } else {
+            processedResult.contact = 'N/A';
+            processedResult.teamOrParticipant = 'Unknown';
+          }
 
-      if (matchingRegistration) {
-        if (matchingRegistration.type === 'group') {
-          result.eventType = "group";
-          result.contact = matchingRegistration.contact?.teamPhone || 'N/A';
-          result.teamOrParticipant = matchingRegistration.teamName || 'Unknown Team';
-          result.teamMembers = matchingRegistration.teamMembers || [];
-        } else if (matchingRegistration.type === 'individual') {
-          result.eventType = "individual";
-          result.contact = matchingRegistration.participant?.phone || 'N/A';
-          result.teamOrParticipant = matchingRegistration.participant?.name || 'Unknown Participant';
-          result.regNum = matchingRegistration.participant?.regNum || 'N/A';
+          totalPoints += parseInt(result.points) || 0;
+          processedResults.push(processedResult);
         }
-      } else {
-        console.log(`No registration found for eventId: ${result.eventId}`);
-        result.contact = 'N/A';
-        result.teamOrParticipant = 'Unknown';
-      }
-
-      // Add points to total
-      totalPoints += parseInt(result.points) || 0;
+      });
     });
 
-    console.log("Processed Results:", results);
-    console.log("Total Points:", totalPoints);
-
+    // Render the page with results
     res.render('admin/classDetails', {
-      results,
+      results: processedResults,
       classId,
-      registrations,
       totalPoints,
       admin: true,
       adminUser: req.session.admin,
@@ -399,6 +397,8 @@ router.get('/classResults/:classId', isAdminLoggedIn, async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+
 
 
 

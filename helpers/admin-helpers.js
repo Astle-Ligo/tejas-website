@@ -380,13 +380,16 @@ module.exports = {
         try {
             let results = await db.get().collection(collection.RESULTS_COLLECTION).aggregate([
                 {
+                    $unwind: "$results" // Flatten results array
+                },
+                {
                     $match: {
-                        $or: [{ classFirst: className }, { classSecond: className }]
+                        "results.classId": className // Filter only relevant class results
                     }
                 },
                 {
                     $lookup: {
-                        from: collection.EVENT_COLLECTION, // Event details
+                        from: collection.EVENT_COLLECTION, // Fetch event details
                         localField: "eventId",
                         foreignField: "_id",
                         as: "eventDetails"
@@ -400,7 +403,7 @@ module.exports = {
                 },
                 {
                     $lookup: {
-                        from: collection.EVENT_HEAD_COLLECTION, // Event head details
+                        from: collection.EVENT_HEAD_COLLECTION, // Fetch event head details
                         localField: "eventHeadId",
                         foreignField: "_id",
                         as: "eventHeadDetails"
@@ -413,34 +416,21 @@ module.exports = {
                     }
                 },
                 {
-                    $addFields: {
-                        points: {
-                            $switch: {
-                                branches: [
-                                    { case: { $eq: ["$classFirst", className] }, then: 10 },
-                                    { case: { $eq: ["$classSecond", className] }, then: 5 }
-                                ],
-                                default: 0
-                            }
-                        }
-                    }
-                },
-                {
                     $project: {
                         "eventDetails._id": 0,  // Remove MongoDB _id from event details
                         "eventHeadDetails._id": 0,  // Remove MongoDB _id from event head details
-                        "eventHeadDetails.Password": 0  // Exclude sensitive data like password
+                        "eventHeadDetails.Password": 0,  // Exclude sensitive data
+                        "results._id": 0 // Remove internal result _id
                     }
                 }
             ]).toArray();
 
-            // console.log(results);
             return results;
         } catch (error) {
             console.error("Error fetching results:", error);
             throw error;
         }
-    },
+    },    
 
     getRegistrationsByClass: async (classId) => {
         try {
@@ -450,7 +440,7 @@ module.exports = {
                 .find({ classId: classId })
                 .toArray();
             console.log(registrations);
-            
+
             return registrations;
         } catch (error) {
             console.error('Error fetching registrations:', error);

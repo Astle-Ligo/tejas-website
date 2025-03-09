@@ -1,5 +1,5 @@
 <section class="py-20 px-6 bg-beige text-bistre font-handwritten">
-    <div class="container mx-auto max-w-5xl bg-white p-8 shadow-lg rounded-lg">
+    <div class="container mx-auto w-full bg-white p-8 shadow-lg rounded-lg">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-3xl font-bold text-coffee font-handwritten">
                 Your Registered Events
@@ -132,21 +132,3 @@
     </div>
 </section>
 
-
-{{!-- <script>
-    document.getElementById("shareButton").addEventListener("click", function () {
-        const shareText = "Check out the events I registered for: ";
-        const shareURL = window.location.href;
-
-        if (navigator.share) {
-            navigator.share({
-                title: "Event Registrations",
-                text: shareText,
-                url: shareURL
-            }).catch(err => console.log("Sharing failed", err));
-        } else {
-            navigator.clipboard.writeText(shareText + shareURL);
-            alert("Link copied to clipboard! Share it with your class.");
-        }
-    });
-</script> --}}

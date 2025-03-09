@@ -213,11 +213,15 @@ module.exports = {
             console.log("Second Place:", secondPlaceReg);
             console.log("Third Place:", thirdPlaceReg);
 
-            // Format participant details
+            eventName = await db.get().collection(collection.EVENT_COLLECTION).findOne({ _id: eventId })
+            console.log(eventName.eventName);
+
+            // Format participant details with unique ID for each position
             const formatResult = (registration, position, points) => {
                 if (!registration) return null;
 
                 const baseDetails = {
+                    _id: new ObjectId(), // Assign unique _id for each result entry
                     classId: registration.classId || "Unknown",
                     position,
                     points,
@@ -252,32 +256,33 @@ module.exports = {
                 return null;
             };
 
-            // Create structured results array
-            const resultsArray = [
+            // Format and assign unique _id for each result
+            const results = [
                 formatResult(firstPlaceReg, "First", 25),
                 formatResult(secondPlaceReg, "Second", 15),
                 formatResult(thirdPlaceReg, "Third", 10)
-            ].filter(Boolean); // Removes null values if places are missing
+            ].filter(result => result !== null); // Remove null entries if any
 
-            // Create event results object
-            const eventResults = {
-                eventId,
-                eventHeadId,
-                eventName: resultData.eventName.trim(),
-                results: resultsArray,
-                timestamp: new Date(),
-            };
+            // Save results to database
+            await dbInstance.collection(collection.RESULTS_COLLECTION).updateOne(
+                { eventId },
+                {
+                    $set: {
+                        eventId,
+                        eventName: eventName.eventName,
+                        eventHeadId,
+                        results,
+                        timestamp: new Date(),
+                    },
+                },
+                { upsert: true }
+            );
 
-            console.log("Inserting into collection:", collection.RESULTS_COLLECTION);
-            console.log("Data:", JSON.stringify(eventResults, null, 2));
-
-            // Insert into the database
-            const insertedResult = await dbInstance.collection(collection.RESULTS_COLLECTION).insertOne(eventResults);
-
-            return insertedResult;
+            console.log("✅ Results saved successfully.");
+            return { success: true, message: "Results saved successfully." };
         } catch (error) {
-            console.error("Error saving event results:", error);
-            throw error;
+            console.error("❌ Error saving event results:", error);
+            return { success: false, message: error.message };
         }
     },
 
@@ -346,71 +351,89 @@ module.exports = {
     },
 
 
-    editResult: async (data) => {
-        const { resultId, firstPlace, secondPlace } = data;
+    // editResult: async (data) => {
+    //     const { eventId, resultId, firstPlace, secondPlace, thirdPlace } = data;
 
-        if (!resultId) throw new Error("Result ID is required for editing.");
+    //     console.log(data);
 
-        // Fetch existing result document
-        const resultDoc = await db.get().collection(collection.RESULTS_COLLECTION).findOne(
-            { _id: new ObjectId(resultId) }
-        );
+    //     // Validate Event ID and Result ID
+    //     if (!eventId || !ObjectId.isValid(eventId)) throw new Error("Invalid or missing Event ID.");
+    //     if (!resultId || !ObjectId.isValid(resultId)) throw new Error("Invalid or missing Result ID.");
 
-        if (!resultDoc) throw new Error("Result not found.");
+    //     console.log("Event ID:", eventId);
+    //     console.log("Result ID:", resultId);
 
-        // Fetch classId and other details of selected winners
-        const getParticipantDetails = async (participantId) => {
-            return await db.get().collection(collection.REGISTRATION_COLLECTION).findOne(
-                { _id: new ObjectId(participantId) },
-                { projection: { classId: 1, teamName: 1, name: 1, type: 1 } }
-            );
-        };
+    //     const validateId = (id) => (id && ObjectId.isValid(id) ? new ObjectId(id) : null);
 
-        const firstPlaceData = await getParticipantDetails(firstPlace);
-        const secondPlaceData = await getParticipantDetails(secondPlace);
+    //     // Convert participant IDs if valid
+    //     const firstPlaceId = validateId(firstPlace);
+    //     const secondPlaceId = validateId(secondPlace);
+    //     const thirdPlaceId = validateId(thirdPlace);
 
-        if (!firstPlaceData || !secondPlaceData) throw new Error("Invalid participant selection.");
+    //     // Helper function to fetch participant details
+    //     const getParticipantDetails = async (participantId) => {
+    //         if (!participantId) return null;
+    //         return await db.get().collection(collection.REGISTRATION_COLLECTION).findOne(
+    //             { _id: participantId },
+    //             { projection: { classId: 1, teamName: 1, name: 1, type: 1, contact: 1, teamMembers: 1, regNum: 1, phone: 1 } }
+    //         );
+    //     };
 
-        // Prepare the updated results array
-        let updatedResults = resultDoc.results || [];
+    //     // Fetch details only if IDs are provided
+    //     const firstPlaceData = firstPlaceId ? await getParticipantDetails(firstPlaceId) : null;
+    //     const secondPlaceData = secondPlaceId ? await getParticipantDetails(secondPlaceId) : null;
+    //     const thirdPlaceData = thirdPlaceId ? await getParticipantDetails(thirdPlaceId) : null;
 
-        const updateOrInsert = (position, data) => {
-            const index = updatedResults.findIndex(r => r.position === position);
-            const entry = {
-                position,
-                _id: new ObjectId(data._id),
-                classId: data.classId,
-                teamName: data.type === "group" ? data.teamName : data.name
-            };
+    //     // Prepare update query dynamically
+    //     let updateFields = {};
 
-            if (index !== -1) {
-                updatedResults[index] = entry;
-            } else {
-                updatedResults.push(entry);
-            }
-        };
+    //     const participantsData = [
+    //         { id: firstPlaceId, data: firstPlaceData, position: "First", points: 25 },
+    //         { id: secondPlaceId, data: secondPlaceData, position: "Second", points: 15 },
+    //         { id: thirdPlaceId, data: thirdPlaceData, position: "Third", points: 10 },
+    //     ];
 
-        // Update or insert First and Second place winners
-        updateOrInsert("First", firstPlaceData);
-        updateOrInsert("Second", secondPlaceData);
+    //     // Iterate over participantsData to dynamically create the update fields
+    //     participantsData.forEach(({ id, data, position, points }) => {
+    //         if (data) {
+    //             updateFields[`results.$[elem]`] = {
+    //                 position,
+    //                 _id: id,
+    //                 classId: data.classId,
+    //                 points,
+    //                 ...(data.type === "group"
+    //                     ? { teamName: data.teamName, contact: data.contact, teamMembers: data.teamMembers }
+    //                     : { participant: { name: data.name, regNum: data.regNum, phone: data.phone } })
+    //             };
+    //         }
+    //     });
 
-        // Perform the database update
-        return db.get().collection(collection.RESULTS_COLLECTION).updateOne(
-            { _id: new ObjectId(resultId) },
-            { $set: { results: updatedResults } }
-        );
-    },
+    //     console.log("Looking for eventId:", eventId);
+    //     console.log("Checking if teams exist:", firstPlace, secondPlace, thirdPlace);
 
-    deleteResult: async (resultId) => {
-        console.log(resultId);
+    //     if (Object.keys(updateFields).length === 0) {
+    //         throw new Error("No valid participant data provided.");
+    //     }
 
-        if (!ObjectId.isValid(resultId)) {
-            console.error("Invalid ObjectId:", resultId);
+    //     // Perform the database update
+    //     return db.get().collection(collection.RESULTS_COLLECTION).updateOne(
+    //         { _id: new ObjectId(eventId), "results._id": new ObjectId(resultId) },
+    //         { $set: updateFields },
+    //         {
+    //             arrayFilters: [{ "elem.position": { $in: ["First", "Second", "Third"] } }]
+    //         }
+    //     );
+    // },
+
+    deleteResult: async (eventId) => {
+        console.log(eventId);
+
+        if (!ObjectId.isValid(eventId)) {
+            console.error("Invalid ObjectId:", eventId);
             return false;
         }
-
         const deleteResponse = await db.get().collection(collection.RESULTS_COLLECTION).deleteOne({
-            _id: new ObjectId(resultId),
+            eventId: new ObjectId(eventId),
         });
 
         return deleteResponse.deletedCount === 1;

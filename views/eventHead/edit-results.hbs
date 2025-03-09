@@ -11,8 +11,9 @@
         </p>
 
         <form id="resultsForm" action="/eventHead/editResult" method="POST" class="space-y-4">
-            <input type="hidden" name="eventId" id="eventId" value="{{result.eventId}}">
             <input type="hidden" name="resultId" id="resultId" value="{{result._id}}">
+            <input type="hidden" name="eventId" id="eventId" value="{{result.eventId}}">
+
 
             <div>
                 <label class="block font-semibold">Event Name:</label>
@@ -23,84 +24,93 @@
 
             <div>
                 <label class="block font-semibold">First Place Winner:</label>
-                <select name="FirstPlace" id="FirstPlace" data-selected="{{result.results.[0]._id}}"
+                <select name="firstPlace" id="firstPlace"
                     class="w-full p-2 border border-khaki rounded font-handwritten" required>
-                    <option value="{{result.results.[0]._id}}" selected>{{result.results.[0].teamName}}</option>
+                    <option value="{{result.results.[0].teamName}}" selected>
+                        {{result.results.[0].teamName}} - {{result.results.[0].classId}}
+                    </option>
                 </select>
             </div>
 
             <div>
                 <label class="block font-semibold">Second Place Winner:</label>
-                <select name="SecondPlace" id="SecondPlace" data-selected="{{result.results.[1]._id}}"
+                <select name="secondPlace" id="secondPlace"
                     class="w-full p-2 border border-khaki rounded font-handwritten" required>
-                    <option value="{{result.results.[1]._id}}" selected>{{result.results.[1].teamName}}</option>
+                    <option value="{{result.results.[1].teamName}}" selected>
+                        {{result.results.[1].teamName}} - {{result.results.[1].classId}}
+                    </option>
                 </select>
             </div>
 
             <div>
                 <label class="block font-semibold">Third Place Winner:</label>
-                <select name="ThirdPlace" id="ThirdPlace" data-selected="{{result.results.[2]._id}}"
-                    class="w-full p-2 border border-khaki rounded font-handwritten">
-                    <option value="{{result.results.[2]._id}}" selected>{{result.results.[2].teamName}}</option>
+                <select name="thirdPlace" id="thirdPlace"
+                    class="w-full p-2 border border-khaki rounded font-handwritten" required>
+                    <option value="{{result.results.[2].teamName}}" selected>
+                        {{result.results.[2].teamName}} - {{result.results.[2].classId}}
+                    </option>
                 </select>
             </div>
 
             <button type="submit"
                 class="w-full py-2 bg-coffee text-beige font-bold rounded-lg hover:bg-bistre transition font-handwritten">
-                Update Results
+                Submit Results
             </button>
         </form>
-        <p>First Place ID: {{result.results.[0]._id}}</p>
-        <p>Second Place ID: {{result.results.[1]._id}}</p>
-        <p>Third Place ID: {{result.results.[2]._id}}</p>
-
     </div>
 </section>
 
 <script>
-    async function loadParticipants(eventId, firstPlaceId, secondPlaceId, thirdPlaceId) {
-        const firstPlaceSelect = document.getElementById("FirstPlace");
-        const secondPlaceSelect = document.getElementById("SecondPlace");
-        const thirdPlaceSelect = document.getElementById("ThirdPlace");
+    async function loadParticipants(eventId) {
+        const firstPlaceSelect = document.getElementById("firstPlace");
+        const secondPlaceSelect = document.getElementById("secondPlace");
+        const thirdPlaceSelect = document.getElementById("thirdPlace");
 
-        // Clear existing options except the selected ones
-        firstPlaceSelect.innerHTML = '<option value="">-- Select First Place Winner --</option>';
-        secondPlaceSelect.innerHTML = '<option value="">-- Select Second Place Winner --</option>';
-        thirdPlaceSelect.innerHTML = '<option value="">-- Select Third Place Winner --</option>';
-
-        if (!eventId) {
-            console.error("Event ID is missing!");
-            return;
-        }
+        if (!eventId) return;
 
         try {
-            console.log("Fetching participants for Event ID:", eventId);
             const response = await fetch(`/eventHead/getParticipants/${eventId}`);
-            if (!response.ok) throw new Error("Failed to fetch participants");
-
             const participants = await response.json();
-            console.log("Fetched Participants:", participants);
 
+            // Clear existing options except the selected ones
+            firstPlaceSelect.innerHTML = `<option value="{{#if (eq result.results.[0].type 'individual')}}{{result.results.[0].participant.name}}{{else}}{{result.results.[0].teamName}}{{/if}}" selected>
+    {{#if (eq result.results.[0].type 'individual')}}
+        {{result.results.[0].participant.name}} - {{result.results.[0].classId}}
+    {{else}}
+        {{result.results.[0].teamName}} - {{result.results.[0].classId}}
+    {{/if}}
+</option>`;
+
+            secondPlaceSelect.innerHTML = `<option value="{{#if (eq result.results.[1].type 'individual')}}{{result.results.[1].participant.name}}{{else}}{{result.results.[1].teamName}}{{/if}}" selected>
+    {{#if (eq result.results.[1].type 'individual')}}
+        {{result.results.[1].participant.name}} - {{result.results.[1].classId}}
+    {{else}}
+        {{result.results.[1].teamName}} - {{result.results.[1].classId}}
+    {{/if}}
+</option>`;
+
+            thirdPlaceSelect.innerHTML = `<option value="{{#if (eq result.results.[2].type 'individual')}}{{result.results.[2].participant.name}}{{else}}{{result.results.[2].teamName}}{{/if}}" selected>
+    {{#if (eq result.results.[2].type 'individual')}}
+        {{result.results.[2].participant.name}} - {{result.results.[2].classId}}
+    {{else}}
+        {{result.results.[2].teamName}} - {{result.results.[2].classId}}
+    {{/if}}
+</option>`;
+
+
+            // Add all participants to the select dropdown
             participants.forEach(participant => {
                 let displayName = participant.type === "individual"
                     ? `${participant.name} (${participant.class})`
                     : `Team - ${participant.teamName} (${participant.class})`;
 
-                const option = document.createElement("option");
-                option.value = participant._id;
-                option.textContent = displayName;
+                let option = `<option value="${participant.teamName}">
+                    ${displayName}
+                </option>`;
 
-                const option2 = option.cloneNode(true);
-                const option3 = option.cloneNode(true);
-
-                // Set selected values after populating options
-                if (participant._id === firstPlaceId) option.selected = true;
-                if (participant._id === secondPlaceId) option2.selected = true;
-                if (participant._id === thirdPlaceId) option3.selected = true;
-
-                firstPlaceSelect.appendChild(option);
-                secondPlaceSelect.appendChild(option2);
-                thirdPlaceSelect.appendChild(option3);
+                firstPlaceSelect.innerHTML += option;
+                secondPlaceSelect.innerHTML += option;
+                thirdPlaceSelect.innerHTML += option;
             });
 
         } catch (error) {
@@ -110,11 +120,7 @@
 
     document.addEventListener("DOMContentLoaded", function () {
         const eventId = document.getElementById("eventId").value;
-        const firstPlaceId = document.getElementById("FirstPlace").getAttribute("data-selected");
-        const secondPlaceId = document.getElementById("SecondPlace").getAttribute("data-selected");
-        const thirdPlaceId = document.getElementById("ThirdPlace").getAttribute("data-selected");
-
-        console.log("Pre-filling with:", firstPlaceId, secondPlaceId, thirdPlaceId);
-        loadParticipants(eventId, firstPlaceId, secondPlaceId, thirdPlaceId);
+        if (eventId) loadParticipants(eventId);
     });
+
 </script>
