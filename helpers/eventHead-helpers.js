@@ -2,6 +2,7 @@ const db = require('../config/connection');
 const collection = require('../config/collection');
 const bcrypt = require('bcryptjs');
 const { ObjectId } = require('mongodb');
+const { type } = require('express/lib/response');
 
 module.exports = {
     doLogin: (eventHeadData) => {
@@ -270,9 +271,9 @@ module.exports = {
                     $set: {
                         eventId,
                         eventName: eventName.eventName,
-                        eventSubName:eventName.eventSubName,
+                        eventSubName: eventName.eventSubName,
                         eventHeadId,
-                        eventType:eventName.type,
+                        eventType: eventName.type,
                         results,
                         timestamp: new Date(),
                     },
@@ -455,4 +456,53 @@ module.exports = {
         }
     },
 
+    registerParticipant: async (eventId, registrationData) => {
+        try {
+            console.log("Raw registration data:", JSON.stringify(registrationData, null, 2));
+
+            let registrationEntry = {
+                eventId: eventId,
+                classId: registrationData.classId,
+                type: registrationData.participantName ? "individual" : "group",
+                timestamp: new Date()
+            };
+
+            if (registrationData.participantName) {
+                registrationEntry.participant = {
+                    name: registrationData.participantName,
+                    regNum: registrationData.regNum,
+                    phone: registrationData.phone,
+                };
+            } else if (registrationData.teamName) {
+                // 🔹 Fix incorrect key names ('teamMembers[]' → 'teamMembers')
+                const teamMembers = registrationData["teamMembers[]"] || registrationData.teamMembers || [];
+                const teamRegNums = registrationData["teamRegNums[]"] || registrationData.teamRegNums || [];
+
+                // Ensure they are arrays
+                const membersArray = Array.isArray(teamMembers) ? teamMembers : [teamMembers];
+                const regNumsArray = Array.isArray(teamRegNums) ? teamRegNums : [teamRegNums];
+
+                console.log("Processed team data:", membersArray, regNumsArray); // Debugging log
+
+                // 🔹 Ensure the structure matches what `getRegistrationsByEventId` expects
+
+                registrationEntry.teamName = registrationData.teamName,
+                    registrationEntry.contact = {
+                        teamPhone: registrationData.teamPhone || "N/A",
+                        altPhone: registrationData.altPhone || "N/A"
+                    };
+                registrationEntry.teamMembers = membersArray.map((name, index) => ({
+                    name: name,
+                    regNum: regNumsArray[index] || null
+                }));
+            }
+
+            const result = await db.get().collection(collection.REGISTRATION_COLLECTION).insertOne(registrationEntry);
+            console.log("Registration saved:", result);
+
+        } catch (error) {
+            console.error("Error saving registration:", error);
+            throw error;
+        }
+    }
 }

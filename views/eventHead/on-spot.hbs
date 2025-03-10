@@ -1,0 +1,169 @@
+<section id="register" class="py-20 px-6 bg-beige relative">
+    <div class="container mx-auto relative z-10">
+        <div class="section-title">
+            <h2 class="text-4xl md:text-5xl font-bold mb-16 text-coffee text-center w-full hand-drawn">
+                Register for {{event.eventName}}
+            </h2>
+
+        </div>
+
+        <div class="max-w-2xl mx-auto">
+            <div class="register-form bg-white p-8 shadow-lg rounded-lg">
+                <form action="/eventHead/on-spot/{{event._id}}" method="post" class="space-y-6">
+                    <input type="hidden" name="eventId" value="{{event._id}}">
+                    <div>
+                        <label class="block font-semibold text-bistre">Class</label>
+                        <select name="classId" class="w-full p-2 border border-khaki rounded bg-beige text-bistre">
+                            <option value="I BA">I BA</option>
+                            <option value="II BA">II BA</option>
+                            <option value="III BA">III BA</option>
+                            <option value="I BCOM E">I BCOM E</option>
+                            <option value="II BCOM E">II BCOM E</option>
+                            <option value="III BCOM E">III BCOM E</option>
+                            <option value="I BCOM F">I BCOM F</option>
+                            <option value="II BCOM F">II BCOM F</option>
+                            <option value="III BCOM F">III BCOM F</option>
+                            <option value="I BCOM G">I BCOM G</option>
+                            <option value="II BCOM G">II BCOM G</option>
+                            <option value="I BCA A">I BCA A</option>
+                            <option value="I BCA B">I BCA B</option>
+                            <option value="II BCA B">II BCA B</option>
+                            <option value="II BCA C">II BCA C</option>
+                            <option value="III BCA B">III BCA B</option>
+                            <option value="III BCA C">III BCA C</option>
+                            <option value="I BBA C">I BBA C</option>
+                            <option value="II BBA C">II BBA C</option>
+                            <option value="III BBA C">III BBA C</option>
+                            <option value="I BBA D">I BBA D</option>
+                            <option value="II BBA D">II BBA D</option>
+                            <option value="III BBA D">III BBA D</option>
+                            <option value="I and II BCOM IFA">I and II BCOM IFA</option>
+                            <option value="I and II BBA SF">I and II BBA SF</option>
+                            <option value="I and II MCOM">I and II MCOM</option>
+                            <option value="I and II MA">I and II MA</option>
+                        </select>
+                    </div>
+                    <!-- Individual Registration Fields -->
+                    <div id="individualFields" class="form-section">
+                        <label for="participantName" class="block text-bistre text-lg">Participant Name</label>
+                        <input type="text" id="participantName" name="participantName" class="form-input"
+                            placeholder="Your name">
+
+                        <label for="regNum" class="block text-bistre text-lg">Registration Number</label>
+                        <input type="text" id="regNum" name="regNum" class="form-input"
+                            placeholder="Registration number">
+
+                        <label for="phone" class="block text-bistre text-lg">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" class="form-input" placeholder="Phone number">
+                    </div>
+
+                    <!-- Group Registration Fields -->
+                    <div id="groupFields" class="hidden form-section">
+                        <label for="teamName" class="block text-bistre text-lg">Team Name</label>
+                        <input type="text" id="teamName" name="teamName" class="form-input" placeholder="Team name">
+
+                        <label for="teamPhone" class="block text-bistre text-lg">Team Contact Number</label>
+                        <input type="tel" id="teamPhone" name="teamPhone" class="form-input"
+                            placeholder="Contact number">
+
+                        <label for="altPhone" class="block text-bistre text-lg">Alternate Phone Number</label>
+                        <input type="tel" id="altPhone" name="altPhone" class="form-input"
+                            placeholder="Alternate contact number">
+
+                        <div id="teamMembers" class="mt-4">
+                            <label class="block text-bistre text-lg">Team Members</label>
+                        </div>
+
+                        <button type="button" id="addMemberBtn" class="btn-primary mt-4">+ Add
+                            Member</button>
+                    </div>
+
+                    <button type="submit" class="btn-primary w-full flex justify-center items-center text-center">
+                        Register
+                    </button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const eventStrength = "{{event.eventStrength}}";
+        let minParticipants = "{{event.minParticipants}}" ? parseInt("{{event.minParticipants}}", 10) || null : null;
+        const maxParticipants = parseInt("{{event.maxParticipants}}", 10) || 10;
+        const teamMembersDiv = document.getElementById("teamMembers");
+        const addMemberBtn = document.getElementById("addMemberBtn");
+        const form = document.querySelector("form");
+
+        if (eventStrength === "group") {
+            document.getElementById("individualFields").classList.add("hidden");
+            document.getElementById("groupFields").classList.remove("hidden");
+            let initialParticipants = minParticipants !== null ? minParticipants : maxParticipants;
+            for (let i = 0; i < initialParticipants; i++) {
+                addTeamMember(false);
+            }
+        }
+
+        document.getElementById("addMemberBtn").addEventListener("click", function () {
+            addTeamMember();
+        });
+
+
+        function addTeamMember(allowDelete = true) {
+            let currentMembers = document.querySelectorAll(".team-member").length;
+            console.log(currentMembers)
+            if (currentMembers >= maxParticipants) return;
+            let newMemberDiv = document.createElement("div");
+            newMemberDiv.classList.add("team-member", "flex", "gap-2", "py-2", "items-center");
+            let inputWrapper = document.createElement("div");
+            inputWrapper.classList.add("flex", "gap-2", "w-full");
+            let nameInput = document.createElement("input");
+            nameInput.type = "text";
+            nameInput.name = "teamMembers[]";
+            nameInput.className = "form-input";
+            nameInput.placeholder = "Member Name";
+            nameInput.required = true;
+            let regNumInput = document.createElement("input");
+            regNumInput.type = "text";
+            regNumInput.name = "teamRegNums[]";
+            regNumInput.className = "form-input";
+            regNumInput.placeholder = "Reg No.";
+            regNumInput.required = true;
+            inputWrapper.appendChild(nameInput);
+            inputWrapper.appendChild(regNumInput);
+            if (allowDelete) {
+                let deleteBtn = document.createElement("button");
+                deleteBtn.type = "button";
+                deleteBtn.className = "btn-danger remove-member btn-primary";
+                deleteBtn.innerText = "Delete";
+                deleteBtn.onclick = function () {
+                    removeTeamMember(newMemberDiv);
+                };
+                newMemberDiv.appendChild(deleteBtn);
+            }
+            newMemberDiv.insertBefore(inputWrapper, newMemberDiv.firstChild);
+            teamMembersDiv.appendChild(newMemberDiv);
+            checkAddMemberButton();
+        }
+
+        function removeTeamMember(memberDiv) {
+            memberDiv.remove();
+            checkAddMemberButton();
+        }
+
+        function checkAddMemberButton() {
+            let currentMembers = document.querySelectorAll(".team-member").length;
+            addMemberBtn.style.display = currentMembers >= maxParticipants ? "none" : "block";
+        }
+
+        form.addEventListener("submit", function (event) {
+            let currentMembers = document.querySelectorAll(".team-member").length;
+            if (minParticipants !== null && currentMembers < minParticipants) {
+                alert(`At least ${minParticipants} participants are required to register.`);
+                event.preventDefault();
+            }
+        });
+    });
+</script>

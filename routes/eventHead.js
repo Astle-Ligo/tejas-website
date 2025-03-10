@@ -307,5 +307,28 @@ router.post("/addWhatsAppLink/:eventId", async (req, res) => {
     }
 });
 
+router.get('/:eventId/on-spot', async (req, res) => {
+    try {
+        const event = await eventHeadHelpers.getEventDetailsById(req.params.eventId);
+        res.render('eventHead/on-spot', { event, eventHead: true, eventHeadUser: req.session.eventHead })
+    } catch (error) {
+        console.error(error);
+        res.redirect("/eventHead");
+    }
+});
+
+router.post('/on-spot/:eventId', async (req, res) => {
+    try {
+        const registrationData = req.body;
+        const eventId = req.params.eventId;
+        console.log(req.body, eventId);
+
+        await eventHeadHelpers.registerParticipant(eventId, registrationData);
+        res.redirect('/eventHead'); // Redirect to the dashboard or success page
+    } catch (error) {
+        console.error("Registration Error:", error);
+        res.status(500).send("Error registering participant. Please try again.");
+    }
+});
 
 module.exports = router;
