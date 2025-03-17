@@ -148,14 +148,13 @@ router.get("/results", async (req, res) => {
 router.post("/results", async (req, res) => {
     console.log("response : :: ", req.body);
 
-    const { eventId, eventName, firstPlace, secondPlace } = req.body;
-
-    console.log("Received Data:", req.body); // Debugging log
+    const { eventId, eventName, firstPlace, secondPlace, thirdPlace } = req.body;
 
     // Validate required fields
-    if (!eventId || !firstPlace || !secondPlace) {
-        return res.status(400).json({ error: "Missing required fields: eventId, firstPlace, or secondPlace" });
+    if (!eventId || !firstPlace || !secondPlace || !thirdPlace) {
+        return res.status(400).json({ error: "Missing required fields: eventId, firstPlace, secondPlace, or thirdPlace" });
     }
+
 
     if (!eventName || typeof eventName !== "string" || eventName.trim() === "") {
         return res.status(400).json({ error: "Invalid eventName: It must be a non-empty string." });

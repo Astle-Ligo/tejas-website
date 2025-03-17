@@ -502,15 +502,29 @@ module.exports = {
 
     getAllResults: async () => {
         try {
-            const results = await db
+            const rawResults = await db
                 .get()
                 .collection(collection.RESULTS_COLLECTION)
                 .find({})
                 .toArray();
-            return results;
+
+            console.log("rawResults:", rawResults);
+
+            const formattedResults = rawResults.map(event => {
+                return {
+                    eventName: event.eventName,
+                    eventSubName: event.eventSubName || null,
+                    type: event.results?.[0]?.type || "individual",
+                    results: event.results || [],
+                };
+            });
+
+            console.log(formattedResults);
+            return formattedResults;
         } catch (error) {
             console.error("Database error:", error);
             throw error;
         }
     },
+
 };

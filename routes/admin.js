@@ -467,6 +467,8 @@ router.get("/leaderboard", async (req, res) => {
 router.get("/results", async (req, res) => {
   try {
     const results = await adminHelpers.getAllResults();
+    console.log(results);
+
     res.render("admin/results", {
       results,
       admin: true,

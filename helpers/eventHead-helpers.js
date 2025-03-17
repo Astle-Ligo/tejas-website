@@ -187,23 +187,27 @@ module.exports = {
 
             console.log("Raw resultData:", resultData);
 
-            // Convert IDs to ObjectId
-            const eventId = ObjectId.isValid(resultData.eventId) ? new ObjectId(resultData.eventId) : null;
-            const firstPlace = ObjectId.isValid(resultData.firstPlace) ? new ObjectId(resultData.firstPlace) : null;
-            const secondPlace = ObjectId.isValid(resultData.secondPlace) ? new ObjectId(resultData.secondPlace) : null;
-            const thirdPlace = ObjectId.isValid(resultData.thirdPlace) ? new ObjectId(resultData.thirdPlace) : null;
+            const convertToObjectId = (id) => ObjectId.isValid(id) ? new ObjectId(id) : null;
+
+            const eventId = convertToObjectId(resultData.eventId);
+            const firstPlace = Array.isArray(resultData.firstPlace) ? resultData.firstPlace.map(convertToObjectId).filter(id => id) : convertToObjectId(resultData.firstPlace);
+            const secondPlace = Array.isArray(resultData.secondPlace) ? resultData.secondPlace.map(convertToObjectId).filter(id => id) : convertToObjectId(resultData.secondPlace);
+            const thirdPlace = Array.isArray(resultData.thirdPlace) ? resultData.thirdPlace.map(convertToObjectId).filter(id => id) : convertToObjectId(resultData.thirdPlace);
+
             eventHeadId = ObjectId.isValid(eventHeadId) ? new ObjectId(eventHeadId) : null;
 
             if (!eventId || !eventHeadId) {
-                throw new Error("Invalid ObjectId provided.");
+                return { success: false, message: "Invalid ObjectId provided." };
             }
 
             console.log("✅ All ObjectIds are valid:", { eventId, firstPlace, secondPlace, thirdPlace, eventHeadId });
 
             // Fetch participant details
             const fetchParticipant = async (participantId) => {
-                if (!participantId) return null;
-                return await dbInstance.collection(collection.REGISTRATION_COLLECTION).findOne({ _id: participantId });
+                if (!participantId || participantId.length === 0) return null;
+                const participantIds = Array.isArray(participantId) ? participantId : [participantId];
+                return await dbInstance.collection(collection.REGISTRATION_COLLECTION)
+                    .find({ _id: { $in: participantIds } }).toArray();
             };
 
             const firstPlaceReg = await fetchParticipant(firstPlace);
@@ -214,8 +218,10 @@ module.exports = {
             console.log("Second Place:", secondPlaceReg);
             console.log("Third Place:", thirdPlaceReg);
 
-            eventName = await db.get().collection(collection.EVENT_COLLECTION).findOne({ _id: eventId })
-            console.log(eventName.eventName);
+            const eventName = await dbInstance.collection(collection.EVENT_COLLECTION).findOne({ _id: eventId });
+            if (!eventName) return { success: false, message: "Event not found." };
+
+            console.log("Event Name:", eventName.eventName);
 
             // Format participant details with unique ID for each position
             const formatResult = (registration, position, points) => {
@@ -259,24 +265,23 @@ module.exports = {
 
             // Format and assign unique _id for each result
             const results = [
-                formatResult(firstPlaceReg, "First", 25),
-                formatResult(secondPlaceReg, "Second", 15),
-                formatResult(thirdPlaceReg, "Third", 10)
+                ...(firstPlaceReg ? firstPlaceReg.map(reg => formatResult(reg, "First", 25)) : []),
+                ...(secondPlaceReg ? secondPlaceReg.map(reg => formatResult(reg, "Second", 15)) : []),
+                ...(thirdPlaceReg ? thirdPlaceReg.map(reg => formatResult(reg, "Third", 10)) : [])
             ].filter(result => result !== null); // Remove null entries if any
 
             // Save results to database
             await dbInstance.collection(collection.RESULTS_COLLECTION).updateOne(
-                { eventId },
+                { eventId: eventId },
                 {
                     $set: {
-                        eventId,
                         eventName: eventName.eventName,
                         eventSubName: eventName.eventSubName,
                         eventHeadId,
                         eventType: eventName.type,
-                        results,
                         timestamp: new Date(),
                     },
+                    $push: { results: { $each: results } }
                 },
                 { upsert: true }
             );
@@ -300,13 +305,21 @@ module.exports = {
                     $match: { eventHeadId: new ObjectId(eventHeadId) }
                 },
                 {
-                    $unwind: "$results" // Unwind the results array
+                    $project: {
+                        eventId: 1,
+                        eventName: 1,
+                        eventSubName: 1,
+                        results: 1
+                    }
+                },
+                {
+                    $unwind: "$results"
                 },
                 {
                     $group: {
                         _id: "$eventId",
                         eventName: { $first: "$eventName" },
-                        eventId: { $first: "$eventId" },
+                        eventSubName: { $first: "$eventSubName" },
                         firstPlace: {
                             $push: {
                                 $cond: { if: { $eq: ["$results.position", "First"] }, then: "$results", else: "$$REMOVE" }

@@ -11,33 +11,42 @@
                 <thead class="bg-[var(--coffee)] text-[var(--beige)] text-lg">
                     <tr>
                         <th class="p-4 border-b">Event Name</th>
-                        <th class="p-4 border-b">First Place</th>
-                        <th class="p-4 border-b">Second Place</th>
-                        <th class="p-4 border-b">Third Place</th>
+                        <th class="p-4 border-b">First Place 🥇</th>
+                        <th class="p-4 border-b">Second Place 🥈</th>
+                        <th class="p-4 border-b">Third Place 🥉</th>
                     </tr>
                 </thead>
                 <tbody class="text-[var(--bistre)]">
                     {{#each results}}
-                    {{#if (eq this.results.[0].type "individual")}}
+                    {{#if (eq this.type "individual")}}
                     <tr class="border-b hover:bg-[var(--chamoisee)] transition duration-200">
                         <td class="p-4 font-semibold">{{this.eventName}}</td>
-
                         <td class="p-4 font-semibold text-[var(--bistre)]">
-                            {{#if this.results.[0]}} {{this.results.[0].participant.name}}
-                            ({{this.results.[0].classId}})
-                            {{else}} - {{/if}}
+                            <ul class="list-disc pl-4">
+                                {{#each this.results}}
+                                {{#if (eq this.position "First")}}
+                                <li>{{this.participant.name}} ({{this.classId}})</li>
+                                {{/if}}
+                                {{/each}}
+                            </ul>
                         </td>
-
                         <td class="p-4 font-semibold text-[var(--bistre)]">
-                            {{#if this.results.[1]}} {{this.results.[1].participant.name}}
-                            ({{this.results.[1].classId}})
-                            {{else}} - {{/if}}
+                            <ul class="list-disc pl-4">
+                                {{#each this.results}}
+                                {{#if (eq this.position "Second")}}
+                                <li>{{this.participant.name}} ({{this.classId}})</li>
+                                {{/if}}
+                                {{/each}}
+                            </ul>
                         </td>
-
                         <td class="p-4 font-semibold text-[var(--bistre)]">
-                            {{#if this.results.[2]}} {{this.results.[2].participant.name}}
-                            ({{this.results.[2].classId}})
-                            {{else}} - {{/if}}
+                            <ul class="list-disc pl-4">
+                                {{#each this.results}}
+                                {{#if (eq this.position "Third")}}
+                                <li>{{this.participant.name}} ({{this.classId}})</li>
+                                {{/if}}
+                                {{/each}}
+                            </ul>
                         </td>
                     </tr>
                     {{/if}}
@@ -53,34 +62,46 @@
                 <thead class="bg-[var(--coffee)] text-[var(--beige)] text-lg">
                     <tr>
                         <th class="p-4 border-b">Event Name</th>
-                        <th class="p-4 border-b">First Place</th>
-                        <th class="p-4 border-b">Second Place</th>
-                        <th class="p-4 border-b">Third Place</th>
+                        <th class="p-4 border-b">First Place 🥇</th>
+                        <th class="p-4 border-b">Second Place 🥈</th>
+                        <th class="p-4 border-b">Third Place 🥉</th>
                     </tr>
                 </thead>
                 <tbody class="text-[var(--bistre)]">
                     {{#each results}}
-                    {{#if (eq this.results.[0].type "group")}}
+                    {{#if (eq this.type "group")}}
                     <tr class="border-b hover:bg-[var(--chamoisee)] transition duration-200">
                         <td class="p-4 font-semibold">{{this.eventName}}
                             {{#if this.eventSubName}}
                             <span class="text-sm">({{this.eventSubName}})</span>
                             {{/if}}
                         </td>
-
                         <td class="p-4 font-semibold text-[var(--bistre)]">
-                            {{#if this.results.[0]}} {{this.results.[0].teamName}} ({{this.results.[0].classId}})
-                            {{else}} - {{/if}}
+                            <ul class="list-disc pl-4">
+                                {{#each this.results}}
+                                {{#if (eq this.position "First")}}
+                                <li>{{this.teamName}} ({{this.classId}})</li>
+                                {{/if}}
+                                {{/each}}
+                            </ul>
                         </td>
-
                         <td class="p-4 font-semibold text-[var(--bistre)]">
-                            {{#if this.results.[1]}} {{this.results.[1].teamName}} ({{this.results.[1].classId}})
-                            {{else}} - {{/if}}
+                            <ul class="list-disc pl-4">
+                                {{#each this.results}}
+                                {{#if (eq this.position "Second")}}
+                                <li>{{this.teamName}} ({{this.classId}})</li>
+                                {{/if}}
+                                {{/each}}
+                            </ul>
                         </td>
-
                         <td class="p-4 font-semibold text-[var(--bistre)]">
-                            {{#if this.results.[2]}} {{this.results.[2].teamName}} ({{this.results.[2].classId}})
-                            {{else}} - {{/if}}
+                            <ul class="list-disc pl-4">
+                                {{#each this.results}}
+                                {{#if (eq this.position "Third")}}
+                                <li>{{this.teamName}} ({{this.classId}})</li>
+                                {{/if}}
+                                {{/each}}
+                            </ul>
                         </td>
                     </tr>
                     {{/if}}
